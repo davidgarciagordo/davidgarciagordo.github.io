@@ -4,649 +4,849 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
-<meta name="theme-color" content="#141210">
-<meta name="description" content="David García Gordo, Belcebur. Desde 2008: backend PHP con DDD y arquitectura hexagonal, open source para Zend/Laminas y tooling de IA para Claude Code.">
+<meta name="theme-color" content="#020203">
+<meta name="description" content="David García Gordo, Belcebur. Backend PHP con DDD, CQRS y arquitectura hexagonal, y tooling de IA para Claude Code. Open source desde 2008.">
 <title>David García Gordo · Belcebur</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1c1.2 3.6-3.6 5-3.6 8.4a3.6 3.6 0 0 0 7.2 0C11.6 6 6.8 4.6 8 1z' fill='%23E8842C'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1c1.2 3.6-3.6 5-3.6 8.4a3.6 3.6 0 0 0 7.2 0C11.6 6 6.8 4.6 8 1z' fill='%23F59E0B'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,900&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
 <script>
   (function () {
     try {
       var l = localStorage.getItem("lang");
       if (l === "en" || l === "es") document.documentElement.lang = l;
     } catch (e) {}
-    if (window.matchMedia && matchMedia("(prefers-reduced-motion: no-preference)").matches) {
-      document.documentElement.classList.add("preignite");
-      var floor = new Promise(function (r) { setTimeout(r, 350); });
-      var fonts = (document.fonts && document.fonts.ready) || Promise.resolve();
-      Promise.all([fonts, floor]).then(function () {
-        requestAnimationFrame(function () {
-          document.documentElement.classList.add("ignited");
-        });
-      });
-    }
+    var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    document.documentElement.classList.add(reduce ? "no-splash" : "splash-active");
   })();
 </script>
 <style>
-  /* ============ Tokens (token-plan, 6 hex) ============ */
+  /* ============ Tokens ============ */
   :root {
-    --canvas:    #141210;
-    --surface:   #1D1A16;
-    --ink:       #EDE6DA;
-    --ink-muted: #8F8779;
-    --ember:     #E8842C;
-    --ember-hot: #FFB25E;
-    --hairline:  rgb(237 230 218 / .10);
-    --radius:    16px;
-    --measure:   640px;
-    --font-display: "Fraunces", Georgia, serif;
-    --font-prose:   "Source Serif 4", Georgia, serif;
-    --font-ledger:  "JetBrains Mono", ui-monospace, monospace;
+    --bg-1: #0a0a0f;
+    --bg-2: #020203;
+    --ink: #F5F4F2;
+    --ink-muted: rgb(245 244 242 / .58);
+    --ink-faint: rgb(245 244 242 / .38);
+    --amber: #F59E0B;
+    --amber-hot: #FBBF24;
+    --green: #22C55E;
+    --glass: rgb(255 255 255 / .05);
+    --glass-hi: rgb(255 255 255 / .08);
+    --hairline: rgb(255 255 255 / .08);
+    --radius: 16px;
+    --ease: cubic-bezier(.16, 1, .3, 1);
+    --font-display: "Space Grotesk", system-ui, sans-serif;
+    --font-body: "Inter", system-ui, sans-serif;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
+  html { scroll-padding-top: 6rem; }
+
   body {
-    background: var(--canvas);
+    background: var(--bg-2);
     color: var(--ink);
-    font-family: var(--font-prose);
+    font-family: var(--font-body);
+    font-size: 18px;
     font-weight: 400;
-    font-size: 19px;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
   }
 
-  /* ============ Language switching ============ */
+  /* ============ Language switching (works without JS) ============ */
   html[lang="es"] [lang="en"] { display: none; }
   html[lang="en"] [lang="es"] { display: none; }
 
+  /* ============ Cinematic background ============ */
+  .backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(120% 90% at 50% 0%, var(--bg-1) 0%, var(--bg-2) 65%);
+    overflow: hidden;
+  }
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(48px);
+    will-change: transform;
+  }
+  .blob-a {
+    width: 46vw; height: 46vw;
+    top: -8vw; left: -6vw;
+    background: var(--amber);
+    opacity: .1;
+  }
+  .blob-b {
+    width: 40vw; height: 40vw;
+    top: 42vh; right: -10vw;
+    background: #6366F1;
+    opacity: .08;
+  }
+  .blob-c {
+    width: 38vw; height: 38vw;
+    bottom: -12vw; left: 18vw;
+    background: var(--amber);
+    opacity: .09;
+  }
+
+  /* ============ Splash ============ */
+  .splash {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: var(--bg-2);
+    display: flex;
+    align-items: flex-end;
+    padding: clamp(1.5rem, 5vw, 4rem);
+    transition: opacity .7s ease;
+  }
+  html.no-splash .splash { display: none; }
+  html.splash-active, html.splash-active body { overflow: hidden; }
+  .splash.fade { opacity: 0; }
+  .splash-count {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(4rem, 18vw, 9rem);
+    line-height: .85;
+    letter-spacing: -.03em;
+    color: var(--amber);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ============ Layout ============ */
   .wrap {
-    max-width: 1200px;
+    max-width: 1240px;
     margin-inline: auto;
     padding-inline: clamp(1.25rem, 5vw, 4rem);
   }
+  section {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-block: clamp(5rem, 12vh, 9rem);
+  }
 
   /* ============ Type roles ============ */
-  .ledger-label {
-    font-family: var(--font-ledger);
+  h1, h2, h3, .display { font-family: var(--font-display); font-weight: 700; }
+
+  .label {
+    font-family: var(--font-display);
     font-weight: 500;
     font-size: 12px;
     text-transform: uppercase;
-    letter-spacing: .12em;
+    letter-spacing: .16em;
     color: var(--ink-muted);
   }
+  .label.amber { color: var(--amber); }
 
-  a {
-    color: var(--ink);
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-decoration-color: color-mix(in srgb, var(--ink) 35%, transparent);
-    text-underline-offset: 3px;
-    transition: text-decoration-color .2s ease, color .2s ease;
+  h1 {
+    font-size: clamp(3rem, 11vw, 10rem);
+    line-height: .85;
+    letter-spacing: -.03em;
+    text-transform: uppercase;
+    text-wrap: balance;
   }
-  a:active { text-decoration-color: var(--ember-hot); }
+  h2 {
+    font-size: clamp(2.5rem, 8vw, 6rem);
+    line-height: .9;
+    letter-spacing: -.02em;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+  h3 {
+    font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+    line-height: 1.1;
+    letter-spacing: -.01em;
+  }
 
-  a, button { touch-action: manipulation; }
+  a { color: var(--ink); text-decoration: none; }
 
   :focus-visible {
-    outline: 2px solid var(--ember);
+    outline: 2px solid var(--amber);
     outline-offset: 3px;
-    border-radius: 2px;
+    border-radius: 4px;
+  }
+  ::selection { background: var(--amber); color: var(--bg-2); }
+  a, button { touch-action: manipulation; }
+
+  /* ============ Glass card ============ */
+  .card {
+    background: var(--glass);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    padding: clamp(1.5rem, 3vw, 2.25rem);
   }
 
-  ::selection { background: var(--ember); color: var(--canvas); }
-
-  /* ============ Header: corner-anchored mono micro-labels ============ */
-  .corners {
+  /* ============ Navbar ============ */
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 50;
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    align-items: baseline;
     gap: 1rem;
-    padding-top: 1.5rem;
+    padding: .85rem clamp(1.25rem, 5vw, 4rem);
+    background: rgb(2 2 3 / .55);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--hairline);
   }
-  .corner-right {
-    display: flex;
-    align-items: baseline;
-    gap: 1.5rem;
+  .logo { display: flex; flex-direction: column; line-height: 1; }
+  .logo-lines {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(.95rem, 1.4vw, 1.15rem);
+    text-transform: uppercase;
+    letter-spacing: -.01em;
   }
+  .logo-lines span { display: block; }
+  .logo-sub {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .16em;
+    color: var(--ink-faint);
+    margin-top: .4rem;
+  }
+  .nav-links { display: flex; align-items: center; gap: 1.75rem; }
+  .nav-links a {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .14em;
+    color: var(--ink-muted);
+    padding: .5rem 0;
+    transition: color .2s ease;
+  }
+  .nav-right { display: flex; align-items: center; gap: 1rem; }
 
   .lang-toggle {
-    font-family: var(--font-ledger);
-    font-weight: 500;
+    font-family: var(--font-display);
+    font-weight: 700;
     font-size: 12px;
     letter-spacing: .12em;
     text-transform: uppercase;
     background: none;
-    border: 0;
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
     cursor: pointer;
     color: var(--ink-muted);
-    padding: .5rem;
-    margin: -.5rem;
+    padding: .5rem .8rem;
+    min-height: 34px;
+    transition: border-color .2s ease, color .2s ease;
   }
   .lang-toggle .lt { transition: color .2s ease; }
-  html[lang="es"] .lt-es,
-  html[lang="en"] .lt-en { color: var(--ink); }
+  html[lang="es"] .lt-es, html[lang="en"] .lt-en { color: var(--amber); }
 
-  /* ============ Hero: prose-as-hero ============ */
-  .hero {
-    position: relative;
-    padding-top: clamp(3rem, 9vh, 5.5rem);
-    padding-bottom: clamp(4rem, 10vh, 7rem);
-  }
-
-  .hero .eyebrow {
-    font-family: var(--font-ledger);
-    font-weight: 500;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: .12em;
-    color: var(--ink-muted);
-    display: block;
-    margin-bottom: 1.25rem;
-  }
-
-  .name-block { display: inline-block; }
-
-  h1 {
-    font-family: var(--font-display);
-    font-weight: 900;
-    font-size: clamp(3rem, 8vw, 6rem);
-    letter-spacing: -.04em;
-    line-height: .95;
-    color: var(--ink);
-    text-wrap: balance;
-  }
-
-  /* Ignition underline: draws once after fonts.ready (350ms floor), glow cools hot -> ember.
-     Draw is clip-path based (negative insets keep the glow halo unclipped, no scaleX distortion). */
-  .ignition {
-    position: relative;
-    display: block;
-    height: 3px;
-    margin-top: 1.1rem;
-    background: var(--ember);
-  }
-  .ignition::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: var(--ember-hot);
-    box-shadow: 0 0 14px 2px var(--ember-hot);
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .bio {
-    max-width: var(--measure);
-    margin-top: 2.5rem;
-    font-weight: 300;
-  }
-  .bio p + p { margin-top: 1.25rem; }
-  .bio em { font-style: italic; font-weight: 400; color: var(--ink); }
-
-  .alias-note {
-    margin-top: 1.5rem;
-    font-size: 15px;
-    color: var(--ink-muted);
-  }
-
-  .scroll-cue {
-    position: absolute;
-    right: 0;
-    bottom: 1.5rem;
-    font-family: var(--font-ledger);
-    font-size: 12px;
-    letter-spacing: .12em;
-    color: var(--ink-muted);
-  }
-
-  /* ============ Two-era ledger (signature element) ============ */
-  .ledger { padding-block: clamp(4rem, 10vh, 7rem); border-top: 1px solid var(--hairline); }
-
-  h2 {
-    font-family: var(--font-display);
-    font-weight: 900;
-    font-size: clamp(1.75rem, 3.5vw, 2.75rem);
-    letter-spacing: -.02em;
-    line-height: 1.05;
-    margin-bottom: 3rem;
-    text-wrap: balance;
-  }
-
-  .eras {
-    display: grid;
-    grid-template-columns: 1fr 1.3fr;
-    gap: clamp(2rem, 6vw, 5rem);
-  }
-
-  .era-year {
-    font-family: var(--font-display);
-    font-weight: 900;
-    font-size: clamp(2.5rem, 5vw, 4rem);
-    letter-spacing: -.04em;
-    line-height: .9;
-  }
-  .era .ledger-label { display: block; margin-top: .75rem; }
-
-  .ledger-rule {
-    position: relative;
-    display: block;
-    height: 2px;
-    width: 4.5rem;
-    margin-top: 1rem;
-    background: var(--ember);
-  }
-  .ledger-rule::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: var(--ember-hot);
-    box-shadow: 0 0 12px 2px var(--ember-hot);
-    opacity: 0;
-    pointer-events: none;
-  }
-  .rule-muted { background: color-mix(in srgb, var(--ink-muted) 60%, transparent); }
-  .rule-muted::after { content: none; }
-
-  .era ul { list-style: none; margin-top: 2.25rem; }
-  .era li + li { margin-top: 1.4rem; }
-
-  .repo {
-    font-family: var(--font-ledger);
-    font-weight: 500;
-    font-size: 13px;
-    letter-spacing: .04em;
-    overflow-wrap: anywhere;
-  }
-  .repo a,
-  .foot-links a {
-    display: inline-block;
-    padding-block: .4rem;
-    margin-block: -.4rem;
-  }
-  .repo-desc {
-    display: block;
-    margin-top: .3rem;
-    font-size: 16px;
-    font-weight: 300;
-    color: var(--ink-muted);
-    max-width: 34ch;
-  }
-
-  /* Old era recedes: muted ink, sits lower on desktop */
-  .era-past { color: var(--ink-muted); }
-  .era-past .era-year { color: var(--ink-muted); }
-  .era-past .repo a { color: var(--ink-muted); }
-  @media (min-width: 768px) {
-    .era-past { padding-top: 3.5rem; }
-  }
-
-  .era-now .era-year { color: var(--ink); }
-  .era-now .ledger-label { color: var(--ink); }
-
-  /* ============ Bento row: active work ============ */
-  .now { padding-block: clamp(4rem, 10vh, 7rem); border-top: 1px solid var(--hairline); }
-
-  .bento {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    gap: 16px;
-  }
-
-  .tile {
-    display: block;
-    background: var(--surface);
+  .hamburger {
+    display: none;
+    width: 40px; height: 40px;
+    background: none;
     border: 1px solid var(--hairline);
-    border-radius: var(--radius);
-    padding: 2rem;
-    text-decoration: none;
-    transition: border-color .2s ease;
+    border-radius: 10px;
+    cursor: pointer;
+    position: relative;
   }
-  .tile-wide { border-color: color-mix(in srgb, var(--ember) 35%, transparent); }
+  .hamburger span {
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 18px; height: 2px;
+    background: var(--ink);
+    transform: translate(-50%, -50%);
+    transition: transform .25s var(--ease), opacity .2s ease;
+  }
+  .hamburger span:nth-child(1) { margin-top: -6px; }
+  .hamburger span:nth-child(3) { margin-top: 6px; }
+  .nav.open .hamburger span:nth-child(1) { margin-top: 0; transform: translate(-50%, -50%) rotate(45deg); }
+  .nav.open .hamburger span:nth-child(2) { opacity: 0; }
+  .nav.open .hamburger span:nth-child(3) { margin-top: 0; transform: translate(-50%, -50%) rotate(-45deg); }
 
-  .tile .repo { display: block; transition: color .2s ease; }
-  .tile-desc {
-    margin-top: .75rem;
-    font-size: 16px;
-    font-weight: 300;
-    color: var(--ink-muted);
-  }
-
-  .ratios {
-    display: grid;
-    grid-template-columns: repeat(3, auto);
-    justify-content: start;
-    gap: clamp(1.5rem, 4vw, 3rem);
-    margin-top: 2.25rem;
-  }
-  .ratio-num {
-    font-family: var(--font-ledger);
-    font-weight: 500;
-    font-size: clamp(1.75rem, 3vw, 2.5rem);
-    line-height: 1;
-    color: var(--ink);
-    font-variant-numeric: tabular-nums;
-  }
-  .ratio-cap {
-    display: block;
-    margin-top: .5rem;
-    font-family: var(--font-ledger);
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: .12em;
-    color: var(--ink-muted);
-    max-width: 24ch;
-  }
-
-  /* ============ Terminal: the only "image" ============ */
-  .terminal { margin-top: 16px; }
-  .terminal pre {
-    background: color-mix(in srgb, var(--canvas) 80%, black);
-    border: 1px solid var(--hairline);
-    border-radius: var(--radius);
-    padding: 1.25rem 1.5rem;
-    font-family: var(--font-ledger);
-    font-size: 12px;
-    line-height: 1.7;
-    color: var(--ink-muted);
-    overflow-x: auto;
-  }
-  .terminal .t-cmd,
-  .terminal .t-pass { color: var(--ink); }
-  .terminal figcaption { margin-top: .75rem; }
-
-  /* ============ Footer ============ */
-  footer {
-    border-top: 1px solid var(--hairline);
-    padding-block: 3rem;
-  }
-  .closing {
-    max-width: var(--measure);
-    font-weight: 300;
-    margin-bottom: 2.25rem;
-  }
-  .foot-row {
+  /* ============ Mobile slide panel ============ */
+  .panel {
+    position: fixed;
+    top: 0; right: 0;
+    z-index: 45;
+    width: min(80vw, 320px);
+    height: 100dvh;
+    padding: 6rem 2rem 2rem;
+    background: rgb(2 2 3 / .82);
+    -webkit-backdrop-filter: blur(22px);
+    backdrop-filter: blur(22px);
+    border-left: 1px solid var(--hairline);
+    transform: translateX(100%);
+    transition: transform .4s var(--ease);
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: baseline;
+    flex-direction: column;
     gap: 1.5rem;
   }
-  .foot-links { display: flex; gap: 2rem; }
-  .foot-links a { font-family: var(--font-ledger); font-size: 13px; letter-spacing: .04em; }
+  .nav.open ~ .panel { transform: translateX(0); }
+  .panel a {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: -.01em;
+    color: var(--ink);
+    opacity: 0;
+    transform: translateX(16px);
+    transition: opacity .3s var(--ease), transform .3s var(--ease), color .2s ease;
+  }
+  .nav.open ~ .panel a { opacity: 1; transform: translateX(0); }
+  .nav.open ~ .panel a:nth-child(1) { transition-delay: .08s; }
+  .nav.open ~ .panel a:nth-child(2) { transition-delay: .14s; }
+  .nav.open ~ .panel a:nth-child(3) { transition-delay: .2s; }
+  .nav.open ~ .panel a:nth-child(4) { transition-delay: .26s; }
 
-  /* ============ Hover (pointer devices only) ============ */
-  @media (hover: hover) and (pointer: fine) {
-    a:hover { text-decoration-color: var(--ember); color: var(--ember); }
-    .era-past .repo a:hover { color: var(--ember); }
-    .tile:hover { border-color: var(--ember); color: var(--ink); }
-    .tile:hover .repo { color: var(--ember); }
+  /* ============ Hero ============ */
+  #hero { padding-top: 8rem; }
+  .hero-bars {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: clamp(2rem, 5vh, 4rem);
+  }
+  .bar {
+    padding: 1rem 1.25rem;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: var(--ink);
+  }
+  .bar .dot { color: var(--amber); }
+
+  .hero-main {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 16px;
+    align-items: stretch;
+  }
+  .hero-name { display: flex; flex-direction: column; justify-content: space-between; gap: 2rem; }
+  .hero-headline {
+    max-width: 34ch;
+    font-size: clamp(1.1rem, 1.7vw, 1.4rem);
+    font-weight: 400;
+    color: var(--ink-muted);
+    line-height: 1.4;
+  }
+  .hero-headline em { font-style: normal; color: var(--ink); }
+  /* Hero photo: no rectangle. The face is monochrome + duotone-tinted and
+     feathered into the cinematic background via mask, so it emerges from it. */
+  .hero-photo {
+    position: relative;
+    min-height: 300px;
+    isolation: isolate;
+  }
+  .hero-photo img,
+  .hero-photo .hero-tint {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    -webkit-mask-image: radial-gradient(120% 115% at 62% 38%, #000 32%, transparent 78%);
+    mask-image: radial-gradient(120% 115% at 62% 38%, #000 32%, transparent 78%);
+  }
+  .hero-photo img {
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+    filter: grayscale(1) contrast(1.1) brightness(.9);
+    mix-blend-mode: luminosity;
+    transition: filter .3s ease, transform .3s ease;
+  }
+  .hero-tint {
+    background:
+      radial-gradient(120% 115% at 62% 38%, rgb(245 158 11 / .5), transparent 70%);
+    mix-blend-mode: soft-light;
+    pointer-events: none;
+  }
+  .hero-loc {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.25rem;
   }
 
-  /* ============ Motion (all gated behind reduced-motion) ============ */
+  /* ============ Experience ============ */
+  .sec-head { margin-bottom: clamp(2.5rem, 6vh, 4rem); }
+  .sec-head .label { display: block; margin-bottom: 1rem; }
+
+  .exp-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .exp-grid .card { display: flex; flex-direction: column; gap: .85rem; }
+  .exp-span { grid-column: 1 / -1; }
+  .exp-role h3 { margin-bottom: .35rem; }
+  .exp-when {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .14em;
+    color: var(--amber);
+  }
+  .exp-desc { color: var(--ink-muted); font-size: 16px; }
+
+  /* ============ Stack ============ */
+  .stack-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .skill {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 1.4rem 1rem;
+    min-height: 92px;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 15px;
+    letter-spacing: -.01em;
+    transition: transform .2s ease, border-color .2s ease, color .2s ease;
+  }
+  .stack-stats {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: clamp(1.5rem, 5vw, 4rem);
+    border-color: rgb(245 158 11 / .35);
+  }
+  .stat { display: flex; flex-direction: column; gap: .4rem; }
+  .stat-num {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2.5rem, 5vw, 3.75rem);
+    line-height: 1;
+    color: var(--amber);
+    font-variant-numeric: tabular-nums;
+  }
+  .stat-cap {
+    font-size: 14px;
+    color: var(--ink-muted);
+    max-width: 22ch;
+  }
+  .stat-src {
+    margin-left: auto;
+    max-width: 24ch;
+    font-size: 13px;
+    color: var(--ink-faint);
+  }
+
+  /* ============ Projects ============ */
+  .proj-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .proj {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+    transition: transform .2s ease, border-color .2s ease;
+  }
+  .proj .repo {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: -.01em;
+  }
+  .proj:hover .repo, .proj:focus-visible .repo { color: var(--amber); }
+  .proj-desc { color: var(--ink-muted); font-size: 16px; }
+  .proj-wide { grid-column: span 2; border-color: rgb(245 158 11 / .35); }
+  .proj-wide .repo { font-size: clamp(1.5rem, 3vw, 2.25rem); }
+  .proj-legacy .legacy-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: .55rem;
+    margin-top: .35rem;
+  }
+  .proj-legacy .legacy-list a {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--ink-muted);
+    overflow-wrap: anywhere;
+    transition: color .2s ease;
+    display: inline-block;
+    padding: .15rem 0;
+  }
+
+  /* ============ Contact ============ */
+  #contacto { text-align: center; align-items: center; }
+  .contact-hook {
+    max-width: 18ch;
+    margin-inline: auto;
+    margin-bottom: 2.5rem;
+  }
+  .contact-hook .amber { color: var(--amber); }
+  .cta-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; }
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+    padding: 1rem 1.75rem;
+    border-radius: 999px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    background: var(--glass);
+    border: 1px solid var(--hairline);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    min-height: 48px;
+    transition: transform .2s ease, border-color .2s ease, color .2s ease;
+  }
+  footer {
+    text-align: center;
+    padding: 3rem 0 4rem;
+    border-top: 1px solid var(--hairline);
+  }
+  footer .verified { color: var(--green); }
+
+  /* ============ Hover (pointer devices) ============ */
+  @media (hover: hover) and (pointer: fine) {
+    .nav-links a:hover { color: var(--amber); }
+    .lang-toggle:hover { border-color: var(--amber); color: var(--ink); }
+    .panel a:hover { color: var(--amber); }
+    .skill:hover, .proj:hover, .cta:hover { transform: scale(1.05); border-color: var(--amber); }
+    .skill:hover { color: var(--amber); }
+    .hero-photo:hover img { filter: grayscale(.65) contrast(1.1) brightness(1); transform: scale(1.03); }
+    .legacy-list a:hover { color: var(--amber); }
+    .cta:hover { color: var(--amber); }
+  }
+
+  /* ============ Motion (gated) ============ */
   @media (prefers-reduced-motion: no-preference) {
-    html { scroll-behavior: smooth; }
-
-    html.preignite .ignition { clip-path: inset(-16px 100% -16px 0); }
-    html.ignited .ignition { animation: ignite .6s cubic-bezier(.16, 1, .3, 1) forwards; }
-    html.ignited .ignition::after { animation: cool 1.5s ease-out forwards; }
-
-    .ledger-rule.rule-unlit { clip-path: inset(-16px 100% -16px 0); }
-    .ledger-rule.lit { animation: ignite .6s cubic-bezier(.16, 1, .3, 1) forwards; }
-    .ledger-rule.lit::after { animation: cool 1.5s ease-out forwards; }
-    .rule-muted.lit::after { animation: none; }
-
     .reveal {
       opacity: 0;
-      transform: translateY(12px);
-      transition: opacity .4s cubic-bezier(.16, 1, .3, 1), transform .4s cubic-bezier(.16, 1, .3, 1);
-      transition-delay: calc(var(--i, 0) * 50ms);
+      transform: translateY(24px);
+      transition: opacity .6s var(--ease), transform .6s var(--ease);
+      transition-delay: calc(var(--i, 0) * 120ms);
     }
-    .reveal[data-reveal="fade"] { transform: none; }
-    .reveal[data-reveal="left"] { transform: translateX(-8px); }
-    .reveal[data-reveal="right"] { transform: translateX(8px); }
     .reveal.in { opacity: 1; transform: none; }
 
-    .tile { transition: border-color .2s ease, transform .14s ease; }
-    .tile:active { transform: scale(.98); }
+    .blob-a { animation: drift-a 24s ease-in-out infinite alternate; }
+    .blob-b { animation: drift-b 30s ease-in-out infinite alternate; }
+    .blob-c { animation: drift-c 26s ease-in-out infinite alternate; }
   }
+  @keyframes drift-a { to { transform: translate(6vw, 5vh) scale(1.1); } }
+  @keyframes drift-b { to { transform: translate(-5vw, -4vh) scale(1.08); } }
+  @keyframes drift-c { to { transform: translate(4vw, -6vh) scale(1.12); } }
 
-  @keyframes ignite {
-    from { clip-path: inset(-16px 100% -16px 0); }
-    to   { clip-path: inset(-16px -16px -16px -16px); }
+  /* ============ Responsive ============ */
+  @media (max-width: 900px) {
+    .nav-links { display: none; }
+    .hamburger { display: block; }
+    .hero-bars { grid-template-columns: 1fr; }
+    .hero-main { grid-template-columns: 1fr; }
+    .hero-photo { min-height: 340px; order: -1; }
+    .exp-grid { grid-template-columns: 1fr; }
+    .stack-grid { grid-template-columns: repeat(2, 1fr); }
+    .stack-stats { flex-direction: column; align-items: flex-start; }
+    .stat-src { margin-left: 0; }
+    .proj-grid { grid-template-columns: 1fr; }
+    .proj-wide { grid-column: auto; }
   }
-  @keyframes cool { 0% { opacity: 1; } 100% { opacity: 0; } }
-
-  /* ============ Mobile collapse ============ */
-  @media (max-width: 767px) {
+  @media (max-width: 560px) {
     body { font-size: 17px; }
-    .eras { grid-template-columns: 1fr; }
-    .bento { grid-template-columns: 1fr; }
-    .ratios { grid-template-columns: 1fr; gap: 1.25rem; }
-    .corners { flex-wrap: wrap; gap: .35rem 1.5rem; }
-  }
-  @media (min-width: 768px) and (max-width: 1023px) {
-    .bento { grid-template-columns: 1fr 1fr; }
-    .tile-wide { grid-column: 1 / -1; }
+    .stack-grid { grid-template-columns: 1fr 1fr; }
   }
 </style>
 </head>
-<body>
+<body id="top">
 
-<header class="wrap corners">
-  <p class="ledger-label">
-    <span lang="es">Sabadell, España</span><span lang="en">Sabadell, Spain</span>
-  </p>
-  <div class="corner-right">
-    <p class="ledger-label">
-      <span lang="es">2008 → hoy</span><span lang="en">2008 → today</span>
-    </p>
+<div class="backdrop" aria-hidden="true">
+  <span class="blob blob-a"></span>
+  <span class="blob blob-b"></span>
+  <span class="blob blob-c"></span>
+</div>
+
+<div class="splash" id="splash" aria-hidden="true">
+  <span class="splash-count" id="splash-count">0</span>
+</div>
+
+<header class="nav" id="nav">
+  <a class="logo" href="#top" aria-label="David García Gordo, inicio">
+    <span class="logo-lines" translate="no"><span>David</span><span>García Gordo</span></span>
+    <span class="logo-sub"><span lang="es">Belcebur · Backend y tooling de IA</span><span lang="en">Belcebur · Backend and AI tooling</span></span>
+  </a>
+  <nav class="nav-links" aria-label="Secciones">
+    <a href="#experiencia"><span lang="es">Experiencia</span><span lang="en">Experience</span></a>
+    <a href="#stack">Stack</a>
+    <a href="#proyectos"><span lang="es">Proyectos</span><span lang="en">Projects</span></a>
+    <a href="#contacto"><span lang="es">Contacto</span><span lang="en">Contact</span></a>
+  </nav>
+  <div class="nav-right">
     <button id="lang-toggle" class="lang-toggle" type="button" aria-pressed="false" aria-label="Switch to English">
       <span class="lt lt-es">ES</span> / <span class="lt lt-en">EN</span>
     </button>
+    <button id="hamburger" class="hamburger" type="button" aria-expanded="false" aria-controls="panel" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </header>
+<nav class="panel" id="panel" aria-label="Menú móvil">
+  <a href="#experiencia"><span lang="es">Experiencia</span><span lang="en">Experience</span></a>
+  <a href="#stack">Stack</a>
+  <a href="#proyectos"><span lang="es">Proyectos</span><span lang="en">Projects</span></a>
+  <a href="#contacto"><span lang="es">Contacto</span><span lang="en">Contact</span></a>
+</nav>
 
-<main class="wrap">
+<main>
 
-  <!-- Hero: prose-as-hero, the name is the image -->
-  <section class="hero js-reveal" data-reveal="fade">
-    <span class="eyebrow" translate="no">Belcebur</span>
-    <div class="name-block">
-      <h1>David García Gordo</h1>
-      <span class="ignition" aria-hidden="true"></span>
+  <!-- ============ S1 HERO ============ -->
+  <section id="hero" class="wrap">
+    <div class="hero-bars">
+      <div class="card bar js-reveal"><span class="dot">·</span> Backend · DDD / CQRS / Hexagonal</div>
+      <div class="card bar js-reveal"><span class="dot">·</span> <span lang="es">AI tooling para Claude Code</span><span lang="en">AI tooling for Claude Code</span></div>
+      <div class="card bar js-reveal"><span class="dot">·</span> <span lang="es">Open source desde 2008</span><span lang="en">Open source since 2008</span></div>
     </div>
-    <div class="bio">
-      <p lang="es">Llevo desde 2008 construyendo software a la vista de todos. Hoy escribo el backend de Classlife Education, una plataforma edtech de Barcelona: DDD, CQRS y arquitectura hexagonal en producción, no en diapositivas.</p>
-      <p lang="en">I've been building software in the open since 2008. Today I write the backend of Classlife Education, an edtech platform in Barcelona: DDD, CQRS and hexagonal architecture in production, not on slides.</p>
-      <p lang="es"><em>Herrero de herramientas.</em> Primero fueron familias de paquetes open source para Zend Framework y Laminas: RBAC con Doctrine, login social OAuth2, APIs CRUD automáticas. Hoy construyo las herramientas que hacen que los agentes de IA trabajen con la disciplina de un equipo senior: <a href="https://github.com/davidgarciagordo/forge-methodology" translate="no">forge-methodology</a> encadena spec, grill adversarial, plan y verificación; <a href="https://github.com/davidgarciagordo/design-review" translate="no">design-review</a> juzga la interfaz con cuatro lentes en un navegador real; <a href="https://github.com/davidgarciagordo/token-economy" translate="no">token-economy</a> recorta el coste multiagente sin perder cobertura.</p>
-      <p lang="en"><em>A blacksmith of tools.</em> First came families of open-source packages for Zend Framework and Laminas: RBAC with Doctrine, OAuth2 social login, automatic CRUD APIs. Today I build the tools that make AI agents work with the discipline of a senior team: <a href="https://github.com/davidgarciagordo/forge-methodology" translate="no">forge-methodology</a> chains spec, adversarial grill, plan and verify; <a href="https://github.com/davidgarciagordo/design-review" translate="no">design-review</a> judges the interface through four lenses in a real browser; <a href="https://github.com/davidgarciagordo/token-economy" translate="no">token-economy</a> cuts multi-agent cost without losing coverage.</p>
-      <p class="alias-note">
-        <span lang="es">Belcebur es el alias con el que firmo código desde 2008.</span><span lang="en">Belcebur is the alias I've signed code with since 2008.</span>
-      </p>
-    </div>
-    <span class="scroll-cue" aria-hidden="true">(scroll)</span>
-  </section>
-
-  <!-- Two-era ledger: the signature element -->
-  <section class="ledger" aria-labelledby="eras-title">
-    <h2 id="eras-title" class="js-reveal" data-reveal="fade">
-      <span lang="es">Dos eras, el mismo oficio</span><span lang="en">Two eras, one craft</span>
-    </h2>
-    <div class="eras">
-      <div class="era era-past js-reveal" data-reveal="left">
-        <p class="era-year" aria-hidden="true">2008</p>
-        <span class="ledger-label" translate="no">Zend Framework / Laminas · 2008-2020</span>
-        <span class="ledger-rule rule-muted js-ignite" aria-hidden="true"></span>
-        <ul>
-          <li>
-            <span class="repo" translate="no"><a href="https://github.com/davidgarciagordo/BelceburBasic">BelceburBasic</a></span>
-            <span class="repo-desc"><span lang="es">la caja de herramientas de ZF2: Doctrine, extensiones Gedmo, helpers</span><span lang="en">the ZF2 toolbox: Doctrine, Gedmo behaviors, view helpers</span></span>
-          </li>
-          <li>
-            <span class="repo" translate="no"><a href="https://github.com/davidgarciagordo/zf3belcebur-rbac">zf3belcebur-rbac</a></span>
-            <span class="repo-desc"><span lang="es">control de acceso por roles integrado con Doctrine ORM</span><span lang="en">role-based access control wired into Doctrine ORM</span></span>
-          </li>
-          <li>
-            <span class="repo" translate="no"><a href="https://github.com/davidgarciagordo/zf3belcebur-oauth2-social-client">zf3belcebur-oauth2-social-client</a></span>
-            <span class="repo-desc"><span lang="es">login social unificado sobre league/oauth2-client</span><span lang="en">unified social login on top of league/oauth2-client</span></span>
-          </li>
-          <li>
-            <span class="repo" translate="no"><a href="https://github.com/davidgarciagordo/zf3belcebur-doctrine-orm-fast-api">zf3belcebur-doctrine-orm-fast-api</a></span>
-            <span class="repo-desc"><span lang="es">API CRUD generada directamente desde las entidades de Doctrine</span><span lang="en">CRUD API generated straight from Doctrine entities</span></span>
-          </li>
-          <li>
-            <span class="repo" translate="no"><a href="https://github.com/davidgarciagordo/lambelcebur-mongodb-logger">lambelcebur-mongodb-logger</a></span>
-            <span class="repo-desc"><span lang="es">trazas de producción a MongoDB para Laminas</span><span lang="en">production logging into MongoDB for Laminas</span></span>
-          </li>
-        </ul>
-      </div>
-      <div class="era era-now js-reveal" data-reveal="right">
-        <p class="era-year" aria-hidden="true">2026</p>
-        <span class="ledger-label">
-          <span lang="es">Tooling para Claude Code · 2026</span><span lang="en">Claude Code tooling · 2026</span>
-        </span>
-        <span class="ledger-rule js-ignite" aria-hidden="true"></span>
-        <ul>
-          <li>
-            <span class="repo" translate="no"><a href="https://github.com/davidgarciagordo/forge-methodology">forge-methodology</a></span>
-            <span class="repo-desc"><span lang="es">spec, grill adversarial, plan y verificación: los agentes se auditan entre sí</span><span lang="en">spec, adversarial grill, plan, verify: agents audit each other</span></span>
-          </li>
-          <li>
-            <span class="repo" translate="no"><a href="https://github.com/davidgarciagordo/design-review">design-review</a></span>
-            <span class="repo-desc"><span lang="es">cuatro lentes de diseño y un veredicto en navegador real</span><span lang="en">four design lenses and a verdict in a real browser</span></span>
-          </li>
-          <li>
-            <span class="repo" translate="no"><a href="https://github.com/davidgarciagordo/token-economy">token-economy</a></span>
-            <span class="repo-desc"><span lang="es">recorta el coste multiagente sin perder cobertura, medido con benchmark</span><span lang="en">cuts multi-agent cost without losing coverage, with measured benchmarks</span></span>
-          </li>
-          <li>
-            <span class="repo" translate="no"><a href="https://github.com/davidgarciagordo/claude-code-setup-optimizer">claude-code-setup-optimizer</a></span>
-            <span class="repo-desc"><span lang="es">audita y afina una instalación de Claude Code</span><span lang="en">audits and tunes a Claude Code setup</span></span>
-          </li>
-          <li>
-            <span class="repo" translate="no"><a href="https://github.com/davidgarciagordo/claude-plugins">claude-plugins</a></span>
-            <span class="repo-desc"><span lang="es">el catálogo público donde viven los cinco plugins</span><span lang="en">the public catalog where the five plugins live</span></span>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- Active work: one bento row + the terminal as the only "image" -->
-  <section class="now" aria-labelledby="now-title">
-    <h2 id="now-title" class="js-reveal" data-reveal="fade">
-      <span lang="es">Ahora</span><span lang="en">Now</span>
-    </h2>
-    <div class="bento">
-      <a class="tile tile-wide js-reveal" href="https://github.com/davidgarciagordo/token-economy">
-        <span class="repo" translate="no">token-economy</span>
-        <p class="tile-desc">
-          <span lang="es">Cada unidad de señal se paga una vez, en el tier más barato que la produce. Medido sobre el pipeline real de design-review.</span><span lang="en">Every distinct unit of signal is paid for once, in the cheapest tier that produces it. Measured on the real design-review pipeline.</span>
+    <div class="hero-main">
+      <div class="hero-name js-reveal">
+        <h1 translate="no">David García Gordo</h1>
+        <p class="hero-headline">
+          <span lang="es">Construyo las herramientas que hacen que los agentes de IA trabajen con la <em>disciplina de un equipo senior</em>.</span><span lang="en">I build the tools that make AI agents work with the <em>discipline of a senior team</em>.</span>
         </p>
-        <div class="ratios">
-          <div>
-            <span class="ratio-num js-count" data-count="2.6" data-decimals="1">×2.6</span>
-            <span class="ratio-cap"><span lang="es">menos tokens por lente de revisión</span><span lang="en">fewer tokens per review lens</span></span>
-          </div>
-          <div>
-            <span class="ratio-num js-count" data-count="1.8" data-decimals="1">×1.8</span>
-            <span class="ratio-cap"><span lang="es">menos en el diagnóstico completo de 4 lentes</span><span lang="en">cheaper across the full 4-lens diagnosis</span></span>
-          </div>
-          <div>
-            <span class="ratio-num js-count" data-count="7" data-decimals="0">×7</span>
-            <span class="ratio-cap"><span lang="es">menos al rediseñar el mismo componente</span><span lang="en">cheaper redesigning the same component</span></span>
-          </div>
+      </div>
+      <figure class="hero-photo js-reveal">
+        <img src="https://avatars.githubusercontent.com/u/8148488?v=4&size=512" width="512" height="512"
+          alt="Foto de perfil de David García Gordo">
+        <span class="hero-tint" aria-hidden="true"></span>
+      </figure>
+    </div>
+    <p class="hero-loc label" translate="no">Barcelona · ES/CA/EN</p>
+  </section>
+
+  <!-- ============ S2 EXPERIENCIA ============ -->
+  <section id="experiencia" class="wrap">
+    <div class="sec-head js-reveal">
+      <span class="label amber"><span lang="es">Trayectoria</span><span lang="en">Career</span></span>
+      <h2><span lang="es">Experiencia</span><span lang="en">Experience</span></h2>
+    </div>
+    <div class="exp-grid">
+      <article class="card exp-span js-reveal exp-role">
+        <span class="exp-when"><span lang="es">Hoy · Barcelona</span><span lang="en">Today · Barcelona</span></span>
+        <h3 translate="no">Classlife Education · Senior Backend Engineer</h3>
+        <p class="exp-desc">
+          <span lang="es">Plataforma edtech. DDD, CQRS y arquitectura hexagonal con PHP 8 en producción, no en diapositivas.</span><span lang="en">Edtech platform. DDD, CQRS and hexagonal architecture with PHP 8 in production, not on slides.</span>
+        </p>
+      </article>
+      <article class="card js-reveal exp-role">
+        <span class="exp-when" translate="no">2008 - 2020</span>
+        <h3><span lang="es">Open source Zend / Laminas</span><span lang="en">Open source Zend / Laminas</span></h3>
+        <p class="exp-desc">
+          <span lang="es">Familias de paquetes: RBAC con Doctrine, login social OAuth2, API CRUD automática y logger a MongoDB.</span><span lang="en">Package families: Doctrine RBAC, OAuth2 social login, automatic CRUD API and MongoDB logger.</span>
+        </p>
+      </article>
+      <article class="card js-reveal exp-role">
+        <span class="exp-when" translate="no">2026</span>
+        <h3><span lang="es">Tooling de IA</span><span lang="en">AI tooling</span></h3>
+        <p class="exp-desc">
+          <span lang="es">La nueva era: herramientas que hacen que los agentes de IA trabajen con disciplina de equipo senior.</span><span lang="en">The new era: tools that make AI agents work with senior team discipline.</span>
+        </p>
+      </article>
+      <article class="card exp-span js-reveal exp-role">
+        <span class="exp-when amber"><span lang="es">Formación</span><span lang="en">Education</span></span>
+        <h3 translate="no">Escoles Universitàries Gimbernat (UAB) · 2007 - 2012</h3>
+        <p class="exp-desc">
+          <span lang="es">Ingeniería técnica en informática y multimedia. Idiomas: español y catalán nativos, inglés básico.</span><span lang="en">Technical engineering in computing and multimedia. Languages: native Spanish and Catalan, basic English.</span>
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ S3 STACK ============ -->
+  <section id="stack" class="wrap">
+    <div class="sec-head js-reveal">
+      <span class="label amber"><span lang="es">Herramientas del oficio</span><span lang="en">Tools of the trade</span></span>
+      <h2>Stack</h2>
+    </div>
+    <div class="stack-grid">
+      <div class="card skill js-reveal" translate="no">PHP 8</div>
+      <div class="card skill js-reveal" translate="no">DDD</div>
+      <div class="card skill js-reveal" translate="no">CQRS</div>
+      <div class="card skill js-reveal"><span lang="es">Arquitectura Hexagonal</span><span lang="en">Hexagonal Architecture</span></div>
+      <div class="card skill js-reveal" translate="no">SOLID</div>
+      <div class="card skill js-reveal" translate="no">Doctrine ORM</div>
+      <div class="card skill js-reveal" translate="no">Zend / Laminas</div>
+      <div class="card skill js-reveal"><span lang="es">Testing</span><span lang="en">Testing</span></div>
+      <div class="card skill js-reveal" translate="no">MySQL / MongoDB</div>
+      <div class="card skill js-reveal" translate="no">Git / CI</div>
+      <div class="card skill js-reveal" translate="no">Claude Code</div>
+      <div class="card skill js-reveal"><span lang="es">Orquestación multiagente</span><span lang="en">Multi-agent orchestration</span></div>
+      <div class="card skill js-reveal" translate="no">MCP / plugins</div>
+      <div class="card stack-stats js-reveal">
+        <div class="stat">
+          <span class="stat-num js-count" data-count="2.6" data-decimals="1">×2.6</span>
+          <span class="stat-cap"><span lang="es">menos tokens por lente de revisión</span><span lang="en">fewer tokens per review lens</span></span>
         </div>
-      </a>
-      <a class="tile js-reveal" href="https://github.com/davidgarciagordo/design-review">
-        <span class="repo" translate="no">design-review</span>
-        <p class="tile-desc">
-          <span lang="es">Cuatro lentes de diseño y un veredicto explícito en navegador real: alive, templated o flat.</span><span lang="en">Four design lenses and an explicit verdict in a real browser: alive, templated or flat.</span>
+        <div class="stat">
+          <span class="stat-num js-count" data-count="1.8" data-decimals="1">×1.8</span>
+          <span class="stat-cap"><span lang="es">menos en el diagnóstico completo</span><span lang="en">cheaper across the full diagnosis</span></span>
+        </div>
+        <div class="stat">
+          <span class="stat-num js-count" data-count="7" data-decimals="0">×7</span>
+          <span class="stat-cap"><span lang="es">menos en la segunda pasada</span><span lang="en">cheaper on the second pass</span></span>
+        </div>
+        <p class="stat-src">
+          <span lang="es">Medido en <span translate="no">token-economy</span>, mi plugin de optimización.</span><span lang="en">Measured in <span translate="no">token-economy</span>, my optimization plugin.</span>
         </p>
-      </a>
-      <a class="tile js-reveal" href="https://github.com/davidgarciagordo/forge-methodology">
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ S4 PROYECTOS ============ -->
+  <section id="proyectos" class="wrap">
+    <div class="sec-head js-reveal">
+      <span class="label amber"><span lang="es">Open source 2026</span><span lang="en">Open source 2026</span></span>
+      <h2><span lang="es">Proyectos</span><span lang="en">Projects</span></h2>
+    </div>
+    <div class="proj-grid">
+      <a class="card proj proj-wide js-reveal" href="https://github.com/davidgarciagordo/forge-methodology">
         <span class="repo" translate="no">forge-methodology</span>
-        <p class="tile-desc">
-          <span lang="es">Del spec al verify con un grill adversarial en medio: los agentes se auditan entre sí.</span><span lang="en">From spec to verify with an adversarial grill in between: agents audit each other.</span>
-        </p>
+        <span class="proj-desc"><span lang="es">Del spec al verify con un grill adversarial en medio: los agentes se auditan entre sí.</span><span lang="en">From spec to verify with an adversarial grill in between: agents audit each other.</span></span>
+      </a>
+      <a class="card proj js-reveal" href="https://github.com/davidgarciagordo/design-review">
+        <span class="repo" translate="no">design-review</span>
+        <span class="proj-desc"><span lang="es">Cuatro lentes de diseño y un veredicto en navegador real.</span><span lang="en">Four design lenses and a verdict in a real browser.</span></span>
+      </a>
+      <a class="card proj js-reveal" href="https://github.com/davidgarciagordo/token-economy">
+        <span class="repo" translate="no">token-economy</span>
+        <span class="proj-desc"><span lang="es">Recorta el coste multiagente sin perder cobertura, medido con benchmark.</span><span lang="en">Cuts multi-agent cost without losing coverage, with measured benchmarks.</span></span>
+      </a>
+      <a class="card proj js-reveal" href="https://github.com/davidgarciagordo/working-methods">
+        <span class="repo" translate="no">working-methods</span>
+        <span class="proj-desc"><span lang="es">Flujos de trabajo y orquestación multiagente como comandos.</span><span lang="en">Workflows and multi-agent orchestration as commands.</span></span>
+      </a>
+      <a class="card proj js-reveal" href="https://github.com/davidgarciagordo/automations">
+        <span class="repo" translate="no">automations</span>
+        <span class="proj-desc"><span lang="es">Automatiza y afina tu instalación de Claude Code.</span><span lang="en">Automates and tunes your Claude Code setup.</span></span>
+      </a>
+      <div class="card proj proj-legacy js-reveal">
+        <span class="repo"><span lang="es">Era Laminas · 2008 - 2020</span><span lang="en">Laminas era · 2008 - 2020</span></span>
+        <ul class="legacy-list" translate="no">
+          <li><a href="https://github.com/davidgarciagordo/BelceburBasic">BelceburBasic</a></li>
+          <li><a href="https://github.com/davidgarciagordo/zf3belcebur-rbac">zf3belcebur-rbac</a></li>
+          <li><a href="https://github.com/davidgarciagordo/zf3belcebur-oauth2-social-client">zf3belcebur-oauth2-social-client</a></li>
+          <li><a href="https://github.com/davidgarciagordo/zf3belcebur-doctrine-orm-fast-api">zf3belcebur-doctrine-orm-fast-api</a></li>
+          <li><a href="https://github.com/davidgarciagordo/lambelcebur-mongodb-logger">lambelcebur-mongodb-logger</a></li>
+        </ul>
+      </div>
+      <a class="card proj proj-wide js-reveal" href="https://github.com/davidgarciagordo/claude-plugins">
+        <span class="repo" translate="no">claude-plugins</span>
+        <span class="proj-desc"><span lang="es">El catálogo público donde viven los plugins.</span><span lang="en">The public catalog where the plugins live.</span></span>
       </a>
     </div>
-    <figure class="terminal js-reveal" data-reveal="fade">
-      <pre translate="no"><span class="t-cmd">$ bash tests/context-pack.test.sh</span>
-  skip T1 (set BASELINE=… to enable)
-  ok   T2 JSON shape (R2-R5 fields)
-  ok   T3 JSON deterministic
-  ok   T4 --out + --json-out both land
-  ok   T5 flags-anywhere equivalence
-  ok   T6 targetEmbedding=outline above cap
-  ok   T7 --json-out alone writes JSON
-  ok   T8 missing target: exit 2, stale json untouched
-  ok   T9 no-json run deletes stale default json
-  ok   T10 diverted json-out deletes stale default
-  ok   T11 default json as target survives
-  ok   T12 --root + --json (default json at root)
+  </section>
 
-<span class="t-pass">pass=11 fail=0</span></pre>
-      <figcaption class="ledger-label">
-        <span lang="es">salida real del harness de tests de token-economy</span><span lang="en">real output from the token-economy test harness</span>
-      </figcaption>
-    </figure>
+  <!-- ============ S5 CONTACT ============ -->
+  <section id="contacto" class="wrap">
+    <span class="label amber js-reveal"><span lang="es">Lo que viene</span><span lang="en">What comes next</span></span>
+    <h2 class="contact-hook js-reveal">
+      <span lang="es">Lo que viene también se <span class="amber">forja a la vista</span></span><span lang="en">What comes next gets <span class="amber">forged in the open</span> too</span>
+    </h2>
+    <div class="cta-row js-reveal">
+      <a class="cta" href="https://github.com/davidgarciagordo">GitHub</a>
+      <a class="cta" href="https://www.linkedin.com/in/davidgarciagordo">LinkedIn</a>
+    </div>
   </section>
 
 </main>
 
-<footer class="wrap js-reveal" data-reveal="fade">
-  <p class="closing">
-    <span lang="es">Dieciocho años de código en abierto. Lo que viene también se forja a la vista.</span><span lang="en">Eighteen years of public code. What comes next gets forged in the open too.</span>
+<footer class="wrap">
+  <p class="label">
+    <span translate="no">Belcebur · 2008 → </span><span lang="es">hoy</span><span lang="en">today</span>
+    <span class="verified" aria-hidden="true"> ✓</span>
   </p>
-  <div class="foot-row">
-    <nav class="foot-links" aria-label="Enlaces">
-      <a href="https://github.com/davidgarciagordo">GitHub</a>
-      <a href="https://www.linkedin.com/in/davidgarciagordo">LinkedIn</a>
-    </nav>
-    <p class="ledger-label">© 2026 David García Gordo</p>
-  </div>
 </footer>
 
 <script>
   (function () {
     var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    /* ---- Language toggle (independent of motion) ---- */
+    /* ---- Splash ---- */
+    var splash = document.getElementById("splash");
+    var splashCount = document.getElementById("splash-count");
+    if (!reduce && splash) {
+      var start = null, DUR = 2000;
+      function tick(t) {
+        if (start === null) start = t;
+        var p = Math.min((t - start) / DUR, 1);
+        splashCount.textContent = Math.round(p * 100);
+        if (p < 1) requestAnimationFrame(tick);
+        else setTimeout(function () {
+          splash.classList.add("fade");
+          splash.addEventListener("transitionend", function () {
+            splash.remove();
+            document.documentElement.classList.remove("splash-active");
+          }, { once: true });
+        }, 200);
+      }
+      requestAnimationFrame(tick);
+    }
+
+    /* ---- Language toggle ---- */
     var DESC = {
-      es: "David García Gordo, Belcebur. Desde 2008: backend PHP con DDD y arquitectura hexagonal, open source para Zend/Laminas y tooling de IA para Claude Code.",
-      en: "David García Gordo, Belcebur. Building in the open since 2008: PHP backend with DDD, open source for Zend/Laminas, AI tooling for Claude Code."
+      es: "David García Gordo, Belcebur. Backend PHP con DDD, CQRS y arquitectura hexagonal, y tooling de IA para Claude Code. Open source desde 2008.",
+      en: "David García Gordo, Belcebur. PHP backend with DDD, CQRS and hexagonal architecture, and AI tooling for Claude Code. Open source since 2008."
     };
     var btn = document.getElementById("lang-toggle");
     var meta = document.querySelector('meta[name="description"]');
-    var nav = document.querySelector(".foot-links");
-
     function setLang(lang, persist) {
       document.documentElement.lang = lang;
       btn.setAttribute("aria-pressed", lang === "en" ? "true" : "false");
       btn.setAttribute("aria-label", lang === "en" ? "Cambiar a español" : "Switch to English");
       if (meta) meta.setAttribute("content", DESC[lang]);
-      if (nav) nav.setAttribute("aria-label", lang === "en" ? "Links" : "Enlaces");
-      if (persist) {
-        try { localStorage.setItem("lang", lang); } catch (e) {}
-      }
+      if (persist) { try { localStorage.setItem("lang", lang); } catch (e) {} }
     }
-
     setLang(document.documentElement.lang === "en" ? "en" : "es", false);
     btn.addEventListener("click", function () {
       setLang(document.documentElement.lang === "en" ? "es" : "en", true);
     });
 
-    /* ---- Motion: reveals, era rules, count-up (all gated) ---- */
+    /* ---- Mobile panel ---- */
+    var nav = document.getElementById("nav");
+    var burger = document.getElementById("hamburger");
+    var panel = document.getElementById("panel");
+    function closePanel() {
+      nav.classList.remove("open");
+      burger.setAttribute("aria-expanded", "false");
+      document.body.style.overflow = "";
+    }
+    burger.addEventListener("click", function () {
+      var open = nav.classList.toggle("open");
+      burger.setAttribute("aria-expanded", open ? "true" : "false");
+      document.body.style.overflow = open ? "hidden" : "";
+    });
+    panel.querySelectorAll("a").forEach(function (a) {
+      a.addEventListener("click", closePanel);
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && nav.classList.contains("open")) closePanel();
+    });
+
+    /* ---- Motion: reveals + count-up (gated) ---- */
     if (reduce || !("IntersectionObserver" in window)) return;
 
     var reveals = document.querySelectorAll(".js-reveal");
-    var rules = document.querySelectorAll(".js-ignite");
-    var counts = document.querySelectorAll(".js-count");
-
     var groupIndex = new Map();
     reveals.forEach(function (el) {
       var parent = el.parentElement;
@@ -655,7 +855,6 @@
       groupIndex.set(parent, i + 1);
       el.classList.add("reveal");
     });
-    rules.forEach(function (el) { el.classList.add("rule-unlit"); });
 
     function countUp(el) {
       var target = parseFloat(el.getAttribute("data-count"));
@@ -663,7 +862,7 @@
       var t0 = null;
       function frame(t) {
         if (t0 === null) t0 = t;
-        var p = Math.min((t - t0) / 600, 1);
+        var p = Math.min((t - t0) / 900, 1);
         var eased = 1 - Math.pow(1 - p, 3);
         el.textContent = "×" + (target * eased).toFixed(decimals);
         if (p < 1) requestAnimationFrame(frame);
@@ -675,19 +874,14 @@
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) return;
         var el = entry.target;
+        el.classList.add("in");
+        el.querySelectorAll(".js-count").forEach(countUp);
         if (el.classList.contains("js-count")) countUp(el);
-        else {
-          el.classList.add("in");
-          // The clipped rules have zero box area (clip-path inset collapses them), so the
-          // observer can never see them intersect — light them from their revealed ancestor.
-          el.querySelectorAll(".js-ignite").forEach(function (r) { r.classList.add("lit"); });
-        }
         io.unobserve(el);
       });
-    }, { threshold: 0.2 });
+    }, { threshold: 0.15 });
 
     reveals.forEach(function (el) { io.observe(el); });
-    counts.forEach(function (el) { io.observe(el); });
   })();
 </script>
 
