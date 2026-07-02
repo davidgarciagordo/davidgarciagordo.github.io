@@ -1,9 +1,695 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Belcebur HomePage</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#141210">
+<meta name="description" content="David García Gordo, Belcebur. Desde 2008: backend PHP con DDD y arquitectura hexagonal, open source para Zend/Laminas y tooling de IA para Claude Code.">
+<title>David García Gordo · Belcebur</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1c1.2 3.6-3.6 5-3.6 8.4a3.6 3.6 0 0 0 7.2 0C11.6 6 6.8 4.6 8 1z' fill='%23E8842C'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,900&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+  (function () {
+    try {
+      var l = localStorage.getItem("lang");
+      if (l === "en" || l === "es") document.documentElement.lang = l;
+    } catch (e) {}
+    if (window.matchMedia && matchMedia("(prefers-reduced-motion: no-preference)").matches) {
+      document.documentElement.classList.add("preignite");
+      var floor = new Promise(function (r) { setTimeout(r, 350); });
+      var fonts = (document.fonts && document.fonts.ready) || Promise.resolve();
+      Promise.all([fonts, floor]).then(function () {
+        requestAnimationFrame(function () {
+          document.documentElement.classList.add("ignited");
+        });
+      });
+    }
+  })();
+</script>
+<style>
+  /* ============ Tokens (token-plan, 6 hex) ============ */
+  :root {
+    --canvas:    #141210;
+    --surface:   #1D1A16;
+    --ink:       #EDE6DA;
+    --ink-muted: #8F8779;
+    --ember:     #E8842C;
+    --ember-hot: #FFB25E;
+    --hairline:  rgb(237 230 218 / .10);
+    --radius:    16px;
+    --measure:   640px;
+    --font-display: "Fraunces", Georgia, serif;
+    --font-prose:   "Source Serif 4", Georgia, serif;
+    --font-ledger:  "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--canvas);
+    color: var(--ink);
+    font-family: var(--font-prose);
+    font-weight: 400;
+    font-size: 19px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ============ Language switching ============ */
+  html[lang="es"] [lang="en"] { display: none; }
+  html[lang="en"] [lang="es"] { display: none; }
+
+  .wrap {
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 5vw, 4rem);
+  }
+
+  /* ============ Type roles ============ */
+  .ledger-label {
+    font-family: var(--font-ledger);
+    font-weight: 500;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    color: var(--ink-muted);
+  }
+
+  a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: color-mix(in srgb, var(--ink) 35%, transparent);
+    text-underline-offset: 3px;
+    transition: text-decoration-color .2s ease, color .2s ease;
+  }
+  a:active { text-decoration-color: var(--ember-hot); }
+
+  a, button { touch-action: manipulation; }
+
+  :focus-visible {
+    outline: 2px solid var(--ember);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection { background: var(--ember); color: var(--canvas); }
+
+  /* ============ Header: corner-anchored mono micro-labels ============ */
+  .corners {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding-top: 1.5rem;
+  }
+  .corner-right {
+    display: flex;
+    align-items: baseline;
+    gap: 1.5rem;
+  }
+
+  .lang-toggle {
+    font-family: var(--font-ledger);
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    color: var(--ink-muted);
+    padding: .5rem;
+    margin: -.5rem;
+  }
+  .lang-toggle .lt { transition: color .2s ease; }
+  html[lang="es"] .lt-es,
+  html[lang="en"] .lt-en { color: var(--ink); }
+
+  /* ============ Hero: prose-as-hero ============ */
+  .hero {
+    position: relative;
+    padding-top: clamp(3rem, 9vh, 5.5rem);
+    padding-bottom: clamp(4rem, 10vh, 7rem);
+  }
+
+  .hero .eyebrow {
+    font-family: var(--font-ledger);
+    font-weight: 500;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    color: var(--ink-muted);
+    display: block;
+    margin-bottom: 1.25rem;
+  }
+
+  .name-block { display: inline-block; }
+
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(3rem, 8vw, 6rem);
+    letter-spacing: -.04em;
+    line-height: .95;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+
+  /* Ignition underline: draws once after fonts.ready (350ms floor), glow cools hot -> ember.
+     Draw is clip-path based (negative insets keep the glow halo unclipped, no scaleX distortion). */
+  .ignition {
+    position: relative;
+    display: block;
+    height: 3px;
+    margin-top: 1.1rem;
+    background: var(--ember);
+  }
+  .ignition::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--ember-hot);
+    box-shadow: 0 0 14px 2px var(--ember-hot);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .bio {
+    max-width: var(--measure);
+    margin-top: 2.5rem;
+    font-weight: 300;
+  }
+  .bio p + p { margin-top: 1.25rem; }
+  .bio em { font-style: italic; font-weight: 400; color: var(--ink); }
+
+  .alias-note {
+    margin-top: 1.5rem;
+    font-size: 15px;
+    color: var(--ink-muted);
+  }
+
+  .scroll-cue {
+    position: absolute;
+    right: 0;
+    bottom: 1.5rem;
+    font-family: var(--font-ledger);
+    font-size: 12px;
+    letter-spacing: .12em;
+    color: var(--ink-muted);
+  }
+
+  /* ============ Two-era ledger (signature element) ============ */
+  .ledger { padding-block: clamp(4rem, 10vh, 7rem); border-top: 1px solid var(--hairline); }
+
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+    letter-spacing: -.02em;
+    line-height: 1.05;
+    margin-bottom: 3rem;
+    text-wrap: balance;
+  }
+
+  .eras {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    gap: clamp(2rem, 6vw, 5rem);
+  }
+
+  .era-year {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    letter-spacing: -.04em;
+    line-height: .9;
+  }
+  .era .ledger-label { display: block; margin-top: .75rem; }
+
+  .ledger-rule {
+    position: relative;
+    display: block;
+    height: 2px;
+    width: 4.5rem;
+    margin-top: 1rem;
+    background: var(--ember);
+  }
+  .ledger-rule::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--ember-hot);
+    box-shadow: 0 0 12px 2px var(--ember-hot);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .rule-muted { background: color-mix(in srgb, var(--ink-muted) 60%, transparent); }
+  .rule-muted::after { content: none; }
+
+  .era ul { list-style: none; margin-top: 2.25rem; }
+  .era li + li { margin-top: 1.4rem; }
+
+  .repo {
+    font-family: var(--font-ledger);
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: .04em;
+    overflow-wrap: anywhere;
+  }
+  .repo a,
+  .foot-links a {
+    display: inline-block;
+    padding-block: .4rem;
+    margin-block: -.4rem;
+  }
+  .repo-desc {
+    display: block;
+    margin-top: .3rem;
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--ink-muted);
+    max-width: 34ch;
+  }
+
+  /* Old era recedes: muted ink, sits lower on desktop */
+  .era-past { color: var(--ink-muted); }
+  .era-past .era-year { color: var(--ink-muted); }
+  .era-past .repo a { color: var(--ink-muted); }
+  @media (min-width: 768px) {
+    .era-past { padding-top: 3.5rem; }
+  }
+
+  .era-now .era-year { color: var(--ink); }
+  .era-now .ledger-label { color: var(--ink); }
+
+  /* ============ Bento row: active work ============ */
+  .now { padding-block: clamp(4rem, 10vh, 7rem); border-top: 1px solid var(--hairline); }
+
+  .bento {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 16px;
+  }
+
+  .tile {
+    display: block;
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    padding: 2rem;
+    text-decoration: none;
+    transition: border-color .2s ease;
+  }
+  .tile-wide { border-color: color-mix(in srgb, var(--ember) 35%, transparent); }
+
+  .tile .repo { display: block; transition: color .2s ease; }
+  .tile-desc {
+    margin-top: .75rem;
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--ink-muted);
+  }
+
+  .ratios {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    justify-content: start;
+    gap: clamp(1.5rem, 4vw, 3rem);
+    margin-top: 2.25rem;
+  }
+  .ratio-num {
+    font-family: var(--font-ledger);
+    font-weight: 500;
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    line-height: 1;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .ratio-cap {
+    display: block;
+    margin-top: .5rem;
+    font-family: var(--font-ledger);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    color: var(--ink-muted);
+    max-width: 24ch;
+  }
+
+  /* ============ Terminal: the only "image" ============ */
+  .terminal { margin-top: 16px; }
+  .terminal pre {
+    background: color-mix(in srgb, var(--canvas) 80%, black);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    font-family: var(--font-ledger);
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--ink-muted);
+    overflow-x: auto;
+  }
+  .terminal .t-cmd,
+  .terminal .t-pass { color: var(--ink); }
+  .terminal figcaption { margin-top: .75rem; }
+
+  /* ============ Footer ============ */
+  footer {
+    border-top: 1px solid var(--hairline);
+    padding-block: 3rem;
+  }
+  .closing {
+    max-width: var(--measure);
+    font-weight: 300;
+    margin-bottom: 2.25rem;
+  }
+  .foot-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1.5rem;
+  }
+  .foot-links { display: flex; gap: 2rem; }
+  .foot-links a { font-family: var(--font-ledger); font-size: 13px; letter-spacing: .04em; }
+
+  /* ============ Hover (pointer devices only) ============ */
+  @media (hover: hover) and (pointer: fine) {
+    a:hover { text-decoration-color: var(--ember); color: var(--ember); }
+    .era-past .repo a:hover { color: var(--ember); }
+    .tile:hover { border-color: var(--ember); color: var(--ink); }
+    .tile:hover .repo { color: var(--ember); }
+  }
+
+  /* ============ Motion (all gated behind reduced-motion) ============ */
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+
+    html.preignite .ignition { clip-path: inset(-16px 100% -16px 0); }
+    html.ignited .ignition { animation: ignite .6s cubic-bezier(.16, 1, .3, 1) forwards; }
+    html.ignited .ignition::after { animation: cool 1.5s ease-out forwards; }
+
+    .ledger-rule.rule-unlit { clip-path: inset(-16px 100% -16px 0); }
+    .ledger-rule.lit { animation: ignite .6s cubic-bezier(.16, 1, .3, 1) forwards; }
+    .ledger-rule.lit::after { animation: cool 1.5s ease-out forwards; }
+    .rule-muted.lit::after { animation: none; }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity .4s cubic-bezier(.16, 1, .3, 1), transform .4s cubic-bezier(.16, 1, .3, 1);
+      transition-delay: calc(var(--i, 0) * 50ms);
+    }
+    .reveal[data-reveal="fade"] { transform: none; }
+    .reveal[data-reveal="left"] { transform: translateX(-8px); }
+    .reveal[data-reveal="right"] { transform: translateX(8px); }
+    .reveal.in { opacity: 1; transform: none; }
+
+    .tile { transition: border-color .2s ease, transform .14s ease; }
+    .tile:active { transform: scale(.98); }
+  }
+
+  @keyframes ignite {
+    from { clip-path: inset(-16px 100% -16px 0); }
+    to   { clip-path: inset(-16px -16px -16px -16px); }
+  }
+  @keyframes cool { 0% { opacity: 1; } 100% { opacity: 0; } }
+
+  /* ============ Mobile collapse ============ */
+  @media (max-width: 767px) {
+    body { font-size: 17px; }
+    .eras { grid-template-columns: 1fr; }
+    .bento { grid-template-columns: 1fr; }
+    .ratios { grid-template-columns: 1fr; gap: 1.25rem; }
+    .corners { flex-wrap: wrap; gap: .35rem 1.5rem; }
+  }
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .bento { grid-template-columns: 1fr 1fr; }
+    .tile-wide { grid-column: 1 / -1; }
+  }
+</style>
 </head>
 <body>
+
+<header class="wrap corners">
+  <p class="ledger-label">
+    <span lang="es">Sabadell, España</span><span lang="en">Sabadell, Spain</span>
+  </p>
+  <div class="corner-right">
+    <p class="ledger-label">
+      <span lang="es">2008 → hoy</span><span lang="en">2008 → today</span>
+    </p>
+    <button id="lang-toggle" class="lang-toggle" type="button" aria-pressed="false" aria-label="Switch to English">
+      <span class="lt lt-es">ES</span> / <span class="lt lt-en">EN</span>
+    </button>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- Hero: prose-as-hero, the name is the image -->
+  <section class="hero js-reveal" data-reveal="fade">
+    <span class="eyebrow" translate="no">Belcebur</span>
+    <div class="name-block">
+      <h1>David García Gordo</h1>
+      <span class="ignition" aria-hidden="true"></span>
+    </div>
+    <div class="bio">
+      <p lang="es">Llevo desde 2008 construyendo software a la vista de todos. Hoy escribo el backend de Classlife Education, una plataforma edtech de Barcelona: DDD, CQRS y arquitectura hexagonal en producción, no en diapositivas.</p>
+      <p lang="en">I've been building software in the open since 2008. Today I write the backend of Classlife Education, an edtech platform in Barcelona: DDD, CQRS and hexagonal architecture in production, not on slides.</p>
+      <p lang="es"><em>Herrero de herramientas.</em> Primero fueron familias de paquetes open source para Zend Framework y Laminas: RBAC con Doctrine, login social OAuth2, APIs CRUD automáticas. Hoy construyo las herramientas que hacen que los agentes de IA trabajen con la disciplina de un equipo senior: <a href="https://github.com/davidgarciagordo/forge-methodology" translate="no">forge-methodology</a> encadena spec, grill adversarial, plan y verificación; <a href="https://github.com/davidgarciagordo/design-review" translate="no">design-review</a> juzga la interfaz con cuatro lentes en un navegador real; <a href="https://github.com/davidgarciagordo/token-economy" translate="no">token-economy</a> recorta el coste multiagente sin perder cobertura.</p>
+      <p lang="en"><em>A blacksmith of tools.</em> First came families of open-source packages for Zend Framework and Laminas: RBAC with Doctrine, OAuth2 social login, automatic CRUD APIs. Today I build the tools that make AI agents work with the discipline of a senior team: <a href="https://github.com/davidgarciagordo/forge-methodology" translate="no">forge-methodology</a> chains spec, adversarial grill, plan and verify; <a href="https://github.com/davidgarciagordo/design-review" translate="no">design-review</a> judges the interface through four lenses in a real browser; <a href="https://github.com/davidgarciagordo/token-economy" translate="no">token-economy</a> cuts multi-agent cost without losing coverage.</p>
+      <p class="alias-note">
+        <span lang="es">Belcebur es el alias con el que firmo código desde 2008.</span><span lang="en">Belcebur is the alias I've signed code with since 2008.</span>
+      </p>
+    </div>
+    <span class="scroll-cue" aria-hidden="true">(scroll)</span>
+  </section>
+
+  <!-- Two-era ledger: the signature element -->
+  <section class="ledger" aria-labelledby="eras-title">
+    <h2 id="eras-title" class="js-reveal" data-reveal="fade">
+      <span lang="es">Dos eras, el mismo oficio</span><span lang="en">Two eras, one craft</span>
+    </h2>
+    <div class="eras">
+      <div class="era era-past js-reveal" data-reveal="left">
+        <p class="era-year" aria-hidden="true">2008</p>
+        <span class="ledger-label" translate="no">Zend Framework / Laminas · 2008-2020</span>
+        <span class="ledger-rule rule-muted js-ignite" aria-hidden="true"></span>
+        <ul>
+          <li>
+            <span class="repo" translate="no"><a href="https://github.com/davidgarciagordo/BelceburBasic">BelceburBasic</a></span>
+            <span class="repo-desc"><span lang="es">la caja de herramientas de ZF2: Doctrine, extensiones Gedmo, helpers</span><span lang="en">the ZF2 toolbox: Doctrine, Gedmo behaviors, view helpers</span></span>
+          </li>
+          <li>
+            <span class="repo" translate="no"><a href="https://github.com/davidgarciagordo/zf3belcebur-rbac">zf3belcebur-rbac</a></span>
+            <span class="repo-desc"><span lang="es">control de acceso por roles integrado con Doctrine ORM</span><span lang="en">role-based access control wired into Doctrine ORM</span></span>
+          </li>
+          <li>
+            <span class="repo" translate="no"><a href="https://github.com/davidgarciagordo/zf3belcebur-oauth2-social-client">zf3belcebur-oauth2-social-client</a></span>
+            <span class="repo-desc"><span lang="es">login social unificado sobre league/oauth2-client</span><span lang="en">unified social login on top of league/oauth2-client</span></span>
+          </li>
+          <li>
+            <span class="repo" translate="no"><a href="https://github.com/davidgarciagordo/zf3belcebur-doctrine-orm-fast-api">zf3belcebur-doctrine-orm-fast-api</a></span>
+            <span class="repo-desc"><span lang="es">API CRUD generada directamente desde las entidades de Doctrine</span><span lang="en">CRUD API generated straight from Doctrine entities</span></span>
+          </li>
+          <li>
+            <span class="repo" translate="no"><a href="https://github.com/davidgarciagordo/lambelcebur-mongodb-logger">lambelcebur-mongodb-logger</a></span>
+            <span class="repo-desc"><span lang="es">trazas de producción a MongoDB para Laminas</span><span lang="en">production logging into MongoDB for Laminas</span></span>
+          </li>
+        </ul>
+      </div>
+      <div class="era era-now js-reveal" data-reveal="right">
+        <p class="era-year" aria-hidden="true">2026</p>
+        <span class="ledger-label">
+          <span lang="es">Tooling para Claude Code · 2026</span><span lang="en">Claude Code tooling · 2026</span>
+        </span>
+        <span class="ledger-rule js-ignite" aria-hidden="true"></span>
+        <ul>
+          <li>
+            <span class="repo" translate="no"><a href="https://github.com/davidgarciagordo/forge-methodology">forge-methodology</a></span>
+            <span class="repo-desc"><span lang="es">spec, grill adversarial, plan y verificación: los agentes se auditan entre sí</span><span lang="en">spec, adversarial grill, plan, verify: agents audit each other</span></span>
+          </li>
+          <li>
+            <span class="repo" translate="no"><a href="https://github.com/davidgarciagordo/design-review">design-review</a></span>
+            <span class="repo-desc"><span lang="es">cuatro lentes de diseño y un veredicto en navegador real</span><span lang="en">four design lenses and a verdict in a real browser</span></span>
+          </li>
+          <li>
+            <span class="repo" translate="no"><a href="https://github.com/davidgarciagordo/token-economy">token-economy</a></span>
+            <span class="repo-desc"><span lang="es">recorta el coste multiagente sin perder cobertura, medido con benchmark</span><span lang="en">cuts multi-agent cost without losing coverage, with measured benchmarks</span></span>
+          </li>
+          <li>
+            <span class="repo" translate="no"><a href="https://github.com/davidgarciagordo/claude-code-setup-optimizer">claude-code-setup-optimizer</a></span>
+            <span class="repo-desc"><span lang="es">audita y afina una instalación de Claude Code</span><span lang="en">audits and tunes a Claude Code setup</span></span>
+          </li>
+          <li>
+            <span class="repo" translate="no"><a href="https://github.com/davidgarciagordo/claude-plugins">claude-plugins</a></span>
+            <span class="repo-desc"><span lang="es">el catálogo público donde viven los cinco plugins</span><span lang="en">the public catalog where the five plugins live</span></span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Active work: one bento row + the terminal as the only "image" -->
+  <section class="now" aria-labelledby="now-title">
+    <h2 id="now-title" class="js-reveal" data-reveal="fade">
+      <span lang="es">Ahora</span><span lang="en">Now</span>
+    </h2>
+    <div class="bento">
+      <a class="tile tile-wide js-reveal" href="https://github.com/davidgarciagordo/token-economy">
+        <span class="repo" translate="no">token-economy</span>
+        <p class="tile-desc">
+          <span lang="es">Cada unidad de señal se paga una vez, en el tier más barato que la produce. Medido sobre el pipeline real de design-review.</span><span lang="en">Every distinct unit of signal is paid for once, in the cheapest tier that produces it. Measured on the real design-review pipeline.</span>
+        </p>
+        <div class="ratios">
+          <div>
+            <span class="ratio-num js-count" data-count="2.6" data-decimals="1">×2.6</span>
+            <span class="ratio-cap"><span lang="es">menos tokens por lente de revisión</span><span lang="en">fewer tokens per review lens</span></span>
+          </div>
+          <div>
+            <span class="ratio-num js-count" data-count="1.8" data-decimals="1">×1.8</span>
+            <span class="ratio-cap"><span lang="es">menos en el diagnóstico completo de 4 lentes</span><span lang="en">cheaper across the full 4-lens diagnosis</span></span>
+          </div>
+          <div>
+            <span class="ratio-num js-count" data-count="7" data-decimals="0">×7</span>
+            <span class="ratio-cap"><span lang="es">menos al rediseñar el mismo componente</span><span lang="en">cheaper redesigning the same component</span></span>
+          </div>
+        </div>
+      </a>
+      <a class="tile js-reveal" href="https://github.com/davidgarciagordo/design-review">
+        <span class="repo" translate="no">design-review</span>
+        <p class="tile-desc">
+          <span lang="es">Cuatro lentes de diseño y un veredicto explícito en navegador real: alive, templated o flat.</span><span lang="en">Four design lenses and an explicit verdict in a real browser: alive, templated or flat.</span>
+        </p>
+      </a>
+      <a class="tile js-reveal" href="https://github.com/davidgarciagordo/forge-methodology">
+        <span class="repo" translate="no">forge-methodology</span>
+        <p class="tile-desc">
+          <span lang="es">Del spec al verify con un grill adversarial en medio: los agentes se auditan entre sí.</span><span lang="en">From spec to verify with an adversarial grill in between: agents audit each other.</span>
+        </p>
+      </a>
+    </div>
+    <figure class="terminal js-reveal" data-reveal="fade">
+      <pre translate="no"><span class="t-cmd">$ bash tests/context-pack.test.sh</span>
+  skip T1 (set BASELINE=… to enable)
+  ok   T2 JSON shape (R2-R5 fields)
+  ok   T3 JSON deterministic
+  ok   T4 --out + --json-out both land
+  ok   T5 flags-anywhere equivalence
+  ok   T6 targetEmbedding=outline above cap
+  ok   T7 --json-out alone writes JSON
+  ok   T8 missing target: exit 2, stale json untouched
+  ok   T9 no-json run deletes stale default json
+  ok   T10 diverted json-out deletes stale default
+  ok   T11 default json as target survives
+  ok   T12 --root + --json (default json at root)
+
+<span class="t-pass">pass=11 fail=0</span></pre>
+      <figcaption class="ledger-label">
+        <span lang="es">salida real del harness de tests de token-economy</span><span lang="en">real output from the token-economy test harness</span>
+      </figcaption>
+    </figure>
+  </section>
+
+</main>
+
+<footer class="wrap js-reveal" data-reveal="fade">
+  <p class="closing">
+    <span lang="es">Dieciocho años de código en abierto. Lo que viene también se forja a la vista.</span><span lang="en">Eighteen years of public code. What comes next gets forged in the open too.</span>
+  </p>
+  <div class="foot-row">
+    <nav class="foot-links" aria-label="Enlaces">
+      <a href="https://github.com/davidgarciagordo">GitHub</a>
+      <a href="https://www.linkedin.com/in/davidgarciagordo">LinkedIn</a>
+    </nav>
+    <p class="ledger-label">© 2026 David García Gordo</p>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    /* ---- Language toggle (independent of motion) ---- */
+    var DESC = {
+      es: "David García Gordo, Belcebur. Desde 2008: backend PHP con DDD y arquitectura hexagonal, open source para Zend/Laminas y tooling de IA para Claude Code.",
+      en: "David García Gordo, Belcebur. Building in the open since 2008: PHP backend with DDD, open source for Zend/Laminas, AI tooling for Claude Code."
+    };
+    var btn = document.getElementById("lang-toggle");
+    var meta = document.querySelector('meta[name="description"]');
+    var nav = document.querySelector(".foot-links");
+
+    function setLang(lang, persist) {
+      document.documentElement.lang = lang;
+      btn.setAttribute("aria-pressed", lang === "en" ? "true" : "false");
+      btn.setAttribute("aria-label", lang === "en" ? "Cambiar a español" : "Switch to English");
+      if (meta) meta.setAttribute("content", DESC[lang]);
+      if (nav) nav.setAttribute("aria-label", lang === "en" ? "Links" : "Enlaces");
+      if (persist) {
+        try { localStorage.setItem("lang", lang); } catch (e) {}
+      }
+    }
+
+    setLang(document.documentElement.lang === "en" ? "en" : "es", false);
+    btn.addEventListener("click", function () {
+      setLang(document.documentElement.lang === "en" ? "es" : "en", true);
+    });
+
+    /* ---- Motion: reveals, era rules, count-up (all gated) ---- */
+    if (reduce || !("IntersectionObserver" in window)) return;
+
+    var reveals = document.querySelectorAll(".js-reveal");
+    var rules = document.querySelectorAll(".js-ignite");
+    var counts = document.querySelectorAll(".js-count");
+
+    var groupIndex = new Map();
+    reveals.forEach(function (el) {
+      var parent = el.parentElement;
+      var i = groupIndex.get(parent) || 0;
+      el.style.setProperty("--i", i);
+      groupIndex.set(parent, i + 1);
+      el.classList.add("reveal");
+    });
+    rules.forEach(function (el) { el.classList.add("rule-unlit"); });
+
+    function countUp(el) {
+      var target = parseFloat(el.getAttribute("data-count"));
+      var decimals = parseInt(el.getAttribute("data-decimals") || "0", 10);
+      var t0 = null;
+      function frame(t) {
+        if (t0 === null) t0 = t;
+        var p = Math.min((t - t0) / 600, 1);
+        var eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = "×" + (target * eased).toFixed(decimals);
+        if (p < 1) requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    }
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        var el = entry.target;
+        if (el.classList.contains("js-count")) countUp(el);
+        else {
+          el.classList.add("in");
+          // The clipped rules have zero box area (clip-path inset collapses them), so the
+          // observer can never see them intersect — light them from their revealed ancestor.
+          el.querySelectorAll(".js-ignite").forEach(function (r) { r.classList.add("lit"); });
+        }
+        io.unobserve(el);
+      });
+    }, { threshold: 0.2 });
+
+    reveals.forEach(function (el) { io.observe(el); });
+    counts.forEach(function (el) { io.observe(el); });
+  })();
+</script>
+
 </body>
 </html>
