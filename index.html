@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#020203">
-<meta name="description" content="David García Gordo, Belcebur. Backend PHP con DDD, CQRS y arquitectura hexagonal, y tooling de IA para Claude Code. Open source desde 2008.">
+<meta name="description" content="David García Gordo, Belcebur. Tech Lead. Más de 20 años transformando sistemas legacy en arquitecturas DDD, CQRS y hexagonales, y tooling de IA para Claude Code. Open source desde 2008.">
 <title>David García Gordo · Belcebur</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1c1.2 3.6-3.6 5-3.6 8.4a3.6 3.6 0 0 0 7.2 0C11.6 6 6.8 4.6 8 1z' fill='%23F59E0B'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -55,6 +55,7 @@
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }
+  html { overflow-x: clip; }
 
   /* ============ Language switching (works without JS) ============ */
   html[lang="es"] [lang="en"] { display: none; }
@@ -307,6 +308,7 @@
   .nav.open ~ .panel a:nth-child(2) { transition-delay: .14s; }
   .nav.open ~ .panel a:nth-child(3) { transition-delay: .2s; }
   .nav.open ~ .panel a:nth-child(4) { transition-delay: .26s; }
+  .nav.open ~ .panel a:nth-child(5) { transition-delay: .32s; }
 
   /* ============ Hero ============ */
   #hero { padding-top: 8rem; }
@@ -333,15 +335,7 @@
     gap: 16px;
     align-items: stretch;
   }
-  .hero-name { display: flex; flex-direction: column; justify-content: space-between; gap: 2rem; }
-  .hero-headline {
-    max-width: 34ch;
-    font-size: clamp(1.1rem, 1.7vw, 1.4rem);
-    font-weight: 400;
-    color: var(--ink-muted);
-    line-height: 1.4;
-  }
-  .hero-headline em { font-style: normal; color: var(--ink); }
+  .hero-name { display: flex; flex-direction: column; justify-content: center; gap: 1.5rem; }
   /* Hero photo: no rectangle. The face is monochrome + duotone-tinted and
      feathered into the cinematic background via mask, so it emerges from it. */
   .hero-photo {
@@ -376,6 +370,84 @@
     justify-content: flex-end;
     margin-top: 1.25rem;
   }
+  .hero-photo-inner {
+    position: absolute;
+    inset: 0;
+    will-change: transform;
+  }
+
+  /* rotating claim */
+  .hero-rotate {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: .4ch;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.35rem, 3.2vw, 2.1rem);
+    letter-spacing: -.02em;
+    line-height: 1.1;
+  }
+  .hero-rotate .prefix { color: var(--ink-muted); }
+  .rotator {
+    display: inline-block;
+    height: 1.2em;
+    overflow: hidden;
+    vertical-align: bottom;
+  }
+  .rotator-track {
+    display: flex;
+    flex-direction: column;
+  }
+  .rotator-track > span {
+    height: 1.2em;
+    line-height: 1.2em;
+    color: var(--amber);
+    white-space: nowrap;
+  }
+
+  /* selling claim + badge + hero CTA */
+  .hero-sell {
+    max-width: 46ch;
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    color: var(--ink-muted);
+    line-height: 1.5;
+  }
+  .hero-sell em { font-style: normal; color: var(--ink); }
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem 1.25rem;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+    padding: .55rem .95rem;
+    border-radius: 999px;
+    background: var(--glass);
+    border: 1px solid var(--hairline);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: .04em;
+    color: var(--ink);
+  }
+  .badge-dot {
+    width: 9px; height: 9px;
+    flex: none;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 0 0 rgb(34 197 94 / .5);
+  }
+  .cta-amber {
+    background: rgb(245 158 11 / .14);
+    border-color: rgb(245 158 11 / .45);
+    color: var(--amber-hot);
+  }
 
   /* ============ Experience ============ */
   .sec-head { margin-bottom: clamp(2.5rem, 6vh, 4rem); }
@@ -398,45 +470,262 @@
     color: var(--amber);
   }
   .exp-desc { color: var(--ink-muted); font-size: 16px; }
-
-  /* ============ Stack ============ */
-  .stack-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-  }
-  .skill {
+  .exp-wins {
+    list-style: none;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 1.4rem 1rem;
-    min-height: 92px;
+    flex-direction: column;
+    gap: .4rem;
+    margin-top: .35rem;
+    font-size: 15px;
+    color: var(--ink-muted);
+  }
+  .exp-wins li { padding-left: 1.1rem; position: relative; }
+  .exp-wins li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--amber);
+  }
+  .tech-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+    margin-top: .35rem;
+  }
+  .tech-tags span {
     font-family: var(--font-display);
     font-weight: 500;
-    font-size: 15px;
-    letter-spacing: -.01em;
-    transition: transform .2s ease, border-color .2s ease, color .2s ease;
+    font-size: 11.5px;
+    letter-spacing: .02em;
+    color: var(--ink-muted);
+    padding: .2rem .55rem;
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
   }
-  .stack-stats {
+  .exp-quote {
     grid-column: 1 / -1;
+    border-color: rgb(245 158 11 / .35);
+  }
+  .exp-quote blockquote {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.15rem, 2.6vw, 1.6rem);
+    line-height: 1.25;
+    letter-spacing: -.01em;
+    text-wrap: balance;
+  }
+  .exp-quote blockquote .amber { color: var(--amber); }
+  .exp-quote figcaption {
+    margin-top: 1rem;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .14em;
+    color: var(--ink-faint);
+  }
+
+  /* ============ AI section (special chapter) ============ */
+  .sec-ia { position: relative; overflow: hidden; }
+  .sec-ia::before {
+    content: "";
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--amber), transparent);
+    opacity: .55;
+  }
+  .sec-ia::after {
+    content: "";
+    position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background:
+      radial-gradient(55% 45% at 18% 8%, rgb(245 158 11 / .13), transparent 70%),
+      radial-gradient(50% 45% at 86% 92%, rgb(251 191 36 / .09), transparent 70%);
+  }
+  .ia-eyebrow { display: block; margin-bottom: 1rem; }
+  .ia-head { max-width: 22ch; margin-bottom: 1.5rem; }
+  .ia-sub {
+    max-width: 62ch;
+    color: var(--ink-muted);
+    font-size: clamp(1rem, 1.6vw, 1.2rem);
+    line-height: 1.5;
+    margin-bottom: clamp(2.5rem, 6vh, 4rem);
+  }
+  .ia-sub em { font-style: normal; color: var(--ink); }
+
+  .pipeline { position: relative; margin-bottom: clamp(2rem, 5vh, 3rem); }
+  .pipeline-line {
+    position: absolute;
+    left: 0; right: 0; top: 11px;
+    width: 100%; height: 2px;
+    overflow: visible;
+  }
+  .pl-path { fill: none; stroke: rgb(245 158 11 / .5); stroke-width: 2; stroke-linecap: round; }
+  .pipeline-nodes {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+  }
+  .pnode { display: flex; flex-direction: column; align-items: center; text-align: center; gap: .75rem; }
+  .pnode-dot {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    border: 2px solid var(--amber);
+    background: var(--bg-2);
+    position: relative;
+    z-index: 1;
+  }
+  .pnode-dot::after {
+    content: "";
+    position: absolute; inset: 5px;
+    border-radius: 50%;
+    background: var(--amber);
+  }
+  .pnode-stage {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    color: var(--amber);
+  }
+  .pnode-card {
+    display: flex; flex-direction: column; gap: .4rem;
+    width: 100%;
+    text-align: left;
+    transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+  }
+  .pnode-card .repo { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; letter-spacing: -.01em; }
+  .pnode-card:hover .repo, .pnode-card:focus-visible .repo { color: var(--amber); }
+  .pnode-card .pn-desc { color: var(--ink-muted); font-size: 13.5px; line-height: 1.4; }
+  .pnode-card .pn-stat { color: var(--amber); font-family: var(--font-display); font-weight: 700; font-size: 13px; }
+  .pnode-card:hover, .pnode-card:focus-visible {
+    transition-delay: 0s;
+    transform: translateY(-3px);
+    border-color: var(--amber);
+    box-shadow: 0 0 26px rgb(245 158 11 / .22);
+  }
+
+  .ia-chips { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin-bottom: clamp(1.75rem, 4vh, 2.5rem); }
+  .ia-chip {
+    display: inline-flex; align-items: center; gap: .5rem;
+    padding: .5rem .9rem;
+    border: 1px solid rgb(245 158 11 / .3);
+    border-radius: 999px;
+    background: rgb(245 158 11 / .06);
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: .01em;
+  }
+  .ia-chip .dot { width: 6px; height: 6px; flex: none; border-radius: 50%; background: var(--amber); }
+  .ia-microstat { color: var(--ink-muted); font-size: 13px; }
+  .ia-microstat b { color: var(--amber); font-family: var(--font-display); }
+
+  /* ============ Stack: marquee (21st.dev style) ============ */
+  .sec-stack { position: relative; overflow: hidden; }
+  .stack-ghost {
+    position: absolute;
+    left: 50%; top: 54%;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    pointer-events: none;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(9rem, 30vw, 24rem);
+    line-height: .8;
+    letter-spacing: -.04em;
+    color: transparent;
+    -webkit-text-stroke: 1px rgb(245 244 242 / .05);
+    white-space: nowrap;
+    will-change: transform;
+  }
+  .sec-stack > .sec-head,
+  .sec-stack > .marquee-wrap,
+  .sec-stack > .stack-stats { position: relative; z-index: 1; }
+
+  .marquee-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: clamp(1.5rem, 5vh, 3rem) 0 clamp(2rem, 6vh, 3.5rem);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  }
+  .marquee-row { overflow: hidden; }
+  .marquee-track {
+    display: flex;
+    gap: 14px;
+    width: max-content;
+    will-change: transform;
+  }
+  .tchip {
+    display: inline-flex;
+    align-items: center;
+    gap: .65rem;
+    padding: .7rem 1.1rem;
+    background: var(--glass);
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    white-space: nowrap;
+    position: relative;
+    transition: transform .25s var(--ease), border-color .25s ease, box-shadow .25s ease, background .25s ease;
+  }
+  .tchip-icon { position: relative; width: 28px; height: 28px; flex: none; }
+  .tchip-icon .ico { position: absolute; inset: 0; width: 28px; height: 28px; transition: opacity .25s ease; }
+  .tchip-icon .ico-hot { opacity: 0; }
+  .tchip .glyph {
+    width: 26px; height: 26px; flex: none;
+    fill: none; stroke: var(--amber); stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round;
+  }
+  .tchip-name { font-family: var(--font-display); font-weight: 500; font-size: 16px; letter-spacing: -.01em; }
+  .tchip-tip {
+    position: absolute;
+    left: 50%; bottom: calc(100% + 10px);
+    transform: translateX(-50%) translateY(4px);
+    background: rgb(2 2 3 / .94);
+    border: 1px solid var(--hairline);
+    border-radius: 8px;
+    padding: .4rem .6rem;
+    font-family: var(--font-body);
+    font-size: 12px; line-height: 1.3;
+    color: var(--ink-muted);
+    white-space: nowrap;
+    opacity: 0; pointer-events: none;
+    transition: opacity .2s ease, transform .2s ease;
+    z-index: 20;
+  }
+  .tchip:hover, .tchip:focus-visible {
+    transform: scale(1.06);
+    border-color: var(--amber);
+    box-shadow: 0 0 26px rgb(245 158 11 / .35);
+    background: rgb(245 158 11 / .09);
+  }
+  .tchip:hover .ico-hot, .tchip:focus-visible .ico-hot { opacity: 1; }
+  .tchip:hover .ico-mono, .tchip:focus-visible .ico-mono { opacity: 0; }
+  .tchip:hover .tchip-tip, .tchip:focus-visible .tchip-tip { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ============ Stack: compact stats ============ */
+  .stack-stats {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: clamp(1.5rem, 5vw, 4rem);
+    gap: clamp(1.25rem, 4vw, 3rem);
     border-color: rgb(245 158 11 / .35);
+    padding-block: clamp(1.1rem, 2.5vw, 1.6rem);
   }
-  .stat { display: flex; flex-direction: column; gap: .4rem; }
+  .stat { display: flex; flex-direction: column; gap: .35rem; }
   .stat-num {
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: clamp(2.5rem, 5vw, 3.75rem);
+    font-size: clamp(2rem, 4vw, 3rem);
     line-height: 1;
     color: var(--amber);
     font-variant-numeric: tabular-nums;
   }
   .stat-cap {
-    font-size: 14px;
+    font-size: 13px;
     color: var(--ink-muted);
     max-width: 22ch;
   }
@@ -526,8 +815,7 @@
     .nav-links a:hover { color: var(--amber); }
     .lang-toggle:hover { border-color: var(--amber); color: var(--ink); }
     .panel a:hover { color: var(--amber); }
-    .skill:hover, .proj:hover, .cta:hover { transform: scale(1.05); border-color: var(--amber); }
-    .skill:hover { color: var(--amber); }
+    .proj:hover, .cta:hover { transform: scale(1.05); border-color: var(--amber); }
     .hero-photo:hover img { filter: grayscale(.65) contrast(1.1) brightness(1); transform: scale(1.03); }
     .legacy-list a:hover { color: var(--amber); }
     .cta:hover { color: var(--amber); }
@@ -535,6 +823,8 @@
 
   /* ============ Motion (gated) ============ */
   @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+
     .reveal {
       opacity: 0;
       transform: translateY(24px);
@@ -546,10 +836,71 @@
     .blob-a { animation: drift-a 24s ease-in-out infinite alternate; }
     .blob-b { animation: drift-b 30s ease-in-out infinite alternate; }
     .blob-c { animation: drift-c 26s ease-in-out infinite alternate; }
+
+    .hero-tint { animation: breathe 6s ease-in-out infinite alternate; }
+    .badge-dot { animation: pulse-dot 2.4s ease-out infinite; }
   }
   @keyframes drift-a { to { transform: translate(6vw, 5vh) scale(1.1); } }
   @keyframes drift-b { to { transform: translate(-5vw, -4vh) scale(1.08); } }
   @keyframes drift-c { to { transform: translate(4vw, -6vh) scale(1.12); } }
+
+  @keyframes ring-spin { to { transform: rotateZ(360deg); } }
+  @keyframes chip-counter {
+    from { transform: rotateZ(calc(-1 * var(--a))) rotateX(-58deg); }
+    to   { transform: rotateZ(calc(-1 * var(--a) - 360deg)) rotateX(-58deg); }
+  }
+  @keyframes breathe {
+    from { opacity: .55; transform: scale(1); }
+    to   { opacity: 1; transform: scale(1.06); }
+  }
+  @keyframes pulse-dot {
+    0%   { box-shadow: 0 0 0 0 rgb(34 197 94 / .55); }
+    70%  { box-shadow: 0 0 0 8px rgb(34 197 94 / 0); }
+    100% { box-shadow: 0 0 0 0 rgb(34 197 94 / 0); }
+  }
+  @keyframes roll4 {
+    0%, 16%   { transform: translateY(0); }
+    20%, 41%  { transform: translateY(-20%); }
+    45%, 66%  { transform: translateY(-40%); }
+    70%, 91%  { transform: translateY(-60%); }
+    95%, 100% { transform: translateY(-80%); }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .rotator-track { animation: roll4 13s var(--ease) infinite; }
+  }
+
+  /* ============ Marquee motion + reduced-motion fallback ============ */
+  @media (prefers-reduced-motion: no-preference) {
+    .marquee-track { animation: marquee var(--dur, 22s) linear infinite; }
+    .marquee-row[data-dir="reverse"] .marquee-track { animation-direction: reverse; }
+    .marquee-row:hover .marquee-track,
+    .marquee-row:focus-within .marquee-track { animation-play-state: paused; }
+    .marquee-wrap.stagger .tchip { opacity: 0; transform: translateY(14px); }
+    .marquee-wrap.stagger.in .tchip {
+      opacity: 1; transform: none;
+      transition: opacity .5s var(--ease), transform .5s var(--ease);
+      transition-delay: calc(var(--i, 0) * 45ms);
+    }
+  }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* ---- Pipeline draw-in (gated) ---- */
+  @media (prefers-reduced-motion: no-preference) {
+    .pl-path { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.4s var(--ease); }
+    .pipeline.in .pl-path { stroke-dashoffset: 0; }
+    .pnode-dot { opacity: .25; transform: scale(.6); transition: opacity .45s ease, transform .45s var(--ease), box-shadow .45s ease; }
+    .pipeline.in .pnode-dot { opacity: 1; transform: scale(1); box-shadow: 0 0 16px rgb(245 158 11 / .6); transition-delay: calc(var(--n) * .22s + .3s); }
+    .pnode-card { opacity: 0; transform: translateY(18px); transition: opacity .5s var(--ease), transform .5s var(--ease); }
+    .pipeline.in .pnode-card { opacity: 1; transform: none; transition-delay: calc(var(--n) * .22s + .5s); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-wrap { -webkit-mask-image: none; mask-image: none; }
+    .marquee-row { overflow: visible; }
+    .marquee-track { flex-wrap: wrap; width: auto; justify-content: center; transform: none !important; }
+    .stack-ghost { display: none; }
+    .tchip-tip { display: none; }
+  }
 
   /* ============ Responsive ============ */
   @media (max-width: 900px) {
@@ -559,15 +910,22 @@
     .hero-main { grid-template-columns: 1fr; }
     .hero-photo { min-height: 340px; order: -1; }
     .exp-grid { grid-template-columns: 1fr; }
-    .stack-grid { grid-template-columns: repeat(2, 1fr); }
+    .pipeline-line { display: none; }
+    .pipeline-nodes { grid-template-columns: 1fr; }
+    .pnode { flex-direction: row; align-items: center; text-align: left; }
+    .pnode-stage { min-width: 4.5rem; }
     .stack-stats { flex-direction: column; align-items: flex-start; }
     .stat-src { margin-left: 0; }
     .proj-grid { grid-template-columns: 1fr; }
     .proj-wide { grid-column: auto; }
   }
+  @media (max-width: 620px) {
+    .tchip { padding: .6rem .9rem; }
+    .tchip-name { font-size: 14px; }
+    .tchip-icon, .tchip-icon .ico { width: 24px; height: 24px; }
+  }
   @media (max-width: 560px) {
     body { font-size: 17px; }
-    .stack-grid { grid-template-columns: 1fr 1fr; }
   }
 </style>
 </head>
@@ -586,10 +944,11 @@
 <header class="nav" id="nav">
   <a class="logo" href="#top" aria-label="David García Gordo, inicio">
     <span class="logo-lines" translate="no"><span>David</span><span>García Gordo</span></span>
-    <span class="logo-sub"><span lang="es">Belcebur · Backend y tooling de IA</span><span lang="en">Belcebur · Backend and AI tooling</span></span>
+    <span class="logo-sub"><span lang="es">Tech Lead · Backend y tooling de IA</span><span lang="en">Tech Lead · Backend and AI tooling</span></span>
   </a>
   <nav class="nav-links" aria-label="Secciones">
     <a href="#experiencia"><span lang="es">Experiencia</span><span lang="en">Experience</span></a>
+    <a href="#ia"><span lang="es">IA</span><span lang="en">AI</span></a>
     <a href="#stack">Stack</a>
     <a href="#proyectos"><span lang="es">Proyectos</span><span lang="en">Projects</span></a>
     <a href="#contacto"><span lang="es">Contacto</span><span lang="en">Contact</span></a>
@@ -605,6 +964,7 @@
 </header>
 <nav class="panel" id="panel" aria-label="Menú móvil">
   <a href="#experiencia"><span lang="es">Experiencia</span><span lang="en">Experience</span></a>
+  <a href="#ia"><span lang="es">IA</span><span lang="en">AI</span></a>
   <a href="#stack">Stack</a>
   <a href="#proyectos"><span lang="es">Proyectos</span><span lang="en">Projects</span></a>
   <a href="#contacto"><span lang="es">Contacto</span><span lang="en">Contact</span></a>
@@ -615,21 +975,51 @@
   <!-- ============ S1 HERO ============ -->
   <section id="hero" class="wrap">
     <div class="hero-bars">
-      <div class="card bar js-reveal"><span class="dot">·</span> Backend · DDD / CQRS / Hexagonal</div>
-      <div class="card bar js-reveal"><span class="dot">·</span> <span lang="es">AI tooling para Claude Code</span><span lang="en">AI tooling for Claude Code</span></div>
-      <div class="card bar js-reveal"><span class="dot">·</span> <span lang="es">Open source desde 2008</span><span lang="en">Open source since 2008</span></div>
+      <div class="card bar js-reveal"><span class="dot">·</span> <span lang="es">Tech Lead · Classlife Education</span><span lang="en">Tech Lead · Classlife Education</span></div>
+      <div class="card bar js-reveal"><span class="dot">·</span> <span lang="es">Tooling de IA para Claude Code</span><span lang="en">AI tooling for Claude Code</span></div>
+      <div class="card bar js-reveal"><span class="dot">·</span> <span lang="es">20+ años · open source desde 2008</span><span lang="en">20+ years · open source since 2008</span></div>
     </div>
     <div class="hero-main">
       <div class="hero-name js-reveal">
         <h1 translate="no">David García Gordo</h1>
-        <p class="hero-headline">
-          <span lang="es">Construyo las herramientas que hacen que los agentes de IA trabajen con la <em>disciplina de un equipo senior</em>.</span><span lang="en">I build the tools that make AI agents work with the <em>discipline of a senior team</em>.</span>
+        <p class="hero-rotate">
+          <span class="prefix"><span lang="es">Construyo</span><span lang="en">I build</span></span>
+          <span class="rotator" aria-hidden="true">
+            <span class="rotator-track" lang="es">
+              <span>sistemas que aguantan producción</span>
+              <span>arquitecturas que sobreviven al negocio</span>
+              <span>equipos que no dependen de mí</span>
+              <span>agentes de IA con disciplina senior</span>
+              <span>sistemas que aguantan producción</span>
+            </span>
+            <span class="rotator-track" lang="en">
+              <span>systems that survive production</span>
+              <span>architectures that outlast the business</span>
+              <span>teams that don't depend on me</span>
+              <span>AI agents with senior discipline</span>
+              <span>systems that survive production</span>
+            </span>
+          </span>
         </p>
+        <p class="hero-sell">
+          <span lang="es">Más de 20 años transformando sistemas legacy en arquitecturas que escalan. Hoy lidero un equipo de ingeniería y construyo las herramientas que hacen que los agentes de IA trabajen con la <em>disciplina de un equipo senior</em>: specs, revisión adversarial y verificación antes de mergear.</span><span lang="en">Over 20 years turning legacy systems into architectures that scale. Today I lead an engineering team and build the tools that make AI agents work with the <em>discipline of a senior team</em>: specs, adversarial review and verification before merging.</span>
+        </p>
+        <div class="hero-actions">
+          <span class="badge">
+            <span class="badge-dot" aria-hidden="true"></span>
+            <span lang="es">Abierto a retos serios de backend + IA</span><span lang="en">Open to serious backend + AI challenges</span>
+          </span>
+          <a class="cta cta-amber" href="#proyectos">
+            <span lang="es">Ver proyectos</span><span lang="en">See projects</span> ↓
+          </a>
+        </div>
       </div>
       <figure class="hero-photo js-reveal">
-        <img src="https://avatars.githubusercontent.com/u/8148488?v=4&size=512" width="512" height="512"
-          alt="Foto de perfil de David García Gordo">
-        <span class="hero-tint" aria-hidden="true"></span>
+        <span class="hero-photo-inner">
+          <img src="https://avatars.githubusercontent.com/u/8148488?v=4&size=512" width="512" height="512"
+            alt="Foto de perfil de David García Gordo">
+          <span class="hero-tint" aria-hidden="true"></span>
+        </span>
       </figure>
     </div>
     <p class="hero-loc label" translate="no">Barcelona · ES/CA/EN</p>
@@ -643,73 +1033,248 @@
     </div>
     <div class="exp-grid">
       <article class="card exp-span js-reveal exp-role">
-        <span class="exp-when"><span lang="es">Hoy · Barcelona</span><span lang="en">Today · Barcelona</span></span>
-        <h3 translate="no">Classlife Education · Senior Backend Engineer</h3>
+        <span class="exp-when"><span lang="es">2025 - hoy · Barcelona</span><span lang="en">2025 - today · Barcelona</span></span>
+        <h3 translate="no">Classlife Education · Tech Lead</h3>
         <p class="exp-desc">
-          <span lang="es">Plataforma edtech. DDD, CQRS y arquitectura hexagonal con PHP 8 en producción, no en diapositivas.</span><span lang="en">Edtech platform. DDD, CQRS and hexagonal architecture with PHP 8 in production, not on slides.</span>
+          <span lang="es">Lidero la plataforma de ingeniería de un SaaS EdTech para cientos de colegios, con un equipo de 4 ingenieros (3 backend, 1 Vue).</span><span lang="en">I lead the engineering platform of an EdTech SaaS serving hundreds of schools, with a team of 4 engineers (3 backend, 1 Vue).</span>
         </p>
+        <ul class="exp-wins">
+          <li><span lang="es">Monolito <span translate="no">Symfony</span> a arquitectura multi-app, un kernel por dominio.</span><span lang="en">From a <span translate="no">Symfony</span> monolith to a multi-app architecture, one kernel per domain.</span></li>
+          <li><span lang="es">Reescritura de <span translate="no">PHP</span> legacy a DDD + CQRS con <span translate="no">Symfony 7</span>; multi-tenancy con base de datos dual.</span><span lang="en">Legacy <span translate="no">PHP</span> rewritten to DDD + CQRS on <span translate="no">Symfony 7</span>; multi-tenancy with a dual database.</span></li>
+          <li><span lang="es">Runner de tests paralelo con +160 suites; <span translate="no">PHPStan</span> a nivel máximo como gate.</span><span lang="en">Parallel test runner with 160+ suites; <span translate="no">PHPStan</span> at max level as a gate.</span></li>
+          <li><span lang="es">Refactor de +1.400 ficheros validado con análisis estático (<span translate="no">Rector / ECS</span>); migración <span translate="no">PHP 5/7 a 8.x</span>.</span><span lang="en">1,400+ files refactored, verified with static analysis (<span translate="no">Rector / ECS</span>); <span translate="no">PHP 5/7 to 8.x</span> migration.</span></li>
+          <li><span lang="es">Introduje desarrollo asistido por IA con patrones reutilizables: de horas a minutos por funcionalidad estándar.</span><span lang="en">Introduced AI-assisted development with reusable patterns: from hours to minutes per standard feature.</span></li>
+        </ul>
       </article>
+
+      <figure class="card exp-quote js-reveal">
+        <blockquote>
+          <span lang="es">Las mejores decisiones técnicas no son las más sofisticadas, sino las que el equipo puede <span class="amber">entender y extender sin necesitarte</span>.</span><span lang="en">The best technical decisions are not the most sophisticated ones, but the ones the team can <span class="amber">understand and extend without needing you</span>.</span>
+        </blockquote>
+        <figcaption translate="no">David García Gordo</figcaption>
+      </figure>
+
       <article class="card js-reveal exp-role">
-        <span class="exp-when" translate="no">2008 - 2020</span>
-        <h3><span lang="es">Open source Zend / Laminas</span><span lang="en">Open source Zend / Laminas</span></h3>
+        <span class="exp-when"><span lang="es">2023 - 2025 · Barcelona</span><span lang="en">2023 - 2025 · Barcelona</span></span>
+        <h3 translate="no">Biocorporate Technologies · Backend Lead</h3>
         <p class="exp-desc">
-          <span lang="es">Familias de paquetes: RBAC con Doctrine, login social OAuth2, API CRUD automática y logger a MongoDB.</span><span lang="en">Package families: Doctrine RBAC, OAuth2 social login, automatic CRUD API and MongoDB logger.</span>
+          <span lang="es">Telemedicina. Migré el legacy de <span translate="no">PHP 5.2</span> a <span translate="no">8.3</span> sobre arquitectura hexagonal + CQRS, y formé a las nuevas incorporaciones.</span><span lang="en">Telemedicine. Migrated the legacy from <span translate="no">PHP 5.2</span> to <span translate="no">8.3</span> onto a hexagonal + CQRS architecture, and trained new hires.</span>
         </p>
+        <div class="tech-tags" translate="no"><span>Symfony 7</span><span>PostgreSQL</span><span>RabbitMQ</span><span>AWS</span></div>
       </article>
+
       <article class="card js-reveal exp-role">
-        <span class="exp-when" translate="no">2026</span>
-        <h3><span lang="es">Tooling de IA</span><span lang="en">AI tooling</span></h3>
+        <span class="exp-when" translate="no">2022 - 2023</span>
+        <h3 translate="no">PcComponentes · Senior Software Engineer</h3>
         <p class="exp-desc">
-          <span lang="es">La nueva era: herramientas que hacen que los agentes de IA trabajen con disciplina de equipo senior.</span><span lang="en">The new era: tools that make AI agents work with senior team discipline.</span>
+          <span lang="es">Servicios de postventa (devoluciones y garantías) y modernización del core.</span><span lang="en">After-sales services (returns and warranties) and core modernization.</span>
+        </p>
+        <div class="tech-tags" translate="no"><span>PHP</span><span>Symfony</span><span>RabbitMQ</span><span>Docker</span><span>Kubernetes</span></div>
+      </article>
+
+      <article class="card js-reveal exp-role">
+        <span class="exp-when" translate="no">2021 - 2022</span>
+        <h3 translate="no">Drinks&Co · Backend Developer</h3>
+        <p class="exp-desc">
+          <span lang="es">Equipo de Integrations del marketplace.</span><span lang="en">Marketplace Integrations team.</span>
+        </p>
+        <div class="tech-tags" translate="no"><span>CQRS</span><span>DDD</span><span>Event Sourcing</span><span>AWS</span></div>
+      </article>
+
+      <article class="card js-reveal exp-role">
+        <span class="exp-when"><span lang="es">2014 - 2021 · 7 años</span><span lang="en">2014 - 2021 · 7 years</span></span>
+        <h3 translate="no">Germans Boada · Web Architect</h3>
+        <p class="exp-desc">
+          <span lang="es">Dirigí el ecosistema web del grupo en 14 idiomas: webs corporativas, club de fidelización y app. Migración a hexagonal + CQRS desde 2020.</span><span lang="en">Led the group's web ecosystem across 14 languages: corporate sites, loyalty club and app. Migration to hexagonal + CQRS from 2020.</span>
+        </p>
+        <div class="tech-tags" translate="no"><span>ZF2 / ZF3</span><span>Symfony</span><span>Vue.js</span><span>TypeScript</span><span>MongoDB</span></div>
+      </article>
+
+      <article class="card exp-span js-reveal exp-role">
+        <span class="exp-when" translate="no">2003 - 2014</span>
+        <h3><span lang="es">Antes: CTO, arquitecto y consultor</span><span lang="en">Before: CTO, architect and consultant</span></h3>
+        <p class="exp-desc">
+          <span lang="es">CTO en <span translate="no">Alandum</span>; arquitecto y consultor en <span translate="no">Vasava</span>, <span translate="no">Ressulta</span> e <span translate="no">IDNEO</span> para <span translate="no">Mango, LS2 Helmets, Caprabo, ESADE, RACC, Almirall, Banco Sabadell</span> y <span translate="no">Bankimia</span>. Empecé como técnico electrónico en 2003.</span><span lang="en">CTO at <span translate="no">Alandum</span>; architect and consultant at <span translate="no">Vasava</span>, <span translate="no">Ressulta</span> and <span translate="no">IDNEO</span> for <span translate="no">Mango, LS2 Helmets, Caprabo, ESADE, RACC, Almirall, Banco Sabadell</span> and <span translate="no">Bankimia</span>. Started as an electronics technician in 2003.</span>
         </p>
       </article>
+
       <article class="card exp-span js-reveal exp-role">
         <span class="exp-when amber"><span lang="es">Formación</span><span lang="en">Education</span></span>
-        <h3 translate="no">Escoles Universitàries Gimbernat (UAB) · 2007 - 2012</h3>
+        <h3 translate="no">Grado en Informática · Gimbernat (UAB) · 2007 - 2012</h3>
         <p class="exp-desc">
-          <span lang="es">Ingeniería técnica en informática y multimedia. Idiomas: español y catalán nativos, inglés básico.</span><span lang="en">Technical engineering in computing and multimedia. Languages: native Spanish and Catalan, basic English.</span>
+          <span lang="es">Grado en Informática (<span translate="no">Escoles Universitàries Gimbernat, UAB</span>) y CFGS de Telecomunicaciones (<span translate="no">Salesians de Sarrià</span>). Idiomas: español y catalán nativos, inglés básico.</span><span lang="en">Computing degree (<span translate="no">Escoles Universitàries Gimbernat, UAB</span>) and a higher vocational diploma in Telecommunications (<span translate="no">Salesians de Sarrià</span>). Languages: native Spanish and Catalan, basic English.</span>
         </p>
       </article>
     </div>
   </section>
 
+  <!-- ============ S2.5 IA / AI ENGINEERING ============ -->
+  <section id="ia" class="wrap sec-ia">
+    <span class="label amber ia-eyebrow js-reveal"><span lang="es">IA · AI Engineering</span><span lang="en">AI Engineering</span></span>
+    <h2 class="ia-head js-reveal"><span lang="es">Enseño a los agentes a trabajar como un equipo senior</span><span lang="en">I teach AI agents to work like a senior team</span></h2>
+    <p class="ia-sub js-reveal">
+      <span lang="es">En <span translate="no">Classlife</span> introduje desarrollo asistido por IA con patrones reutilizables: <em>de horas a minutos por funcionalidad estándar</em>. Fuera del trabajo construyo el ecosistema open-source de plugins para <span translate="no">Claude Code</span>: la misma disciplina de un equipo senior, aplicada a los agentes.</span><span lang="en">At <span translate="no">Classlife</span> I introduced AI-assisted development with reusable patterns: <em>from hours to minutes per standard feature</em>. Outside work I build the open-source plugin ecosystem for <span translate="no">Claude Code</span>: the same senior-team discipline, applied to agents.</span>
+    </p>
+
+    <div class="pipeline">
+      <svg class="pipeline-line" viewBox="0 0 100 2" preserveAspectRatio="none" aria-hidden="true"><path class="pl-path" pathLength="1" d="M10 1 H90"/></svg>
+      <ol class="pipeline-nodes">
+        <li class="pnode" style="--n:0">
+          <span class="pnode-dot" aria-hidden="true"></span>
+          <span class="pnode-stage">Spec</span>
+          <a class="card pnode-card" href="https://github.com/davidgarciagordo/working-methods">
+            <span class="repo" translate="no">working-methods</span>
+            <span class="pn-desc"><span lang="es">Flujos y orquestación multiagente como comandos.</span><span lang="en">Workflows and multi-agent orchestration as commands.</span></span>
+          </a>
+        </li>
+        <li class="pnode" style="--n:1">
+          <span class="pnode-dot" aria-hidden="true"></span>
+          <span class="pnode-stage">Grill</span>
+          <a class="card pnode-card" href="https://github.com/davidgarciagordo/forge-methodology">
+            <span class="repo" translate="no">forge-methodology</span>
+            <span class="pn-desc"><span lang="es">Del spec al verify con grill adversarial: los agentes se auditan entre sí.</span><span lang="en">From spec to verify with an adversarial grill: agents audit each other.</span></span>
+          </a>
+        </li>
+        <li class="pnode" style="--n:2">
+          <span class="pnode-dot" aria-hidden="true"></span>
+          <span class="pnode-stage">Plan</span>
+          <a class="card pnode-card" href="https://github.com/davidgarciagordo/token-economy">
+            <span class="repo" translate="no">token-economy</span>
+            <span class="pn-desc"><span lang="es">Recorta el coste multiagente sin perder cobertura.</span><span lang="en">Cuts multi-agent cost without losing coverage.</span></span>
+            <span class="pn-stat"><span lang="es">×7 en la segunda pasada</span><span lang="en">×7 on the second pass</span></span>
+          </a>
+        </li>
+        <li class="pnode" style="--n:3">
+          <span class="pnode-dot" aria-hidden="true"></span>
+          <span class="pnode-stage"><span lang="es">Ejecución</span><span lang="en">Execution</span></span>
+          <a class="card pnode-card" href="https://github.com/davidgarciagordo/design-review">
+            <span class="repo" translate="no">design-review</span>
+            <span class="pn-desc"><span lang="es">Cuatro lentes de diseño en paralelo y un veredicto en navegador real.</span><span lang="en">Four design lenses in parallel and a verdict in a real browser.</span></span>
+          </a>
+        </li>
+        <li class="pnode" style="--n:4">
+          <span class="pnode-dot" aria-hidden="true"></span>
+          <span class="pnode-stage">Verify</span>
+          <a class="card pnode-card" href="https://github.com/davidgarciagordo/automations">
+            <span class="repo" translate="no">automations</span>
+            <span class="pn-desc"><span lang="es">Automatiza y afina tu instalación de Claude Code.</span><span lang="en">Automates and tunes your Claude Code setup.</span></span>
+          </a>
+        </li>
+      </ol>
+    </div>
+
+    <div class="ia-chips js-reveal">
+      <span class="ia-chip"><span class="dot" aria-hidden="true"></span><span translate="no">MCP</span></span>
+      <span class="ia-chip"><span class="dot" aria-hidden="true"></span><span lang="es">Skills de IA</span><span lang="en">AI Skills</span></span>
+      <span class="ia-chip"><span class="dot" aria-hidden="true"></span><span lang="es">Orquestación multiagente</span><span lang="en">Multi-agent orchestration</span></span>
+      <span class="ia-chip"><span class="dot" aria-hidden="true"></span><span translate="no">Claude Code</span></span>
+      <span class="ia-chip"><span class="dot" aria-hidden="true"></span><span translate="no">token-economy</span></span>
+      <span class="ia-microstat"><b>×7</b> <span lang="es">menos coste al reusar artefactos</span><span lang="en">cheaper when reusing artifacts</span></span>
+    </div>
+
+    <a class="cta cta-amber js-reveal" href="https://github.com/davidgarciagordo/claude-plugins">
+      <span lang="es">Ver el catálogo de plugins</span><span lang="en">See the plugin catalog</span> →
+    </a>
+  </section>
+
   <!-- ============ S3 STACK ============ -->
-  <section id="stack" class="wrap">
+  <section id="stack" class="wrap sec-stack">
     <div class="sec-head js-reveal">
       <span class="label amber"><span lang="es">Herramientas del oficio</span><span lang="en">Tools of the trade</span></span>
       <h2>Stack</h2>
     </div>
-    <div class="stack-grid">
-      <div class="card skill js-reveal" translate="no">PHP 8</div>
-      <div class="card skill js-reveal" translate="no">DDD</div>
-      <div class="card skill js-reveal" translate="no">CQRS</div>
-      <div class="card skill js-reveal"><span lang="es">Arquitectura Hexagonal</span><span lang="en">Hexagonal Architecture</span></div>
-      <div class="card skill js-reveal" translate="no">SOLID</div>
-      <div class="card skill js-reveal" translate="no">Doctrine ORM</div>
-      <div class="card skill js-reveal" translate="no">Zend / Laminas</div>
-      <div class="card skill js-reveal"><span lang="es">Testing</span><span lang="en">Testing</span></div>
-      <div class="card skill js-reveal" translate="no">MySQL / MongoDB</div>
-      <div class="card skill js-reveal" translate="no">Git / CI</div>
-      <div class="card skill js-reveal" translate="no">Claude Code</div>
-      <div class="card skill js-reveal"><span lang="es">Orquestación multiagente</span><span lang="en">Multi-agent orchestration</span></div>
-      <div class="card skill js-reveal" translate="no">MCP / plugins</div>
-      <div class="card stack-stats js-reveal">
-        <div class="stat">
-          <span class="stat-num js-count" data-count="2.6" data-decimals="1">×2.6</span>
-          <span class="stat-cap"><span lang="es">menos tokens por lente de revisión</span><span lang="en">fewer tokens per review lens</span></span>
+      <div class="stack-ghost" aria-hidden="true">STACK</div>
+      <div class="marquee-wrap">
+        <div class="marquee-row" data-dir="normal">
+          <div class="marquee-track" style="--dur:18s">
+            <span class="tchip" tabindex="0" style="--i:0"><span class="tchip-icon"><img class="ico ico-mono" src="https://cdn.simpleicons.org/php/F5F4F2" alt="" width="28" height="28" loading="lazy"><img class="ico ico-hot" src="https://cdn.simpleicons.org/php" alt="" width="28" height="28" loading="lazy"></span><span class="tchip-name" translate="no">PHP</span><span class="tchip-tip" role="tooltip"><span lang="es">El backend diario, PHP 8 moderno</span><span lang="en">The daily backend, modern PHP 8</span></span></span>
+            <span class="tchip" tabindex="0" style="--i:1"><span class="tchip-icon"><img class="ico ico-mono" src="https://cdn.simpleicons.org/symfony/F5F4F2" alt="" width="28" height="28" loading="lazy"><img class="ico ico-hot" src="https://cdn.simpleicons.org/symfony" alt="" width="28" height="28" loading="lazy"></span><span class="tchip-name" translate="no">Symfony</span><span class="tchip-tip" role="tooltip"><span lang="es">El framework del backend</span><span lang="en">The backend framework</span></span></span>
+            <span class="tchip" tabindex="0" style="--i:2"><span class="tchip-icon"><img class="ico ico-mono" src="https://cdn.simpleicons.org/typescript/F5F4F2" alt="" width="28" height="28" loading="lazy"><img class="ico ico-hot" src="https://cdn.simpleicons.org/typescript" alt="" width="28" height="28" loading="lazy"></span><span class="tchip-name" translate="no">TypeScript</span><span class="tchip-tip" role="tooltip"><span lang="es">Tipado fuerte en front y tooling</span><span lang="en">Strong typing in front and tooling</span></span></span>
+            <span class="tchip" tabindex="0" style="--i:3"><span class="tchip-icon"><img class="ico ico-mono" src="https://cdn.simpleicons.org/javascript/F5F4F2" alt="" width="28" height="28" loading="lazy"><img class="ico ico-hot" src="https://cdn.simpleicons.org/javascript" alt="" width="28" height="28" loading="lazy"></span><span class="tchip-name" translate="no">JavaScript</span><span class="tchip-tip" role="tooltip"><span lang="es">La base del navegador</span><span lang="en">The browser foundation</span></span></span>
+            <span class="tchip" tabindex="0" style="--i:4"><span class="tchip-icon"><img class="ico ico-mono" src="https://cdn.simpleicons.org/vuedotjs/F5F4F2" alt="" width="28" height="28" loading="lazy"><img class="ico ico-hot" src="https://cdn.simpleicons.org/vuedotjs" alt="" width="28" height="28" loading="lazy"></span><span class="tchip-name" translate="no">Vue</span><span class="tchip-tip" role="tooltip"><span lang="es">Front reactivo en proyectos privados</span><span lang="en">Reactive front in private projects</span></span></span>
+            <span class="tchip" tabindex="0" style="--i:5"><span class="tchip-icon"><img class="ico ico-mono" src="https://cdn.simpleicons.org/astro/F5F4F2" alt="" width="28" height="28" loading="lazy"><img class="ico ico-hot" src="https://cdn.simpleicons.org/astro" alt="" width="28" height="28" loading="lazy"></span><span class="tchip-name" translate="no">Astro</span><span class="tchip-tip" role="tooltip"><span lang="es">Sitios rápidos por defecto</span><span lang="en">Fast sites by default</span></span></span>
+            <span class="tchip" tabindex="0" style="--i:6"><span class="tchip-icon"><img class="ico ico-mono" src="https://cdn.simpleicons.org/python/F5F4F2" alt="" width="28" height="28" loading="lazy"><img class="ico ico-hot" src="https://cdn.simpleicons.org/python" alt="" width="28" height="28" loading="lazy"></span><span class="tchip-name" translate="no">Python</span><span class="tchip-tip" role="tooltip"><span lang="es">Scripts y automatización</span><span lang="en">Scripts and automation</span></span></span>
+            <span class="tchip" tabindex="-1" aria-hidden="true"><span class="tchip-icon"><img class="ico ico-mono" src="https://cdn.simpleicons.org/php/F5F4F2" alt="" width="28" height="28" loading="lazy"><img class="ico ico-hot" src="https://cdn.simpleicons.org/php" alt="" width="28" height="28" loading="lazy"></span><span class="tchip-name" translate="no">PHP</span><span class="tchip-tip" role="tooltip"><span lang="es">El backend diario, PHP 8 moderno</span><span lang="en">The daily backend, modern PHP 8</span></span></span>
+            <span class="tchip" tabindex="-1" aria-hidden="true"><span class="tchip-icon"><img class="ico ico-mono" src="https://cdn.simpleicons.org/symfony/F5F4F2" alt="" width="28" height="28" loading="lazy"><img class="ico ico-hot" src="https://cdn.simpleicons.org/symfony" alt="" width="28" height="28" loading="lazy"></span><span class="tchip-name" translate="no">Symfony</span><span class="tchip-tip" role="tooltip"><span lang="es">El framework del backend</span><span lang="en">The backend framework</span></span></span>
+            <span class="tchip" tabindex="-1" aria-hidden="true"><span class="tchip-icon"><img class="ico ico-mono" src="https://cdn.simpleicons.org/typescript/F5F4F2" alt="" width="28" height="28" loading="lazy"><img class="ico ico-hot" src="https://cdn.simpleicons.org/typescript" alt="" width="28" height="28" loading="lazy"></span><span class="tchip-name" translate="no">TypeScript</span><span class="tchip-tip" role="tooltip"><span lang="es">Tipado fuerte en front y tooling</span><span lang="en">Strong typing in front and tooling</span></span></span>
+            <span class="tchip" tabindex="-1" aria-hidden="true"><span class="tchip-icon"><img class="ico ico-mono" src="https://cdn.simpleicons.org/javascript/F5F4F2" alt="" width="28" height="28" loading="lazy"><img class="ico ico-hot" src="https://cdn.simpleicons.org/javascript" alt="" width="28" height="28" loading="lazy"></span><span class="tchip-name" translate="no">JavaScript</span><span class="tchip-tip" role="tooltip"><span lang="es">La base del navegador</span><span lang="en">The browser foundation</span></span></span>
+            <span class="tchip" tabindex="-1" aria-hidden="true"><span class="tchip-icon"><img class="ico ico-mono" src="https://cdn.simpleicons.org/vuedotjs/F5F4F2" alt="" width="28" height="28" loading="lazy"><img class="ico ico-hot" src="https://cdn.simpleicons.org/vuedotjs" alt="" width="28" height="28" loading="lazy"></span><span class="tchip-name" translate="no">Vue</span><span class="tchip-tip" role="tooltip"><span lang="es">Front reactivo en proyectos privados</span><span lang="en">Reactive front in private projects</span></span></span>
+            <span class="tchip" tabindex="-1" aria-hidden="true"><span class="tchip-icon"><img class="ico ico-mono" src="https://cdn.simpleicons.org/astro/F5F4F2" alt="" width="28" height="28" loading="lazy"><img class="ico ico-hot" src="https://cdn.simpleicons.org/astro" alt="" width="28" height="28" loading="lazy"></span><span class="tchip-name" translate="no">Astro</span><span class="tchip-tip" role="tooltip"><span lang="es">Sitios rápidos por defecto</span><span lang="en">Fast sites by default</span></span></span>
+            <span class="tchip" tabindex="-1" aria-hidden="true"><span class="tchip-icon"><img class="ico ico-mono" src="https://cdn.simpleicons.org/python/F5F4F2" alt="" width="28" height="28" loading="lazy"><img class="ico ico-hot" src="https://cdn.simpleicons.org/python" alt="" width="28" height="28" loading="lazy"></span><span class="tchip-name" translate="no">Python</span><span class="tchip-tip" role="tooltip"><span lang="es">Scripts y automatización</span><span lang="en">Scripts and automation</span></span></span>
+          </div>
         </div>
-        <div class="stat">
-          <span class="stat-num js-count" data-count="1.8" data-decimals="1">×1.8</span>
-          <span class="stat-cap"><span lang="es">menos en el diagnóstico completo</span><span lang="en">cheaper across the full diagnosis</span></span>
+        <div class="marquee-row" data-dir="reverse">
+          <div class="marquee-track" style="--dur:24s">
+            <span class="tchip" tabindex="0" style="--i:0"><svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8.66 5v10L12 22 3.34 17V7z"/></svg><span class="tchip-name" translate="no">DDD</span><span class="tchip-tip" role="tooltip"><span lang="es">El dominio manda</span><span lang="en">The domain leads</span></span></span>
+            <span class="tchip" tabindex="0" style="--i:1"><svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8.66 5v10L12 22 3.34 17V7z"/></svg><span class="tchip-name" translate="no">CQRS</span><span class="tchip-tip" role="tooltip"><span lang="es">Comandos y consultas separados</span><span lang="en">Commands and queries split</span></span></span>
+            <span class="tchip" tabindex="0" style="--i:2"><svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8.66 5v10L12 22 3.34 17V7z"/></svg><span class="tchip-name" translate="no">Hexagonal</span><span class="tchip-tip" role="tooltip"><span lang="es">Puertos y adaptadores</span><span lang="en">Ports and adapters</span></span></span>
+            <span class="tchip" tabindex="0" style="--i:3"><svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8.66 5v10L12 22 3.34 17V7z"/></svg><span class="tchip-name" translate="no">SOLID</span><span class="tchip-tip" role="tooltip"><span lang="es">Principios de diseño limpio</span><span lang="en">Clean design principles</span></span></span>
+            <span class="tchip" tabindex="0" style="--i:4"><svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8.66 5v10L12 22 3.34 17V7z"/></svg><span class="tchip-name" translate="no">Event Sourcing</span><span class="tchip-tip" role="tooltip"><span lang="es">El estado como secuencia de eventos</span><span lang="en">State as a sequence of events</span></span></span>
+            <span class="tchip" tabindex="0" style="--i:5"><svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8.66 5v10L12 22 3.34 17V7z"/></svg><span class="tchip-name" translate="no">Testing</span><span class="tchip-tip" role="tooltip"><span lang="es">Verde antes de mergear</span><span lang="en">Green before merging</span></span></span>
+            <span class="tchip" tabindex="0" style="--i:6"><svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8.66 5v10L12 22 3.34 17V7z"/></svg><span class="tchip-name" translate="no">PHPStan</span><span class="tchip-tip" role="tooltip"><span lang="es">Análisis estático a nivel máximo</span><span lang="en">Static analysis at max level</span></span></span>
+            <span class="tchip" tabindex="0" style="--i:7"><svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8.66 5v10L12 22 3.34 17V7z"/></svg><span class="tchip-name" translate="no">Rector</span><span class="tchip-tip" role="tooltip"><span lang="es">Refactor automatizado a escala</span><span lang="en">Automated refactoring at scale</span></span></span>
+            <span class="tchip" tabindex="-1" aria-hidden="true"><svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8.66 5v10L12 22 3.34 17V7z"/></svg><span class="tchip-name" translate="no">DDD</span><span class="tchip-tip" role="tooltip"><span lang="es">El dominio manda</span><span lang="en">The domain leads</span></span></span>
+            <span class="tchip" tabindex="-1" aria-hidden="true"><svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8.66 5v10L12 22 3.34 17V7z"/></svg><span class="tchip-name" translate="no">CQRS</span><span class="tchip-tip" role="tooltip"><span lang="es">Comandos y consultas separados</span><span lang="en">Commands and queries split</span></span></span>
+            <span class="tchip" tabindex="-1" aria-hidden="true"><svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8.66 5v10L12 22 3.34 17V7z"/></svg><span class="tchip-name" translate="no">Hexagonal</span><span class="tchip-tip" role="tooltip"><span lang="es">Puertos y adaptadores</span><span lang="en">Ports and adapters</span></span></span>
+            <span class="tchip" tabindex="-1" aria-hidden="true"><svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8.66 5v10L12 22 3.34 17V7z"/></svg><span class="tchip-name" translate="no">SOLID</span><span class="tchip-tip" role="tooltip"><span lang="es">Principios de diseño limpio</span><span lang="en">Clean design principles</span></span></span>
+            <span class="tchip" tabindex="-1" aria-hidden="true"><svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8.66 5v10L12 22 3.34 17V7z"/></svg><span class="tchip-name" translate="no">Event Sourcing</span><span class="tchip-tip" role="tooltip"><span lang="es">El estado como secuencia de eventos</span><span lang="en">State as a sequence of events</span></span></span>
+            <span class="tchip" tabindex="-1" aria-hidden="true"><svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8.66 5v10L12 22 3.34 17V7z"/></svg><span class="tchip-name" translate="no">Testing</span><span class="tchip-tip" role="tooltip"><span lang="es">Verde antes de mergear</span><span lang="en">Green before merging</span></span></span>
+            <span class="tchip" tabindex="-1" aria-hidden="true"><svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8.66 5v10L12 22 3.34 17V7z"/></svg><span class="tchip-name" translate="no">PHPStan</span><span class="tchip-tip" role="tooltip"><span lang="es">Análisis estático a nivel máximo</span><span lang="en">Static analysis at max level</span></span></span>
+            <span class="tchip" tabindex="-1" aria-hidden="true"><svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8.66 5v10L12 22 3.34 17V7z"/></svg><span class="tchip-name" translate="no">Rector</span><span class="tchip-tip" role="tooltip"><span lang="es">Refactor automatizado a escala</span><span lang="en">Automated refactoring at scale</span></span></span>
+          </div>
         </div>
-        <div class="stat">
-          <span class="stat-num js-count" data-count="7" data-decimals="0">×7</span>
-          <span class="stat-cap"><span lang="es">menos en la segunda pasada</span><span lang="en">cheaper on the second pass</span></span>
+        <div class="marquee-row" data-dir="normal">
+          <div class="marquee-track" style="--dur:20s">
+            <span class="tchip" tabindex="0" style="--i:0"><span class="tchip-icon"><img class="ico ico-mono" src="https://cdn.simpleicons.org/docker/F5F4F2" alt="" width="28" height="28" loading="lazy"><img class="ico ico-hot" src="https://cdn.simpleicons.org/docker" alt="" width="28" height="28" loading="lazy"></span><span class="tchip-name" translate="no">Docker</span><span class="tchip-tip" role="tooltip"><span lang="es">Entornos reproducibles</span><span lang="en">Reproducible environments</span></span></span>
+            <span class="tchip" tabindex="0" style="--i:1"><span class="tchip-icon"><img class="ico ico-mono" src="https://cdn.simpleicons.org/kubernetes/F5F4F2" alt="" width="28" height="28" loading="lazy"><img class="ico ico-hot" src="https://cdn.simpleicons.org/kubernetes" alt="" width="28" height="28" loading="lazy"></span><span class="tchip-name" translate="no">Kubernetes</span><span class="tchip-tip" role="tooltip"><span lang="es">Orquestación de contenedores</span><span lang="en">Container orchestration</span></span></span>
+            <span class="tchip" tabindex="0" style="--i:2"><span class="tchip-icon"><img class="ico ico-mono" src="https://cdn.simpleicons.org/postgresql/F5F4F2" alt="" width="28" height="28" loading="lazy"><img class="ico ico-hot" src="https://cdn.simpleicons.org/postgresql" alt="" width="28" height="28" loading="lazy"></span><span class="tchip-name" translate="no">PostgreSQL</span><span class="tchip-tip" role="tooltip"><span lang="es">Base relacional en producción</span><span lang="en">Relational database in production</span></span></span>
+            <span class="tchip" tabindex="0" style="--i:3"><span class="tchip-icon"><img class="ico ico-mono" src="https://cdn.simpleicons.org/mysql/F5F4F2" alt="" width="28" height="28" loading="lazy"><img class="ico ico-hot" src="https://cdn.simpleicons.org/mysql" alt="" width="28" height="28" loading="lazy"></span><span class="tchip-name" translate="no">MySQL</span><span class="tchip-tip" role="tooltip"><span lang="es">Base relacional en producción</span><span lang="en">Relational database in production</span></span></span>
+            <span class="tchip" tabindex="0" style="--i:4"><span class="tchip-icon"><img class="ico ico-mono" src="https://cdn.simpleicons.org/mongodb/F5F4F2" alt="" width="28" height="28" loading="lazy"><img class="ico ico-hot" src="https://cdn.simpleicons.org/mongodb" alt="" width="28" height="28" loading="lazy"></span><span class="tchip-name" translate="no">MongoDB</span><span class="tchip-tip" role="tooltip"><span lang="es">Documentos y logging</span><span lang="en">Documents and logging</span></span></span>
+            <span class="tchip" tabindex="0" style="--i:5"><span class="tchip-icon"><img class="ico ico-mono" src="https://cdn.simpleicons.org/rabbitmq/F5F4F2" alt="" width="28" height="28" loading="lazy"><img class="ico ico-hot" src="https://cdn.simpleicons.org/rabbitmq" alt="" width="28" height="28" loading="lazy"></span><span class="tchip-name" translate="no">RabbitMQ</span><span class="tchip-tip" role="tooltip"><span lang="es">Mensajería asíncrona</span><span lang="en">Asynchronous messaging</span></span></span>
+            <span class="tchip" tabindex="0" style="--i:6"><svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8 4.5v9L12 20l-8-4.5v-9z M12 2v9 M12 11l8-4.5 M12 11l-8-4.5"/></svg><span class="tchip-name" translate="no">AWS</span><span class="tchip-tip" role="tooltip"><span lang="es">Infraestructura en la nube</span><span lang="en">Cloud infrastructure</span></span></span>
+            <span class="tchip" tabindex="0" style="--i:7"><span class="tchip-icon"><img class="ico ico-mono" src="https://cdn.simpleicons.org/git/F5F4F2" alt="" width="28" height="28" loading="lazy"><img class="ico ico-hot" src="https://cdn.simpleicons.org/git" alt="" width="28" height="28" loading="lazy"></span><span class="tchip-name" translate="no">Git</span><span class="tchip-tip" role="tooltip"><span lang="es">Control de versiones</span><span lang="en">Version control</span></span></span>
+            <span class="tchip" tabindex="0" style="--i:8"><span class="tchip-icon"><img class="ico ico-mono" src="https://cdn.simpleicons.org/githubactions/F5F4F2" alt="" width="28" height="28" loading="lazy"><img class="ico ico-hot" src="https://cdn.simpleicons.org/githubactions" alt="" width="28" height="28" loading="lazy"></span><span class="tchip-name" translate="no">GitHub Actions</span><span class="tchip-tip" role="tooltip"><span lang="es">CI/CD automatizado</span><span lang="en">Automated CI/CD</span></span></span>
+            <span class="tchip" tabindex="0" style="--i:9"><span class="tchip-icon"><img class="ico ico-mono" src="https://cdn.simpleicons.org/cloudflareworkers/F5F4F2" alt="" width="28" height="28" loading="lazy"><img class="ico ico-hot" src="https://cdn.simpleicons.org/cloudflareworkers" alt="" width="28" height="28" loading="lazy"></span><span class="tchip-name" translate="no">Cloudflare Workers</span><span class="tchip-tip" role="tooltip"><span lang="es">Edge y serverless</span><span lang="en">Edge and serverless</span></span></span>
+            <span class="tchip" tabindex="0" style="--i:10"><span class="tchip-icon"><img class="ico ico-mono" src="https://cdn.simpleicons.org/claude/F5F4F2" alt="" width="28" height="28" loading="lazy"><img class="ico ico-hot" src="https://cdn.simpleicons.org/claude" alt="" width="28" height="28" loading="lazy"></span><span class="tchip-name" translate="no">Claude Code</span><span class="tchip-tip" role="tooltip"><span lang="es">Agentes con disciplina senior</span><span lang="en">Agents with senior discipline</span></span></span>
+            <span class="tchip" tabindex="0" style="--i:11"><svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.2 6.8L21 11l-6.8 2.2L12 20l-2.2-6.8L3 11l6.8-2.2z"/></svg><span class="tchip-name" translate="no">MCP</span><span class="tchip-tip" role="tooltip"><span lang="es">Extiende el agente</span><span lang="en">Extend the agent</span></span></span>
+            <span class="tchip" tabindex="0" style="--i:12"><svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.2 6.8L21 11l-6.8 2.2L12 20l-2.2-6.8L3 11l6.8-2.2z"/></svg><span class="tchip-name"><span lang="es">Multiagente</span><span lang="en">Multi-agent</span></span><span class="tchip-tip" role="tooltip"><span lang="es">Orquestación en paralelo</span><span lang="en">Parallel orchestration</span></span></span>
+            <span class="tchip" tabindex="-1" aria-hidden="true"><span class="tchip-icon"><img class="ico ico-mono" src="https://cdn.simpleicons.org/docker/F5F4F2" alt="" width="28" height="28" loading="lazy"><img class="ico ico-hot" src="https://cdn.simpleicons.org/docker" alt="" width="28" height="28" loading="lazy"></span><span class="tchip-name" translate="no">Docker</span><span class="tchip-tip" role="tooltip"><span lang="es">Entornos reproducibles</span><span lang="en">Reproducible environments</span></span></span>
+            <span class="tchip" tabindex="-1" aria-hidden="true"><span class="tchip-icon"><img class="ico ico-mono" src="https://cdn.simpleicons.org/kubernetes/F5F4F2" alt="" width="28" height="28" loading="lazy"><img class="ico ico-hot" src="https://cdn.simpleicons.org/kubernetes" alt="" width="28" height="28" loading="lazy"></span><span class="tchip-name" translate="no">Kubernetes</span><span class="tchip-tip" role="tooltip"><span lang="es">Orquestación de contenedores</span><span lang="en">Container orchestration</span></span></span>
+            <span class="tchip" tabindex="-1" aria-hidden="true"><span class="tchip-icon"><img class="ico ico-mono" src="https://cdn.simpleicons.org/postgresql/F5F4F2" alt="" width="28" height="28" loading="lazy"><img class="ico ico-hot" src="https://cdn.simpleicons.org/postgresql" alt="" width="28" height="28" loading="lazy"></span><span class="tchip-name" translate="no">PostgreSQL</span><span class="tchip-tip" role="tooltip"><span lang="es">Base relacional en producción</span><span lang="en">Relational database in production</span></span></span>
+            <span class="tchip" tabindex="-1" aria-hidden="true"><span class="tchip-icon"><img class="ico ico-mono" src="https://cdn.simpleicons.org/mysql/F5F4F2" alt="" width="28" height="28" loading="lazy"><img class="ico ico-hot" src="https://cdn.simpleicons.org/mysql" alt="" width="28" height="28" loading="lazy"></span><span class="tchip-name" translate="no">MySQL</span><span class="tchip-tip" role="tooltip"><span lang="es">Base relacional en producción</span><span lang="en">Relational database in production</span></span></span>
+            <span class="tchip" tabindex="-1" aria-hidden="true"><span class="tchip-icon"><img class="ico ico-mono" src="https://cdn.simpleicons.org/mongodb/F5F4F2" alt="" width="28" height="28" loading="lazy"><img class="ico ico-hot" src="https://cdn.simpleicons.org/mongodb" alt="" width="28" height="28" loading="lazy"></span><span class="tchip-name" translate="no">MongoDB</span><span class="tchip-tip" role="tooltip"><span lang="es">Documentos y logging</span><span lang="en">Documents and logging</span></span></span>
+            <span class="tchip" tabindex="-1" aria-hidden="true"><span class="tchip-icon"><img class="ico ico-mono" src="https://cdn.simpleicons.org/rabbitmq/F5F4F2" alt="" width="28" height="28" loading="lazy"><img class="ico ico-hot" src="https://cdn.simpleicons.org/rabbitmq" alt="" width="28" height="28" loading="lazy"></span><span class="tchip-name" translate="no">RabbitMQ</span><span class="tchip-tip" role="tooltip"><span lang="es">Mensajería asíncrona</span><span lang="en">Asynchronous messaging</span></span></span>
+            <span class="tchip" tabindex="-1" aria-hidden="true"><svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8 4.5v9L12 20l-8-4.5v-9z M12 2v9 M12 11l8-4.5 M12 11l-8-4.5"/></svg><span class="tchip-name" translate="no">AWS</span><span class="tchip-tip" role="tooltip"><span lang="es">Infraestructura en la nube</span><span lang="en">Cloud infrastructure</span></span></span>
+            <span class="tchip" tabindex="-1" aria-hidden="true"><span class="tchip-icon"><img class="ico ico-mono" src="https://cdn.simpleicons.org/git/F5F4F2" alt="" width="28" height="28" loading="lazy"><img class="ico ico-hot" src="https://cdn.simpleicons.org/git" alt="" width="28" height="28" loading="lazy"></span><span class="tchip-name" translate="no">Git</span><span class="tchip-tip" role="tooltip"><span lang="es">Control de versiones</span><span lang="en">Version control</span></span></span>
+            <span class="tchip" tabindex="-1" aria-hidden="true"><span class="tchip-icon"><img class="ico ico-mono" src="https://cdn.simpleicons.org/githubactions/F5F4F2" alt="" width="28" height="28" loading="lazy"><img class="ico ico-hot" src="https://cdn.simpleicons.org/githubactions" alt="" width="28" height="28" loading="lazy"></span><span class="tchip-name" translate="no">GitHub Actions</span><span class="tchip-tip" role="tooltip"><span lang="es">CI/CD automatizado</span><span lang="en">Automated CI/CD</span></span></span>
+            <span class="tchip" tabindex="-1" aria-hidden="true"><span class="tchip-icon"><img class="ico ico-mono" src="https://cdn.simpleicons.org/cloudflareworkers/F5F4F2" alt="" width="28" height="28" loading="lazy"><img class="ico ico-hot" src="https://cdn.simpleicons.org/cloudflareworkers" alt="" width="28" height="28" loading="lazy"></span><span class="tchip-name" translate="no">Cloudflare Workers</span><span class="tchip-tip" role="tooltip"><span lang="es">Edge y serverless</span><span lang="en">Edge and serverless</span></span></span>
+            <span class="tchip" tabindex="-1" aria-hidden="true"><span class="tchip-icon"><img class="ico ico-mono" src="https://cdn.simpleicons.org/claude/F5F4F2" alt="" width="28" height="28" loading="lazy"><img class="ico ico-hot" src="https://cdn.simpleicons.org/claude" alt="" width="28" height="28" loading="lazy"></span><span class="tchip-name" translate="no">Claude Code</span><span class="tchip-tip" role="tooltip"><span lang="es">Agentes con disciplina senior</span><span lang="en">Agents with senior discipline</span></span></span>
+            <span class="tchip" tabindex="-1" aria-hidden="true"><svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.2 6.8L21 11l-6.8 2.2L12 20l-2.2-6.8L3 11l6.8-2.2z"/></svg><span class="tchip-name" translate="no">MCP</span><span class="tchip-tip" role="tooltip"><span lang="es">Extiende el agente</span><span lang="en">Extend the agent</span></span></span>
+            <span class="tchip" tabindex="-1" aria-hidden="true"><svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.2 6.8L21 11l-6.8 2.2L12 20l-2.2-6.8L3 11l6.8-2.2z"/></svg><span class="tchip-name"><span lang="es">Multiagente</span><span lang="en">Multi-agent</span></span><span class="tchip-tip" role="tooltip"><span lang="es">Orquestación en paralelo</span><span lang="en">Parallel orchestration</span></span></span>
+          </div>
         </div>
-        <p class="stat-src">
-          <span lang="es">Medido en <span translate="no">token-economy</span>, mi plugin de optimización.</span><span lang="en">Measured in <span translate="no">token-economy</span>, my optimization plugin.</span>
-        </p>
       </div>
+
+        <div class="card stack-stats js-reveal">
+      <div class="stat">
+        <span class="stat-num js-count" data-count="20" data-decimals="0" data-suffix="+">20+</span>
+        <span class="stat-cap"><span lang="es">años en tecnología</span><span lang="en">years in tech</span></span>
+      </div>
+      <div class="stat">
+        <span class="stat-num js-count" data-count="1400" data-decimals="0" data-suffix="+">1400+</span>
+        <span class="stat-cap"><span lang="es">ficheros migrados a PHP 8</span><span lang="en">files migrated to PHP 8</span></span>
+      </div>
+      <div class="stat">
+        <span class="stat-num js-count" data-count="160" data-decimals="0" data-suffix="+">160+</span>
+        <span class="stat-cap"><span lang="es">suites de test en paralelo</span><span lang="en">parallel test suites</span></span>
+      </div>
+      <div class="stat">
+        <span class="stat-num js-count" data-count="7" data-decimals="0" data-prefix="×">×7</span>
+        <span class="stat-cap"><span lang="es">menos coste en la segunda pasada</span><span lang="en">cheaper on the second pass</span></span>
+      </div>
+      <p class="stat-src">
+        <span lang="es">Cifras del CV; el <span translate="no">×7</span>, medido en <span translate="no">token-economy</span>, mi plugin de optimización.</span><span lang="en">Numbers from the CV; the <span translate="no">×7</span> measured in <span translate="no">token-economy</span>, my optimization plugin.</span>
+      </p>
     </div>
   </section>
 
@@ -720,25 +1285,13 @@
       <h2><span lang="es">Proyectos</span><span lang="en">Projects</span></h2>
     </div>
     <div class="proj-grid">
-      <a class="card proj proj-wide js-reveal" href="https://github.com/davidgarciagordo/forge-methodology">
-        <span class="repo" translate="no">forge-methodology</span>
-        <span class="proj-desc"><span lang="es">Del spec al verify con un grill adversarial en medio: los agentes se auditan entre sí.</span><span lang="en">From spec to verify with an adversarial grill in between: agents audit each other.</span></span>
+      <a class="card proj proj-wide js-reveal" href="#ia">
+        <span class="repo"><span lang="es">Ecosistema Claude Code</span><span lang="en">Claude Code ecosystem</span></span>
+        <span class="proj-desc"><span lang="es">Cinco plugins open source que llevan disciplina de equipo senior a los agentes de IA. Míralos en el capítulo de IA.</span><span lang="en">Five open-source plugins bringing senior-team discipline to AI agents. See them in the AI chapter.</span></span>
       </a>
-      <a class="card proj js-reveal" href="https://github.com/davidgarciagordo/design-review">
-        <span class="repo" translate="no">design-review</span>
-        <span class="proj-desc"><span lang="es">Cuatro lentes de diseño y un veredicto en navegador real.</span><span lang="en">Four design lenses and a verdict in a real browser.</span></span>
-      </a>
-      <a class="card proj js-reveal" href="https://github.com/davidgarciagordo/token-economy">
-        <span class="repo" translate="no">token-economy</span>
-        <span class="proj-desc"><span lang="es">Recorta el coste multiagente sin perder cobertura, medido con benchmark.</span><span lang="en">Cuts multi-agent cost without losing coverage, with measured benchmarks.</span></span>
-      </a>
-      <a class="card proj js-reveal" href="https://github.com/davidgarciagordo/working-methods">
-        <span class="repo" translate="no">working-methods</span>
-        <span class="proj-desc"><span lang="es">Flujos de trabajo y orquestación multiagente como comandos.</span><span lang="en">Workflows and multi-agent orchestration as commands.</span></span>
-      </a>
-      <a class="card proj js-reveal" href="https://github.com/davidgarciagordo/automations">
-        <span class="repo" translate="no">automations</span>
-        <span class="proj-desc"><span lang="es">Automatiza y afina tu instalación de Claude Code.</span><span lang="en">Automates and tunes your Claude Code setup.</span></span>
+      <a class="card proj js-reveal" href="https://davidgarciagordo.github.io">
+        <span class="repo" translate="no">davidgarciagordo.github.io</span>
+        <span class="proj-desc"><span lang="es">Mi sitio personal y laboratorio de experimentos.</span><span lang="en">My personal site and experiments lab.</span></span>
       </a>
       <div class="card proj proj-legacy js-reveal">
         <span class="repo"><span lang="es">Era Laminas · 2008 - 2020</span><span lang="en">Laminas era · 2008 - 2020</span></span>
@@ -805,8 +1358,8 @@
 
     /* ---- Language toggle ---- */
     var DESC = {
-      es: "David García Gordo, Belcebur. Backend PHP con DDD, CQRS y arquitectura hexagonal, y tooling de IA para Claude Code. Open source desde 2008.",
-      en: "David García Gordo, Belcebur. PHP backend with DDD, CQRS and hexagonal architecture, and AI tooling for Claude Code. Open source since 2008."
+      es: "David García Gordo, Belcebur. Tech Lead. Más de 20 años transformando sistemas legacy en arquitecturas DDD, CQRS y hexagonales, y tooling de IA para Claude Code. Open source desde 2008.",
+      en: "David García Gordo, Belcebur. Tech Lead. Over 20 years turning legacy systems into DDD, CQRS and hexagonal architectures, and AI tooling for Claude Code. Open source since 2008."
     };
     var btn = document.getElementById("lang-toggle");
     var meta = document.querySelector('meta[name="description"]');
@@ -859,12 +1412,14 @@
     function countUp(el) {
       var target = parseFloat(el.getAttribute("data-count"));
       var decimals = parseInt(el.getAttribute("data-decimals") || "0", 10);
+      var prefix = el.getAttribute("data-prefix") || "";
+      var suffix = el.getAttribute("data-suffix") || "";
       var t0 = null;
       function frame(t) {
         if (t0 === null) t0 = t;
         var p = Math.min((t - t0) / 900, 1);
         var eased = 1 - Math.pow(1 - p, 3);
-        el.textContent = "×" + (target * eased).toFixed(decimals);
+        el.textContent = prefix + (target * eased).toFixed(decimals) + suffix;
         if (p < 1) requestAnimationFrame(frame);
       }
       requestAnimationFrame(frame);
@@ -882,6 +1437,69 @@
     }, { threshold: 0.15 });
 
     reveals.forEach(function (el) { io.observe(el); });
+
+    /* ---- Marquee stagger-in ---- */
+    var mio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("in");
+        mio.unobserve(entry.target);
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll(".marquee-wrap").forEach(function (w) {
+      w.classList.add("stagger");
+      mio.observe(w);
+    });
+
+    /* ---- Pipeline draw-in (AI section) ---- */
+    var pio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("in");
+        pio.unobserve(entry.target);
+      });
+    }, { threshold: 0.25 });
+    document.querySelectorAll(".pipeline").forEach(function (p) { pio.observe(p); });
+
+    /* ---- Ghost keyword scroll parallax ---- */
+    var ghost = document.querySelector(".stack-ghost");
+    var stackSec = document.getElementById("stack");
+    var gTarget = 0, gCur = 0;
+    if (ghost && stackSec) {
+      window.addEventListener("scroll", function () {
+        var r = stackSec.getBoundingClientRect();
+        gTarget = (r.top + r.height / 2 - window.innerHeight / 2) * -0.08;
+      }, { passive: true });
+    }
+
+    /* ---- Pointer parallax (fine pointers only) ---- */
+    var fine = window.matchMedia("(pointer: fine)").matches;
+    var lerp = function (a, b, n) { return a + (b - a) * n; };
+    var hero = document.getElementById("hero");
+    var photo = document.querySelector(".hero-photo-inner");
+    var backdrop = document.querySelector(".backdrop");
+    var ht = { x: 0, y: 0 }, hc = { x: 0, y: 0 };
+    if (fine && hero) {
+      hero.addEventListener("pointermove", function (e) {
+        var r = hero.getBoundingClientRect();
+        ht.x = ((e.clientX - r.left) / r.width - .5) * 2;
+        ht.y = ((e.clientY - r.top) / r.height - .5) * 2;
+      });
+      hero.addEventListener("pointerleave", function () { ht.x = 0; ht.y = 0; });
+    }
+
+    (function loop() {
+      if (fine) {
+        hc.x = lerp(hc.x, ht.x, .08); hc.y = lerp(hc.y, ht.y, .08);
+        if (photo) photo.style.transform = "translate(" + (hc.x * 8) + "px," + (hc.y * 8) + "px)";
+        if (backdrop) backdrop.style.transform = "translate(" + (hc.x * -6) + "px," + (hc.y * -6) + "px)";
+      }
+      if (ghost) {
+        gCur = lerp(gCur, gTarget, .1);
+        ghost.style.transform = "translate(-50%, calc(-50% + " + gCur.toFixed(1) + "px))";
+      }
+      requestAnimationFrame(loop);
+    })();
   })();
 </script>
 
