@@ -276,6 +276,12 @@
     border-radius: 999px; padding: 5px 12px; background: rgb(var(--green-rgb) / .06);
   }
   .pnode-gate::before { content: "●"; }
+  .pnode-loop { display: block; margin-top: 8px; font-size: 13px; color: var(--ink-cap); }
+  .pnode-loop b { color: var(--amber); font-weight: 500; }
+  /* The two segments that are genuinely NOT linear (grill can send the plan back to be
+     rewritten; a Critical review finding sends the diff back to implementer) get a dashed
+     connector instead of the default solid one, so the rail itself hints at the loop. */
+  .pnode.loop-seg::after { background: repeating-linear-gradient(var(--amber) 0 4px, transparent 4px 9px); }
 
   /* Resting state is LIT by default (matches .js-reveal's pattern) so no-JS and any script
      failure still show a finished, legible instrument. .motion-active dims everything back down
@@ -342,6 +348,8 @@
   .install-row code { font-family: var(--font-mono); white-space: pre; overflow-x: auto; display: block; min-width: 0; flex: 1 1 auto; }
   .install-row .c { color: var(--ink-cap); }
   .install-row .v { color: var(--amber-hot); }
+  .install-alt { max-width: 620px; margin: -12px auto 32px; font-size: 13px; color: var(--ink-cap); }
+  .install-alt code { font-family: var(--font-mono); color: var(--ink-muted); }
   .copy-btn {
     flex-shrink: 0; font-family: var(--font-mono); font-size: 11px; color: var(--ink-cap);
     background: transparent; border: 1px solid var(--hairline); border-radius: var(--radius-tight);
@@ -475,7 +483,7 @@
         <div><div class="pnode-stage"><span lang="es">análisis</span><span lang="en">analysis</span></div>
         <div class="pnode-card"><span lang="es">7 lentes de auditoría read-only (arquitectura, seguridad, rendimiento, datos, SOLID…). Se lanzan solo las que el objetivo necesita, nunca las 7 a la vez.</span><span lang="en">7 read-only audit lenses (architecture, security, performance, data, SOLID…). Only the ones the objective needs run, never all 7 at once.</span></div></div>
       </li>
-      <li class="pnode" style="--n:4">
+      <li class="pnode loop-seg" style="--n:4">
         <span class="pnode-idx">05</span>
         <span class="pnode-dot" aria-hidden="true"></span>
         <div><div class="pnode-stage"><span lang="es">diseño + spec</span><span lang="en">design + spec</span></div>
@@ -485,10 +493,11 @@
         <span class="pnode-idx">06</span>
         <span class="pnode-dot" aria-hidden="true"></span>
         <div><div class="pnode-stage">grill ×3</div>
-        <div class="pnode-card"><span lang="es">Tres lentes adversariales — arquitecto, operador, ingeniero — atacan el spec ANTES de escribir código. Cada hallazgo cita fichero:línea o no cuenta.</span><span lang="en">Three adversarial lenses — architect, operator, engineer — attack the spec BEFORE any code is written. Every finding cites file:line or it doesn't count.</span></div>
+        <div class="pnode-card"><span lang="es">Tres lentes adversariales — arquitecto, operador, ingeniero — atacan el spec ANTES de escribir código. Cada hallazgo cita fichero:línea o no cuenta.</span><span lang="en">Three adversarial lenses — architect, operator, engineer — attack the spec BEFORE any code is written. Every finding cites file:line or it doesn't count.</span>
+        <span class="pnode-loop">↺ <b><span lang="es">no es lineal:</span><span lang="en">not linear:</span></b> <span lang="es">si hay hallazgos P1, planner reescribe el paso 05 y grill vuelve a arbitrar.</span><span lang="en">if there are P1 findings, planner rewrites step 05 and grill arbitrates again.</span></span></div>
         <div class="pnode-gate"><span lang="es">GATE · ×3 lentes, antes del código</span><span lang="en">GATE · ×3 lenses, before any code</span></div></div>
       </li>
-      <li class="pnode" style="--n:6">
+      <li class="pnode loop-seg" style="--n:6">
         <span class="pnode-idx">07</span>
         <span class="pnode-dot" aria-hidden="true"></span>
         <div><div class="pnode-stage">TDD RED → GREEN</div>
@@ -498,13 +507,14 @@
         <span class="pnode-idx">08</span>
         <span class="pnode-dot" aria-hidden="true"></span>
         <div><div class="pnode-stage"><span lang="es">revisión</span><span lang="en">review</span></div>
-        <div class="pnode-card"><span class="muted">reviewer · opus</span> <span lang="es">revisa el diff con severidad, en el worktree aislado — antes de que toque tu rama.</span><span lang="en">reviews the diff with severity tags, in the isolated worktree — before it touches your branch.</span></div></div>
+        <div class="pnode-card"><span class="muted">reviewer · opus</span> <span lang="es">revisa el diff con severidad, en el worktree aislado — antes de que toque tu rama.</span><span lang="en">reviews the diff with severity tags, in the isolated worktree — before it touches your branch.</span>
+        <span class="pnode-loop">↺ <b><span lang="es">tampoco es lineal:</span><span lang="en">not linear either:</span></b> <span lang="es">hasta 2 rondas de arreglo con el paso 07 antes de fusionar.</span><span lang="en">up to 2 rounds of fixes with step 07 before merging.</span></span></div></div>
       </li>
       <li class="pnode" style="--n:8">
         <span class="pnode-idx">09</span>
         <span class="pnode-dot" aria-hidden="true"></span>
         <div><div class="pnode-stage"><span lang="es">verificación</span><span lang="en">verification</span></div>
-        <div class="pnode-card"><span class="muted">verifier · opus</span><span lang="es">, un agente que NUNCA construyó lo que revisa, confirma que el "hecho" es real antes de cerrar. Sin esto, un agente podría marcarse a sí mismo aprobado.</span><span lang="en">, an agent that NEVER built what it checks, confirms "done" is real before closing. Without this, an agent could mark its own work approved.</span></div>
+        <div class="pnode-card"><span class="muted">verifier · opus</span><span lang="es">, un agente que NUNCA construyó lo que revisa, confirma que el "hecho" es real antes de cerrar — con una segunda pasada si algo se corrigió. Sin esto, un agente podría marcarse a sí mismo aprobado.</span><span lang="en">, an agent that NEVER built what it checks, confirms "done" is real before closing — with one more pass if something got fixed. Without this, an agent could mark its own work approved.</span></div>
         <div class="pnode-gate"><span lang="es">GATE · independiente de quien ejecutó</span><span lang="en">GATE · independent of who executed</span></div></div>
       </li>
       <li class="pnode" style="--n:11">
@@ -660,10 +670,11 @@
     <h2><span lang="es">Local, en dos minutos.</span><span lang="en">Local, in two minutes.</span></h2>
     <div class="sr-only" id="copy-status" role="status" aria-live="polite"></div>
     <div class="install-block">
-      <div class="install-row"><code><span class="c">$</span> claude --plugin-dir <span class="v">/ruta/a/swarm</span></code><button class="copy-btn" data-copy="claude --plugin-dir /ruta/a/swarm"><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
-      <div class="install-row"><code><span class="c">$</span> /swarm:init</code><button class="copy-btn" data-copy="/swarm:init"><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
+      <div class="install-row"><code><span class="c">$</span> /plugin marketplace add <span class="v">davidgarciagordo/claude-plugins</span></code><button class="copy-btn" data-copy="/plugin marketplace add davidgarciagordo/claude-plugins"><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
+      <div class="install-row"><code><span class="c">$</span> /plugin install <span class="v">swarm</span></code><button class="copy-btn" data-copy="/plugin install swarm"><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
       <div class="install-row"><code><span class="c">$</span> /swarm:run <span class="v">"&lt;<span lang="es">lo que quieras</span><span lang="en">whatever you want</span>&gt;"</span></code><button class="copy-btn" data-copy='/swarm:run "..."'><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
     </div>
+    <p class="install-alt"><span lang="es">Sin marketplace: <code>$ claude --plugin-dir /ruta/a/swarm</code></span><span lang="en">Without a marketplace: <code>$ claude --plugin-dir /path/to/swarm</code></span></p>
     <div class="cta-row">
       <a class="cta cta-amber" href="https://github.com/davidgarciagordo/swarm"><span lang="es">Ver en GitHub</span><span lang="en">View on GitHub</span> →</a>
       <a class="cta" href="/plugins/"><span lang="es">Más plugins</span><span lang="en">More plugins</span></a>
