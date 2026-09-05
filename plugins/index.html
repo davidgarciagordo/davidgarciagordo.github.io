@@ -108,13 +108,21 @@
     backdrop-filter: blur(14px) saturate(140%);
     border-bottom: 1px solid var(--hairline);
   }
-  .topnav { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; gap: 16px; }
+  .topnav { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; padding: 12px 24px; gap: 10px 16px; }
+  @media (max-width: 480px) { .nav-cross { order: 3; width: 100%; justify-content: center; padding-top: 4px; } }
   .logo {
     font-family: var(--font-display); font-weight: 700; letter-spacing: -.01em;
     font-size: 15px; text-decoration: none; color: var(--ink); min-height: 44px;
     padding: 10px 4px; display: inline-flex; align-items: center;
   }
   .logo b { color: var(--amber); }
+  .nav-cross { display: flex; align-items: center; gap: 18px; }
+  .nav-cross a {
+    font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-cap); text-decoration: none;
+    padding: 10px 2px; min-height: 44px; display: inline-flex; align-items: center;
+    transition: color .2s ease;
+  }
+  .nav-cross a:hover { color: var(--amber-hot); }
   .nav-right { display: flex; align-items: center; gap: 14px; }
   .nav-gh {
     font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-cap); text-decoration: none;
@@ -358,6 +366,10 @@
 <header class="top">
   <div class="topnav">
     <a class="logo" href="/">plugins<b>.</b></a>
+    <nav class="nav-cross" aria-label="Navegación cruzada">
+      <a href="/"><span lang="es">Inicio</span><span lang="en">Home</span></a>
+      <a href="/swarm/" translate="no">swarm</a>
+    </nav>
     <div class="nav-right">
       <a class="nav-gh" href="https://github.com/davidgarciagordo/claude-plugins">GitHub · MIT</a>
       <div class="lang-toggle" role="group" aria-label="Language / Idioma">

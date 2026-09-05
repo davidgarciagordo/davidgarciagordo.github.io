@@ -232,6 +232,29 @@
   }
   .nav-right { display: flex; align-items: center; gap: 1rem; }
 
+  .nav-drop { position: relative; }
+  .nav-drop-trigger { display: inline-flex; align-items: center; gap: .3rem; }
+  .nav-drop-trigger svg { width: 9px; height: 9px; transition: transform .2s ease; }
+  .nav-drop:hover .nav-drop-trigger svg, .nav-drop:focus-within .nav-drop-trigger svg { transform: rotate(180deg); }
+  .nav-drop-menu {
+    position: absolute; top: 100%; left: 50%; transform: translate(-50%, 6px);
+    display: flex; flex-direction: column; gap: .15rem;
+    min-width: 168px; padding: .5rem;
+    background: rgb(10 10 15 / .92); backdrop-filter: blur(16px);
+    border: 1px solid var(--hairline); border-radius: 10px;
+    box-shadow: 0 12px 32px rgb(0 0 0 / .35);
+    opacity: 0; pointer-events: none; transition: opacity .18s ease, transform .18s ease;
+  }
+  .nav-drop:hover .nav-drop-menu, .nav-drop:focus-within .nav-drop-menu {
+    opacity: 1; pointer-events: auto; transform: translate(-50%, 2px);
+  }
+  .nav-drop-menu a {
+    padding: .45rem .6rem; border-radius: 6px; text-transform: none;
+    letter-spacing: normal; font-size: 13px;
+  }
+  .nav-drop-menu a:hover, .nav-drop-menu a:focus-visible { background: rgb(245 158 11 / .1); color: var(--amber); }
+  .nav-drop-menu .drop-sub { color: var(--ink-faint); font-size: 11px; padding: .3rem .6rem 0; }
+
   .lang-toggle {
     font-family: var(--font-display);
     font-weight: 700;
@@ -309,6 +332,12 @@
   .nav.open ~ .panel a:nth-child(3) { transition-delay: .2s; }
   .nav.open ~ .panel a:nth-child(4) { transition-delay: .26s; }
   .nav.open ~ .panel a:nth-child(5) { transition-delay: .32s; }
+  .nav.open ~ .panel a:nth-child(6) { transition-delay: .38s; }
+  .nav.open ~ .panel a:nth-child(7) { transition-delay: .44s; }
+  .panel a.panel-sub {
+    font-size: 1rem; text-transform: none; letter-spacing: normal;
+    color: var(--ink-muted); padding-left: .5rem; margin-top: -.5rem;
+  }
 
   /* ============ Hero ============ */
   #hero { padding-top: 8rem; }
@@ -948,7 +977,14 @@
   </a>
   <nav class="nav-links" aria-label="Secciones">
     <a href="#experiencia"><span lang="es">Experiencia</span><span lang="en">Experience</span></a>
-    <a href="#ia"><span lang="es">IA</span><span lang="en">AI</span></a>
+    <div class="nav-drop">
+      <a href="#ia" class="nav-drop-trigger"><span lang="es">IA</span><span lang="en">AI</span> <svg viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></a>
+      <div class="nav-drop-menu">
+        <a href="#ia"><span lang="es">Ecosistema Claude Code</span><span lang="en">Claude Code ecosystem</span></a>
+        <a href="/swarm/" translate="no">swarm</a>
+        <a href="/plugins/" translate="no">plugins</a>
+      </div>
+    </div>
     <a href="#stack">Stack</a>
     <a href="#proyectos"><span lang="es">Proyectos</span><span lang="en">Projects</span></a>
     <a href="#contacto"><span lang="es">Contacto</span><span lang="en">Contact</span></a>
@@ -965,6 +1001,8 @@
 <nav class="panel" id="panel" aria-label="Menú móvil">
   <a href="#experiencia"><span lang="es">Experiencia</span><span lang="en">Experience</span></a>
   <a href="#ia"><span lang="es">IA</span><span lang="en">AI</span></a>
+  <a href="/swarm/" class="panel-sub" translate="no">↳ swarm</a>
+  <a href="/plugins/" class="panel-sub" translate="no">↳ plugins</a>
   <a href="#stack">Stack</a>
   <a href="#proyectos"><span lang="es">Proyectos</span><span lang="en">Projects</span></a>
   <a href="#contacto"><span lang="es">Contacto</span><span lang="en">Contact</span></a>
@@ -1113,8 +1151,30 @@
     <span class="label amber ia-eyebrow js-reveal"><span lang="es">IA · AI Engineering</span><span lang="en">AI Engineering</span></span>
     <h2 class="ia-head js-reveal"><span lang="es">Enseño a los agentes a trabajar como un equipo senior</span><span lang="en">I teach AI agents to work like a senior team</span></h2>
     <p class="ia-sub js-reveal">
-      <span lang="es">En <span translate="no">Classlife</span> introduje desarrollo asistido por IA con patrones reutilizables: <em>de horas a minutos por funcionalidad estándar</em>. Fuera del trabajo construyo el ecosistema open-source de plugins para <span translate="no">Claude Code</span>: la misma disciplina de un equipo senior, aplicada a los agentes.</span><span lang="en">At <span translate="no">Classlife</span> I introduced AI-assisted development with reusable patterns: <em>from hours to minutes per standard feature</em>. Outside work I build the open-source plugin ecosystem for <span translate="no">Claude Code</span>: the same senior-team discipline, applied to agents.</span>
+      <span lang="es">De horas a minutos por funcionalidad, en <span translate="no">Classlife</span>. Fuera del trabajo construyo el <em>ecosistema</em> que lo hace posible: 6 plugins open-source para <span translate="no">Claude Code</span> que le meten disciplina de equipo senior a los agentes.</span><span lang="en">From hours to minutes per feature, at <span translate="no">Classlife</span>. Outside work I build the <em>ecosystem</em> that makes it possible: 6 open-source plugins for <span translate="no">Claude Code</span> that bring senior-team discipline to the agents.</span>
     </p>
+
+    <div class="card stack-stats js-reveal" style="margin-bottom:clamp(2rem, 5vh, 3rem)">
+      <div class="stat">
+        <span class="stat-num js-count" data-count="6" data-decimals="0">6</span>
+        <span class="stat-cap"><span lang="es">plugins open source</span><span lang="en">open-source plugins</span></span>
+      </div>
+      <div class="stat">
+        <span class="stat-num js-count" data-count="39" data-decimals="0">39</span>
+        <span class="stat-cap"><span lang="es">agentes en <span translate="no">swarm</span></span><span lang="en"><span translate="no">swarm</span>'s agents</span></span>
+      </div>
+      <div class="stat">
+        <span class="stat-num js-count" data-count="7" data-decimals="0">7</span>
+        <span class="stat-cap"><span lang="es">lentes de análisis read-only</span><span lang="en">read-only analysis lenses</span></span>
+      </div>
+      <div class="stat">
+        <span class="stat-num js-count" data-count="7" data-decimals="0" data-prefix="×">×7</span>
+        <span class="stat-cap"><span lang="es">menos coste en la segunda pasada</span><span lang="en">cheaper on the second pass</span></span>
+      </div>
+      <p class="stat-src">
+        <span lang="es">Números reales de mis propios repos, no de marketing.</span><span lang="en">Real numbers from my own repos, not marketing.</span>
+      </p>
+    </div>
 
     <div class="pipeline">
       <svg class="pipeline-line" viewBox="0 0 100 2" preserveAspectRatio="none" aria-hidden="true"><path class="pl-path" pathLength="1" d="M10 1 H90"/></svg>
@@ -1172,14 +1232,18 @@
       <span class="ia-microstat"><b>×7</b> <span lang="es">menos coste al reusar artefactos</span><span lang="en">cheaper when reusing artifacts</span></span>
     </div>
 
-    <a class="cta cta-amber js-reveal" href="https://github.com/davidgarciagordo/claude-plugins">
-      <span lang="es">Ver el catálogo de plugins</span><span lang="en">See the plugin catalog</span> →
-    </a>
-
-    <a class="card proj proj-wide js-reveal" href="/swarm/" style="margin-top:20px">
-      <span class="repo" translate="no">swarm</span>
-      <span class="proj-desc"><span lang="es">El que reúne a los otros cuatro: 39 agentes especializados que descubren, diseñan, implementan y entregan, con gates de seguridad reales. Un equipo de software sénior, en un comando.</span><span lang="en">The one that ties the other four together: 39 specialized agents that discover, design, implement and deliver, with real security gates. A senior software team, in one command.</span></span>
-    </a>
+    <div class="proj-grid js-reveal">
+      <a class="card proj proj-wide" href="/swarm/">
+        <span class="repo" translate="no">swarm</span>
+        <span class="proj-desc"><span lang="es">El que reúne a los otros cinco: 39 agentes especializados que descubren, diseñan, implementan y entregan, con gates de seguridad reales. Un equipo de software sénior, en un comando.</span><span lang="en">The one that ties the other five together: 39 specialized agents that discover, design, implement and deliver, with real security gates. A senior software team, in one command.</span></span>
+        <span class="ia-microstat" aria-hidden="true"><b>39</b> <span lang="es">agentes</span><span lang="en">agents</span> · <b>10</b> <span lang="es">pasos</span><span lang="en">steps</span> · <b>1</b> <span lang="es">comando</span><span lang="en">command</span></span>
+      </a>
+      <a class="card proj" href="/plugins/">
+        <span class="repo" translate="no">plugins</span>
+        <span class="proj-desc"><span lang="es">El catálogo entero: los 6 plugins, uno a uno, con lo que cada uno resuelve de verdad.</span><span lang="en">The whole catalog: all 6 plugins, one by one, with what each one actually solves.</span></span>
+        <span class="ia-microstat" aria-hidden="true"><span lang="es">Ver el catálogo</span><span lang="en">See the catalog</span> →</span>
+      </a>
+    </div>
   </section>
 
   <!-- ============ S3 STACK ============ -->
