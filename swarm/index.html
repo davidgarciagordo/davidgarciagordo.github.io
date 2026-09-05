@@ -268,6 +268,8 @@
   }
   .pnode-stage { font-family: var(--font-display); font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: var(--track-label); color: var(--amber); margin-bottom: 4px; }
   .pnode-card { color: var(--ink-muted); font-size: 15px; line-height: 1.55; }
+  .pnode-card .muted { color: var(--ink-cap); font-family: var(--font-mono); font-size: 13px; }
+  .pnode-card .pn-stat { display: block; margin-top: 6px; color: var(--amber); font-weight: 500; font-size: 13.5px; }
   .pnode-gate {
     display: inline-flex; align-items: center; gap: 8px; margin: 10px 0 0; font-size: 12px;
     text-transform: uppercase; color: var(--green); border: 1px solid rgb(var(--green-rgb) / .35);
@@ -446,38 +448,71 @@
   </section>
 
   <figure class="figframe" id="pipeline">
-    <figcaption class="fig-cap"><span class="rule" aria-hidden="true"></span><h2><span aria-hidden="true">&gt;_ ───</span> <span lang="es">fig. 1 · el pipeline</span><span lang="en">fig. 1 · the pipeline</span> <span aria-hidden="true">─── #</span></h2><span class="rule" aria-hidden="true"></span></figcaption>
+    <figcaption class="fig-cap"><span class="rule" aria-hidden="true"></span><h2><span aria-hidden="true">&gt;_ ───</span> <span lang="es">fig. 1 · el flujo completo</span><span lang="en">fig. 1 · the full flow</span> <span aria-hidden="true">─── #</span></h2><span class="rule" aria-hidden="true"></span></figcaption>
     <ol class="pnode-rail">
       <li class="pnode" style="--n:0">
         <span class="pnode-idx">01</span>
         <span class="pnode-dot" aria-hidden="true"></span>
-        <div><div class="pnode-stage">discovery</div>
-        <div class="pnode-card"><span lang="es">Preguntas al owner en UNA tanda: nunca un interrogatorio.</span><span lang="en">Questions to the owner in ONE batch, never an interrogation.</span></div></div>
+        <div><div class="pnode-stage"><span lang="es">objetivo</span><span lang="en">objective</span></div>
+        <div class="pnode-card"><span lang="es">Escribes lo que quieres, tal cual. Si es ambiguo, el gate de interpretación te pregunta en lenguaje llano antes de decidir nada — nunca ejecuta a ciegas.</span><span lang="en">You write what you want, as-is. If it's ambiguous, the interpretation gate asks in plain language before deciding anything — it never executes blind.</span></div>
+        <div class="pnode-gate"><span lang="es">GATE · pregunta solo si hace falta</span><span lang="en">GATE · asks only when needed</span></div></div>
       </li>
       <li class="pnode" style="--n:1">
         <span class="pnode-idx">02</span>
         <span class="pnode-dot" aria-hidden="true"></span>
-        <div><div class="pnode-stage"><span lang="es">análisis + diseño</span><span lang="en">analysis + design</span></div>
-        <div class="pnode-card"><span lang="es">7 lentes de auditoría read-only. Plan escrito y revisado por grill ×3 adversarial.</span><span lang="en">7 read-only audit lenses. A written plan reviewed by adversarial grill ×3.</span></div></div>
+        <div><div class="pnode-stage"><span lang="es">memoria unificada</span><span lang="en">unified memory</span></div>
+        <div class="pnode-card"><span class="muted"><span lang="es">memory-orchestrator</span><span lang="en">memory-orchestrator</span> · haiku</span> <span lang="es">comprueba un hash del repo. Si no cambió, reusa el context-pack ya construido; si cambió,</span><span lang="en">checks a hash of the repo. If it didn't change, it reuses the already-built context-pack; if it did,</span> <span class="muted">memory-builder · sonnet</span> <span lang="es">lo re-escanea UNA vez. Ningún otro agente vuelve a leer el repo entero.</span><span lang="en">rescans it ONCE. No other agent reads the whole repo again.</span> <span class="pn-stat"><span lang="es">1 escaneo, compartido por los 35 agentes restantes</span><span lang="en">1 scan, shared by the other 35 agents</span></span></div></div>
       </li>
       <li class="pnode" style="--n:2">
         <span class="pnode-idx">03</span>
         <span class="pnode-dot" aria-hidden="true"></span>
-        <div><div class="pnode-stage">TDD RED → GREEN</div>
-        <div class="pnode-card"><span lang="es">Test primero. Implementación en worktree aislado, nunca sobre tu rama activa.</span><span lang="en">Test first. Implementation in an isolated worktree, never on your active branch.</span></div></div>
+        <div><div class="pnode-stage">discovery</div>
+        <div class="pnode-card"><span lang="es">Preguntas de producto al owner en UNA tanda: nunca un interrogatorio.</span><span lang="en">Product questions to the owner in ONE batch, never an interrogation.</span></div></div>
       </li>
       <li class="pnode" style="--n:3">
         <span class="pnode-idx">04</span>
         <span class="pnode-dot" aria-hidden="true"></span>
-        <div><div class="pnode-stage"><span lang="es">revisión</span><span lang="en">review</span></div>
-        <div class="pnode-card"><span lang="es">Reviewer adversarial. Hallazgos con severidad, antes de tocar tu rama.</span><span lang="en">Adversarial reviewer. Severity-tagged findings, before touching your branch.</span></div>
-        <div class="pnode-gate"><span lang="es">GATE · el owner aprueba</span><span lang="en">GATE · the owner approves</span></div></div>
+        <div><div class="pnode-stage"><span lang="es">análisis</span><span lang="en">analysis</span></div>
+        <div class="pnode-card"><span lang="es">7 lentes de auditoría read-only (arquitectura, seguridad, rendimiento, datos, SOLID…). Se lanzan solo las que el objetivo necesita, nunca las 7 a la vez.</span><span lang="en">7 read-only audit lenses (architecture, security, performance, data, SOLID…). Only the ones the objective needs run, never all 7 at once.</span></div></div>
       </li>
-      <li class="pnode" style="--n:7">
+      <li class="pnode" style="--n:4">
         <span class="pnode-idx">05</span>
         <span class="pnode-dot" aria-hidden="true"></span>
+        <div><div class="pnode-stage"><span lang="es">diseño + spec</span><span lang="en">design + spec</span></div>
+        <div class="pnode-card"><span class="muted">pattern-advisor + domain-modeler</span> <span lang="es">informan a</span><span lang="en">feed</span> <span class="muted">planner · opus</span><span lang="es">, que escribe el plan en un fichero versionado — no se queda solo en la conversación.</span><span lang="en">, which writes the plan to a versioned file — never left sitting only in the conversation.</span></div></div>
+      </li>
+      <li class="pnode" style="--n:5">
+        <span class="pnode-idx">06</span>
+        <span class="pnode-dot" aria-hidden="true"></span>
+        <div><div class="pnode-stage">grill ×3</div>
+        <div class="pnode-card"><span lang="es">Tres lentes adversariales — arquitecto, operador, ingeniero — atacan el spec ANTES de escribir código. Cada hallazgo cita fichero:línea o no cuenta.</span><span lang="en">Three adversarial lenses — architect, operator, engineer — attack the spec BEFORE any code is written. Every finding cites file:line or it doesn't count.</span></div>
+        <div class="pnode-gate"><span lang="es">GATE · ×3 lentes, antes del código</span><span lang="en">GATE · ×3 lenses, before any code</span></div></div>
+      </li>
+      <li class="pnode" style="--n:6">
+        <span class="pnode-idx">07</span>
+        <span class="pnode-dot" aria-hidden="true"></span>
+        <div><div class="pnode-stage">TDD RED → GREEN</div>
+        <div class="pnode-card"><span lang="es">Test primero. Implementación en worktree aislado, nunca sobre tu rama activa, siguiendo el plan escrito en el paso anterior.</span><span lang="en">Test first. Implementation in an isolated worktree, never on your active branch, following the plan written in the previous step.</span></div></div>
+      </li>
+      <li class="pnode" style="--n:7">
+        <span class="pnode-idx">08</span>
+        <span class="pnode-dot" aria-hidden="true"></span>
+        <div><div class="pnode-stage"><span lang="es">revisión</span><span lang="en">review</span></div>
+        <div class="pnode-card"><span class="muted">reviewer · opus</span> <span lang="es">revisa el diff con severidad, en el worktree aislado — antes de que toque tu rama.</span><span lang="en">reviews the diff with severity tags, in the isolated worktree — before it touches your branch.</span></div></div>
+      </li>
+      <li class="pnode" style="--n:8">
+        <span class="pnode-idx">09</span>
+        <span class="pnode-dot" aria-hidden="true"></span>
+        <div><div class="pnode-stage"><span lang="es">verificación</span><span lang="en">verification</span></div>
+        <div class="pnode-card"><span class="muted">verifier · opus</span><span lang="es">, un agente que NUNCA construyó lo que revisa, confirma que el "hecho" es real antes de cerrar. Sin esto, un agente podría marcarse a sí mismo aprobado.</span><span lang="en">, an agent that NEVER built what it checks, confirms "done" is real before closing. Without this, an agent could mark its own work approved.</span></div>
+        <div class="pnode-gate"><span lang="es">GATE · independiente de quien ejecutó</span><span lang="en">GATE · independent of who executed</span></div></div>
+      </li>
+      <li class="pnode" style="--n:11">
+        <span class="pnode-idx">10</span>
+        <span class="pnode-dot" aria-hidden="true"></span>
         <div><div class="pnode-stage"><span lang="es">entrega</span><span lang="en">delivery</span></div>
-        <div class="pnode-card"><span lang="es">Push y PR solo por invocación explícita. swarm nunca mergea por su cuenta.</span><span lang="en">Push and PR only by explicit invocation. swarm never merges on its own.</span></div></div>
+        <div class="pnode-card"><span lang="es">Push y PR solo por invocación explícita. swarm nunca mergea por su cuenta.</span><span lang="en">Push and PR only by explicit invocation. swarm never merges on its own.</span></div>
+        <div class="pnode-gate"><span lang="es">GATE · el owner aprueba</span><span lang="en">GATE · the owner approves</span></div></div>
       </li>
     </ol>
   </figure>
