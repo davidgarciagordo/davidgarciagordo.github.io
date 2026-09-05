@@ -393,7 +393,7 @@
         <p id="term-cap" class="sr-only"><span lang="es">Transcripción de una instalación real: añadir el marketplace y luego instalar un plugin concreto.</span><span lang="en">Transcript of a real install: adding the marketplace, then installing one specific plugin.</span></p>
         <div class="term" id="term" role="group" aria-labelledby="term-cap">
           <div class="term-line" style="transition-delay:.1s">$ <span class="amberw">/plugin marketplace add</span> davidgarciagordo/claude-plugins</div>
-          <div class="term-line" style="transition-delay:.3s"><span class="path">→</span> <span class="muted"><span lang="es">5 plugins listados</span><span lang="en">5 plugins listed</span></span></div>
+          <div class="term-line" style="transition-delay:.3s"><span class="path">→</span> <span class="muted"><span lang="es">6 plugins listados</span><span lang="en">6 plugins listed</span></span></div>
           <div class="term-line" style="transition-delay:.5s">$ <span class="amberw">/plugin install</span> token-economy</div>
           <div class="term-line" style="transition-delay:.7s"><span class="path">→</span> <span class="muted"><span lang="es">clonando davidgarciagordo/token-economy…</span><span lang="en">cloning davidgarciagordo/token-economy…</span></span></div>
           <div class="term-line" style="transition-delay:.9s"><span class="greenw">✓</span> <span class="muted"><span lang="es">instalado. sin paso de build</span><span lang="en">installed. no build step</span></span></div>
@@ -402,7 +402,7 @@
     </div>
 
     <div class="stat-rail">
-      <div class="stat-tile"><span class="stat-num js-count" data-to="5">5</span><span class="stat-cap"><span lang="es">plugins</span><span lang="en">plugins</span></span></div>
+      <div class="stat-tile"><span class="stat-num js-count" data-to="6">6</span><span class="stat-cap"><span lang="es">plugins</span><span lang="en">plugins</span></span></div>
       <div class="stat-tile"><span class="stat-num js-count" data-to="1">1</span><span class="stat-cap"><span lang="es">marketplace</span><span lang="en">marketplace</span></span></div>
       <div class="stat-tile"><span class="stat-num js-count" data-to="4">4</span><span class="stat-cap"><span lang="es">hooks fail-closed</span><span lang="en">fail-closed hooks</span></span></div>
       <div class="stat-tile"><span class="stat-num js-count" data-to="9">9</span><span class="stat-cap"><span lang="es">pasos forge</span><span lang="en">forge steps</span></span></div>
@@ -417,11 +417,11 @@
 
   <section class="manifesto-sec wrap">
     <p class="manifesto js-reveal">
-      <span lang="es">Cinco plugins, un marketplace.</span>
-      <span lang="en">Five plugins, one marketplace.</span>
+      <span lang="es">Seis plugins, un marketplace.</span>
+      <span lang="en">Six plugins, one marketplace.</span>
       <span class="m">
-        <span lang="es"> Cada uno resuelve un problema real de trabajar con IA en equipo: ahorro de tokens, revisión de diseño, cierre de specs, gates de calidad, automatización de setup. Se instalan sueltos o juntos.</span>
-        <span lang="en"> Each one solves a real problem of working with AI as a team: token savings, design review, spec closure, quality gates, setup automation. Install them loose or together.</span>
+        <span lang="es"> Cada uno resuelve un problema real de trabajar con IA en equipo — con un hook o un veredicto que lo comprueba, no solo la promesa. Se instalan sueltos o juntos.</span>
+        <span lang="en"> Each one solves a real problem of working with AI as a team — with a hook or a verdict that checks it, not just the promise. Install them loose or together.</span>
       </span>
     </p>
   </section>
@@ -467,28 +467,33 @@
     <div class="plugin-grid">
       <a class="plugin-card js-reveal" href="https://github.com/davidgarciagordo/token-economy">
         <span class="repo" translate="no">token-economy</span>
-        <span class="desc"><span lang="es">Context-pack determinista + lente de solo-lectura + output-style frugal: 2,6×–7× menos tokens de entrada en trabajo multiagente, con la misma cobertura.</span><span lang="en">Deterministic context-pack + a read-only lens + a frugal output-style: 2.6×–7× fewer input tokens on multi-agent work, at identical coverage.</span></span>
+        <span class="desc"><span lang="es">Cuatro agentes de revisión dejan de pagar cuatro veces por leer los mismos ficheros: mismos hallazgos, una fracción del gasto en tokens de entrada, y una segunda pasada sobre el mismo objetivo sale casi gratis.</span><span lang="en">Four review agents stop paying four times to read the same files: same findings, a fraction of the input-token bill, and a second pass on the same target comes out almost free.</span></span>
         <span class="pinstall">$ /plugin install <span class="v">token-economy</span></span>
       </a>
       <a class="plugin-card js-reveal" href="https://github.com/davidgarciagordo/design-review">
         <span class="repo" translate="no">design-review</span>
-        <span class="desc"><span lang="es">Pipeline de diseño de 8 agentes con gates binarios y un veredicto vivo/plantilla/plano verificable por máquina. 7 playbooks fijados por commit.</span><span lang="en">8-agent design pipeline with binary gates and a machine-checkable alive/templated/flat verdict. 7 commit-pinned playbooks.</span></span>
+        <span class="desc"><span lang="es">Tu interfaz hecha por IA deja de salir como una plantilla SaaS correcta pero intercambiable: el pipeline no te deja darla por terminada hasta que un veredicto en navegador real dice que solo podría ser tu producto.</span><span lang="en">Your AI-built UI stops shipping as a correct-but-interchangeable SaaS template: the pipeline won't let you call it done until a real-browser verdict says it could only be your product.</span></span>
         <span class="pinstall">$ /plugin install <span class="v">design-review</span></span>
       </a>
       <a class="plugin-card js-reveal" href="https://github.com/davidgarciagordo/forge-methodology">
         <span class="repo" translate="no">forge-methodology</span>
-        <span class="desc"><span lang="es">Metodología de 9 pasos donde la completitud es mecánica: una matriz de aceptación con req-ids y un hook que bloquea el PR hasta que cada fila tenga evidencia verificada por otro agente.</span><span lang="en">9-step methodology where completeness is mechanical: an Acceptance Matrix with req-ids, and a hook that blocks the PR until every row has evidence verified by someone else.</span></span>
+        <span class="desc"><span lang="es">"A la par con Stripe" deja de significar "hicimos las partes que se nos ocurrieron": cada capacidad de la referencia es una fila, y el PR no se abre hasta que cada una tiene evidencia firmada por alguien que no la construyó.</span><span lang="en">"Parity with Stripe" stops meaning "we built the parts we thought of": every capability of the reference becomes a row, and the PR won't open until each one carries evidence signed by someone who didn't build it.</span></span>
         <span class="pinstall">$ /plugin install <span class="v">forge-methodology</span></span>
       </a>
       <a class="plugin-card js-reveal" href="https://github.com/davidgarciagordo/claude-code-setup-optimizer/tree/main/plugins/working-methods">
         <span class="repo" translate="no">working-methods</span>
-        <span class="desc"><span lang="es">La capa de aplicación de Forge: <code style="font-family:var(--font-mono)">/forge-run</code> encadena 12 fases con gates verificados por máquina y un hook fail-closed antes de cada PR.</span><span lang="en">The Forge enforcement layer: <code style="font-family:var(--font-mono)">/forge-run</code> sequences 12 phases through machine-checked gates with a fail-closed PR hook.</span></span>
+        <span class="desc"><span lang="es">La metodología deja de depender de que el agente se acuerde: las fases son código, los gates devuelven un código de salida, y a ti solo te interrumpe dos veces, no todo el rato.</span><span lang="en">The methodology stops depending on the agent remembering it: phases are code, gates return exit codes, and you're interrupted exactly twice, not constantly.</span></span>
         <span class="pinstall">$ /plugin install <span class="v">working-methods</span></span>
       </a>
       <a class="plugin-card js-reveal" href="https://github.com/davidgarciagordo/claude-code-setup-optimizer/tree/main/plugins/automations">
         <span class="repo" translate="no">automations</span>
-        <span class="desc"><span lang="es">Escaneo determinista de las 8 superficies de configuración de Claude Code + revisores generados por repo. Nada se aplica sin que lo apruebes.</span><span lang="en">Deterministic scan of all 8 Claude Code config surfaces + per-repo generated reviewers. Nothing is applied unless you approve it.</span></span>
+        <span class="desc"><span lang="es">Un repo nuevo se queda con una configuración de Claude Code hecha a su medida — permisos, hooks, revisores con nombres de tus propias tablas — en una pasada, y apruebas cada pieza suelta antes de que se escriba.</span><span lang="en">A new repo gets a Claude Code setup fitted to it — permissions, hooks, reviewers named after your own tables — in one pass, and you approve each piece before it's written.</span></span>
         <span class="pinstall">$ /plugin install <span class="v">automations</span></span>
+      </a>
+      <a class="plugin-card js-reveal" href="https://github.com/davidgarciagordo/swarm">
+        <span class="repo" translate="no">swarm</span>
+        <span class="desc"><span lang="es">El que junta a los otros cinco en un solo ciclo: un objetivo entra, un equipo de software sénior completo sale — memoria compartida, grill adversarial, TDD y verificación independiente, sin que tú orquestes nada.</span><span lang="en">The one that ties the other five into one cycle: one objective in, a full senior software team out — shared memory, adversarial grill, TDD and independent verification, without you orchestrating any of it.</span></span>
+        <span class="pinstall">$ /plugin install <span class="v">swarm</span></span>
       </a>
     </div>
   </figure>
@@ -498,15 +503,16 @@
       <h2 class="js-reveal"><span lang="es">Compuestos, no acoplados.</span><span lang="en">Composed, not coupled.</span></h2>
       <div class="notes-list js-reveal">
         <div class="notes-item"><p><strong><span lang="es">Instala solo lo que necesitas.</span><span lang="en">Install only what you need.</span></strong> <span lang="es">Cada plugin funciona solo; no hay dependencias cruzadas obligatorias.</span><span lang="en">Each plugin works alone; there are no mandatory cross-dependencies.</span></p></div>
-        <div class="notes-item"><p><strong><span lang="es">Un marketplace, cinco fuentes.</span><span lang="en">One marketplace, five sources.</span></strong> <code>/plugin marketplace add</code> <span lang="es">una vez, luego instala cada pieza por separado.</span><span lang="en">once, then install each piece separately.</span></p></div>
+        <div class="notes-item"><p><strong><span lang="es">Un marketplace, seis fuentes.</span><span lang="en">One marketplace, six sources.</span></strong> <code>/plugin marketplace add</code> <span lang="es">una vez, luego instala cada pieza por separado.</span><span lang="en">once, then install each piece separately.</span></p></div>
         <div class="notes-item"><p><strong><span lang="es">Piensan igual.</span><span lang="en">They think alike.</span></strong> <span lang="es">Comparten el mismo vocabulario: gates binarios, hallazgos con fichero:línea, nada de humo.</span><span lang="en">They share the same vocabulary: binary gates, file:line findings, no smoke.</span></p></div>
+        <div class="notes-item"><p><strong><span lang="es">Grill sí, pero no el mismo.</span><span lang="en">Grill, but not the same one.</span></strong> <code>forge-methodology</code> <span lang="es">audita el documento (</span><span lang="en">audits the document (</span><code>grill-me</code><span lang="es">, te entrevista a ti); </span><span lang="en">, interviews you); </span><code>working-methods</code> <span lang="es">audita el artefacto dentro de Claude Code (</span><span lang="en">audits the artifact inside Claude Code (</span><code>/grill</code><span lang="es">). Uno grilla el documento, el otro a su autor.</span><span lang="en">). One grills the document, the other its author.</span></p></div>
       </div>
     </div>
   </section>
 
   <section class="install-sec wrap">
     <span class="label amber"><span lang="es">Instalación</span><span lang="en">Install</span></span>
-    <h2><span lang="es">Un comando, cinco piezas.</span><span lang="en">One command, five pieces.</span></h2>
+    <h2><span lang="es">Un comando, seis piezas.</span><span lang="en">One command, six pieces.</span></h2>
     <div class="sr-only" id="copy-status" role="status" aria-live="polite"></div>
     <div class="install-block">
       <div class="install-row"><code><span class="c">$</span> /plugin marketplace add <span class="v">davidgarciagordo/claude-plugins</span></code><button class="copy-btn" data-copy="/plugin marketplace add davidgarciagordo/claude-plugins"><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
