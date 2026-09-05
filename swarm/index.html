@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#020203">
+<meta name="description" content="swarm: un equipo de software sénior en un comando. 36 agentes especializados para Claude Code, con gates de seguridad reales y revisión adversarial.">
+<title>swarm · David García Gordo</title>
+<link rel="canonical" href="https://davidgarciagordo.github.io/swarm/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://davidgarciagordo.github.io/swarm/">
+<meta property="og:title" content="swarm: David García Gordo">
+<meta property="og:description" content="Un equipo de software sénior, en un comando. 36 agentes para Claude Code.">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1c1.2 3.6-3.6 5-3.6 8.4a3.6 3.6 0 0 0 7.2 0C11.6 6 6.8 4.6 8 1z' fill='%23F59E0B'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Space+Grotesk:wght@500;700&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<script>
+  (function () {
+    try {
+      var l = localStorage.getItem("lang");
+      if (l === "en" || l === "es") document.documentElement.lang = l;
+    } catch (e) {}
+  })();
+</script>
+<style>
+  :root {
+    --bg-1: #0a0a0f;
+    --bg-2: #020203;
+    --bg-2-rgb: 2 2 3;
+    --ink: #F5F4F2;
+    --ink-muted: rgb(245 244 242 / .58);
+    --ink-cap: rgb(245 244 242 / .62);
+    --ink-on-amber: #1a1200;
+    --amber: #F59E0B;
+    --amber-rgb: 245 158 11;
+    --amber-hot: #FBBF24;
+    --green: #22C55E;
+    --green-rgb: 34 197 94;
+    --indigo: #6366F1;
+    --indigo-rgb: 99 102 241;
+    --glass: rgb(255 255 255 / .05);
+    --hairline: rgb(255 255 255 / .08);
+    --hairline-faint: rgb(255 255 255 / .045);
+    --radius: 16px;
+    --radius-tight: 6px;
+    --radius-xs: 4px;
+    --lockup: clamp(3rem, 8vw, 6.5rem);
+    --ease: cubic-bezier(.16, 1, .3, 1);
+    --track-label: .16em;
+    --track-mono: .08em;
+    --font-display: "Space Grotesk", system-ui, sans-serif;
+    --font-body: "Inter", system-ui, sans-serif;
+    --font-mono: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-padding-top: 6rem; overflow-x: clip; }
+  body {
+    background: var(--bg-2);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 18px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+  a, button { touch-action: manipulation; }
+
+  html[lang="es"] [lang="en"] { display: none !important; }
+  html[lang="en"] [lang="es"] { display: none !important; }
+
+  a { color: inherit; }
+
+  :focus-visible { outline: 2px solid var(--amber-hot); outline-offset: 3px; border-radius: var(--radius-xs); }
+
+  .skip-link {
+    position: absolute; left: 16px; top: -60px; z-index: 100;
+    background: var(--amber-hot); color: var(--ink-on-amber); font-family: var(--font-display); font-weight: 500;
+    padding: 10px 18px; border-radius: var(--radius-tight); text-decoration: none; transition: top .25s var(--ease);
+  }
+  .skip-link:focus { top: 16px; }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0);
+    white-space: nowrap; border: 0; padding: 0; margin: -1px;
+  }
+
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+  /* ============ Backdrop ============ */
+  .backdrop {
+    position: fixed; inset: 0; z-index: -1;
+    background: radial-gradient(120% 90% at 8% 0%, var(--bg-1) 0%, var(--bg-2) 62%);
+  }
+
+  /* ============ Reveal (visible by default, JS only enhances) ============ */
+  .js-reveal { opacity: 1; transform: none; }
+  .motion-active .js-reveal { opacity: 0; transform: translateY(16px); transition: opacity .6s var(--ease), transform .6s var(--ease); }
+  .motion-active .js-reveal.is-in { opacity: 1; transform: none; }
+
+  /* ============ Nav ============ */
+  header.top {
+    position: sticky; top: 0; z-index: 40;
+    background: rgb(var(--bg-2-rgb) / .72);
+    backdrop-filter: blur(14px) saturate(140%);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .topnav { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; gap: 16px; }
+  .logo {
+    font-family: var(--font-display); font-weight: 700; letter-spacing: -.01em;
+    font-size: 15px; text-decoration: none; color: var(--ink); min-height: 44px;
+    padding: 10px 4px; display: inline-flex; align-items: center;
+  }
+  .logo b { color: var(--amber); }
+  .nav-right { display: flex; align-items: center; gap: 14px; }
+  .nav-gh {
+    font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-cap); text-decoration: none;
+    border: 1px solid var(--hairline); border-radius: 999px; padding: 9px 14px; min-height: 44px;
+    display: inline-flex; align-items: center; transition: border-color .2s ease, color .2s ease;
+  }
+  .nav-gh:hover { border-color: var(--amber); color: var(--amber-hot); }
+  .lang-toggle { display: inline-flex; border: 1px solid var(--hairline); border-radius: 999px; overflow: hidden; font-family: var(--font-mono); font-size: 12px; }
+  .lang-toggle button {
+    background: transparent; border: 0; color: var(--ink-cap); cursor: pointer;
+    padding: 11px 15px; min-height: 44px; font-family: inherit; font-size: inherit;
+    border-bottom: 2px solid transparent;
+  }
+  .lang-toggle button[aria-pressed="true"] { color: var(--amber); background: var(--glass); border-bottom-color: var(--amber); }
+
+  /* ============ Micro-label ============ */
+  .label { font-family: var(--font-display); font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: var(--track-label); color: var(--ink-cap); }
+  .label.amber { color: var(--amber); }
+  .fig-cap, .bar, .pnode-idx, .pnode-gate, .tchip .m {
+    font-family: var(--font-mono); letter-spacing: var(--track-mono);
+  }
+
+  /* ============ Hero ============ */
+  .hero { position: relative; padding-top: 72px; }
+  .hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 0; align-items: end; }
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-col, .term-outer { min-width: 0; }
+  }
+
+  .hero-col { padding: 24px 0 56px; }
+  .hero-eyebrow { margin-bottom: 22px; }
+  h1.lockup {
+    font-family: var(--font-display); font-weight: 700; text-transform: uppercase;
+    letter-spacing: -.02em; line-height: .92; font-size: var(--lockup);
+  }
+  .rotator { display: block; overflow: hidden; height: var(--lockup); }
+  .rotator > .roll { display: block; animation: roll5 12.5s var(--ease) infinite; }
+  .rotator .w { display: block; height: var(--lockup); line-height: .92; color: var(--amber); }
+  .rotator .w > span { display: inline; }
+  @media (prefers-reduced-motion: reduce) { .rotator > .roll { animation: none !important; } }
+  @keyframes roll5 {
+    0%, 16% { transform: translateY(0); }
+    20%, 36% { transform: translateY(calc(var(--lockup) * -1)); }
+    40%, 56% { transform: translateY(calc(var(--lockup) * -2)); }
+    60%, 76% { transform: translateY(calc(var(--lockup) * -3)); }
+    80%, 96% { transform: translateY(calc(var(--lockup) * -4)); }
+    100% { transform: translateY(0); }
+  }
+
+  /* Bleeding terminal artifact: the margin (breakout) and the padding (gutter) must live on
+     DIFFERENT boxes, or they cancel each other out: margin widens .term-outer's border box,
+     padding on the inner .term box is what actually keeps the content off the true edge. */
+  .term-outer { position: relative; padding-bottom: 24px; }
+  .term-outer::after {
+    content: ""; position: absolute; inset: -30% 0 auto auto; width: 55%; height: 160%;
+    background: radial-gradient(circle, rgb(var(--amber-rgb) / .16), transparent 65%);
+    pointer-events: none; z-index: -1;
+  }
+  .term {
+    position: relative; border-radius: var(--radius-tight) 0 0 var(--radius-tight);
+    background: var(--bg-2); border: 1px solid var(--hairline); border-right: 0;
+    font-family: var(--font-mono); font-size: 13px; line-height: 18px;
+    padding: 18px 20px 18px 20px; overflow: hidden;
+  }
+  @media (min-width: 901px) {
+    /* clamp(): never bleed past a sane max, even if the grid track is unexpectedly narrow */
+    .term-outer { margin-right: clamp(-320px, calc(50% - 50vw), -1px); }
+    .term { padding-right: max(24px, calc(50vw - 50% + 24px)); }
+  }
+  @media (max-width: 900px) {
+    .term { border-radius: var(--radius-tight); border-right: 1px solid var(--hairline); padding-right: 20px; overflow-x: auto; }
+    .term-line { white-space: pre; }
+  }
+  .term-line {
+    opacity: 1;
+    white-space: pre;
+  }
+  .motion-active .term-line { opacity: 0; transform: translateY(4px); transition: opacity .5s var(--ease), transform .5s var(--ease); }
+  .motion-active .term-line.is-in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .motion-active .js-reveal, .motion-active .term-line { transition: none !important; opacity: 1 !important; transform: none !important; }
+  }
+  .term-line .path { color: var(--ink-cap); }
+  .term-line .amberw { color: var(--amber-hot); }
+  .term-line .greenw { color: var(--green); }
+  .term-line .muted { color: var(--ink-muted); }
+
+  /* ============ Stat rail ============ */
+  .stat-rail { display: flex; border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); }
+  @media (max-width: 720px) { .stat-rail { flex-wrap: wrap; } }
+  .stat-tile { flex: 1; min-width: 0; padding: 22px 20px; border-right: 1px solid var(--hairline); text-align: left; }
+  @media (max-width: 720px) {
+    .stat-tile { flex: 0 0 50%; }
+    .stat-tile:nth-child(2n) { border-right: 0; }
+    .stat-tile:nth-child(-n+4) { border-bottom: 1px solid var(--hairline); }
+    .stat-tile:last-child { flex: 0 0 100%; border-right: 0; }
+  }
+  .stat-tile:last-child { border-right: 0; }
+  .stat-num {
+    font-family: var(--font-display); font-weight: 700; color: var(--amber);
+    font-size: clamp(1.6rem, 3vw, 2.2rem); font-variant-numeric: tabular-nums; letter-spacing: -.01em;
+  }
+  .stat-cap { font-family: var(--font-display); font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: var(--track-label); color: var(--ink-cap); margin-top: 4px; display: block; }
+
+  .bar { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; justify-content: center; padding: 14px 0; font-size: 12px; text-transform: uppercase; color: var(--ink-cap); }
+  .bar span::before { content: "·"; color: var(--amber); margin-right: 8px; }
+
+  /* ============ Manifesto ============ */
+  .manifesto-sec { padding: 80px 0; }
+  p.manifesto { font-family: var(--font-display); font-weight: 500; letter-spacing: -.02em; line-height: 1.28; font-size: clamp(1.5rem, 3.2vw, 2.5rem); max-width: 860px; }
+  p.manifesto .m { color: var(--ink-muted); }
+
+  /* ============ Blueprint frame (figures) ============ */
+  figure.figframe {
+    position: relative; margin: 0 0 88px; padding: 52px 24px 48px;
+    background-color: var(--bg-1);
+    background-image:
+      repeating-linear-gradient(90deg, var(--hairline-faint) 0 1px, transparent 1px 25%),
+      radial-gradient(var(--hairline-faint) 1px, transparent 1px);
+    background-size: 100% 100%, 28px 28px;
+    border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline);
+  }
+  figcaption.fig-cap {
+    display: flex; align-items: center; gap: 14px; font-size: 12px; color: var(--ink-cap);
+    max-width: 1120px; margin: 0 auto 40px; padding: 0 24px;
+  }
+  .fig-cap .rule { flex: 1; height: 1px; background: var(--hairline); }
+  .fig-cap h2 { font-family: var(--font-mono); font-weight: 400; font-size: 12px; letter-spacing: var(--track-mono); color: var(--ink-cap); white-space: nowrap; }
+
+  /* ============ Pipeline rail ============ */
+  .pnode-rail { display: flex; flex-direction: column; gap: 0; max-width: 760px; margin: 0 auto; list-style: none; }
+  .pnode {
+    display: grid; grid-template-columns: 32px 32px 1fr; align-items: start; gap: 16px;
+    position: relative; padding: 18px 0;
+  }
+  .pnode:not(:last-child)::before {
+    content: ""; position: absolute; left: 60px; top: 42px; bottom: -18px; width: 1px;
+    background: var(--hairline); transform: translateX(-50%);
+  }
+  .pnode:not(:last-child)::after {
+    content: ""; position: absolute; left: 60px; top: 42px; bottom: -18px; width: 1px;
+    background: var(--amber); transform-origin: top;
+  }
+  .pnode-idx { font-size: 12px; color: var(--ink-cap); padding-top: 5px; }
+  .pnode-dot { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--amber); position: relative; margin-top: 1px; }
+  .pnode-dot::after {
+    content: ""; position: absolute; inset: 5px; border-radius: 50%; background: var(--amber);
+  }
+  .pnode-stage { font-family: var(--font-display); font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: var(--track-label); color: var(--amber); margin-bottom: 4px; }
+  .pnode-card { color: var(--ink-muted); font-size: 15px; line-height: 1.55; }
+  .pnode-gate {
+    display: inline-flex; align-items: center; gap: 8px; margin: 10px 0 0; font-size: 12px;
+    text-transform: uppercase; color: var(--green); border: 1px solid rgb(var(--green-rgb) / .35);
+    border-radius: 999px; padding: 5px 12px; background: rgb(var(--green-rgb) / .06);
+  }
+  .pnode-gate::before { content: "●"; }
+
+  /* Resting state is LIT by default (matches .js-reveal's pattern) so no-JS and any script
+     failure still show a finished, legible instrument. .motion-active dims everything back down
+     so the scripted reveal below has somewhere to animate FROM; .js-lit brings it back, staggered
+     on the --n clock, with the GATE holding before the last node lights. */
+  .motion-active .pnode:not(:last-child)::after { transform: translateX(-50%) scaleY(0); }
+  .motion-active .pnode-dot { border-color: var(--hairline); }
+  .motion-active .pnode-dot::after { transform: scale(.6); opacity: .3; }
+  .motion-active .pnode-gate { opacity: .35; }
+
+  .motion-active .pnode.js-lit .pnode-dot { border-color: var(--amber); transition: border-color .4s var(--ease) calc(var(--n) * .22s + .3s); }
+  .motion-active .pnode.js-lit .pnode-dot::after { transform: scale(1); opacity: 1; box-shadow: 0 0 16px rgb(var(--amber-rgb) / .6); transition: transform .4s var(--ease) calc(var(--n) * .22s + .3s), opacity .4s var(--ease) calc(var(--n) * .22s + .3s), box-shadow .4s var(--ease) calc(var(--n) * .22s + .3s); }
+  .motion-active .pnode.js-lit:not(:last-child)::after { transform: translateX(-50%) scaleY(1); transition: transform .5s var(--ease) calc(var(--n) * .22s + .4s); }
+  .motion-active .pnode.js-lit .pnode-gate { opacity: 1; transition: opacity .35s var(--ease) calc(var(--n) * .22s + .45s); }
+
+  /* ============ Roster marquee ============ */
+  .roster-list { list-style: none; margin-bottom: 10px; }
+  .marquee-row { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+  .marquee-track { display: flex; width: max-content; animation: marquee 48s linear infinite; }
+  .marquee-row[data-dir="reverse"] .marquee-track { animation-name: marquee-rev; animation-duration: 55s; }
+  .marquee-row.paused .marquee-track { animation-play-state: paused; }
+  @media (hover: hover) and (pointer: fine) { .marquee-row:hover .marquee-track { animation-play-state: paused; } }
+  @media (prefers-reduced-motion: reduce) { .marquee-track { animation: none; } }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @keyframes marquee-rev { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+  .tchip {
+    display: inline-flex; align-items: baseline; gap: 6px; white-space: nowrap; margin-right: 10px;
+    border: 1px solid var(--hairline); border-radius: 999px; padding: 8px 14px;
+    font-size: 12.5px; color: var(--ink-muted); background: var(--glass);
+  }
+  .tchip .m { font-size: 10.5px; text-transform: uppercase; color: var(--ink-cap); }
+  .marquee-controls { display: flex; justify-content: center; margin-top: 16px; }
+  .marquee-pause {
+    font-family: var(--font-mono); font-size: 12px; color: var(--ink-cap); background: transparent;
+    border: 1px solid var(--hairline); border-radius: 999px; padding: 9px 16px; min-height: 44px; cursor: pointer;
+  }
+  .marquee-pause[aria-pressed="true"] { color: var(--amber); border-color: rgb(var(--amber-rgb) / .4); }
+  .marquee-pause .lbl-resume { display: none; }
+  .marquee-pause[aria-pressed="true"] .lbl-pause { display: none; }
+  .marquee-pause[aria-pressed="true"] .lbl-resume { display: inline; }
+
+  /* ============ Owner band ============ */
+  .owner-band { background: linear-gradient(180deg, rgb(var(--indigo-rgb) / .08), transparent 60%); border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); padding: 80px 0; }
+  .owner-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+  @media (max-width: 900px) { .owner-grid { grid-template-columns: 1fr; } }
+  .owner-grid h2 { font-family: var(--font-display); font-weight: 700; letter-spacing: -.02em; font-size: clamp(1.8rem, 3.4vw, 2.6rem); color: var(--indigo); }
+  .owner-list {
+    display: flex; flex-direction: column; gap: 20px; background: var(--glass);
+    border: 1px solid rgb(var(--indigo-rgb) / .2); border-radius: var(--radius); padding: 28px;
+  }
+  .owner-item p { color: var(--ink-muted); font-size: 15.5px; }
+  .owner-item strong { color: var(--ink); font-weight: 500; }
+
+  /* ============ Install ============ */
+  .install-sec { padding: 88px 0 64px; text-align: center; }
+  .install-sec .label { display: block; margin-bottom: 20px; }
+  .install-sec h2 { font-family: var(--font-display); font-weight: 700; letter-spacing: -.02em; font-size: clamp(1.8rem, 3.6vw, 2.8rem); margin-bottom: 32px; }
+  .install-block {
+    max-width: 620px; margin: 0 auto 32px; text-align: left; font-size: 14px; line-height: 2;
+    border: 1px solid var(--hairline); border-radius: var(--radius-tight); background: var(--bg-1);
+  }
+  .install-row:not(:last-child) { border-bottom: 1px solid var(--hairline-faint); }
+  .install-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 10px 4px 14px; }
+  .install-row code { font-family: var(--font-mono); white-space: pre; overflow-x: auto; display: block; min-width: 0; flex: 1 1 auto; }
+  .install-row .c { color: var(--ink-cap); }
+  .install-row .v { color: var(--amber-hot); }
+  .copy-btn {
+    flex-shrink: 0; font-family: var(--font-mono); font-size: 11px; color: var(--ink-cap);
+    background: transparent; border: 1px solid var(--hairline); border-radius: var(--radius-tight);
+    padding: 8px 10px; min-width: 44px; min-height: 44px; cursor: pointer;
+  }
+  .copy-btn[data-copied="1"] { color: var(--amber-hot); border-color: rgb(var(--amber-rgb) / .4); }
+  .cta-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .cta {
+    display: inline-flex; align-items: center; gap: 8px; text-decoration: none;
+    font-family: var(--font-display); font-weight: 500; font-size: 14px;
+    padding: 13px 26px; min-height: 44px; border-radius: 999px; border: 1px solid var(--hairline);
+    color: var(--ink); transition: border-color .2s ease, box-shadow .2s ease, color .2s ease, transform .12s ease-out;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .cta:hover { border-color: rgb(var(--amber-rgb) / .4); }
+    .cta-amber:hover { box-shadow: 0 0 26px rgb(var(--amber-rgb) / .22); }
+  }
+  .cta:active { transform: scale(.97); }
+  @media (prefers-reduced-motion: reduce) { .cta { transition: border-color .2s ease, box-shadow .2s ease, color .2s ease; } .cta:active { transform: none; } }
+  .cta-amber { background: rgb(var(--amber-rgb) / .14); border-color: rgb(var(--amber-rgb) / .45); color: var(--amber-hot); }
+
+  footer.site-foot { border-top: 1px solid var(--hairline); padding: 32px 24px; text-align: center; font-family: var(--font-mono); font-size: 12px; color: var(--ink-cap); }
+  footer.site-foot a { color: var(--ink-muted); text-decoration: none; }
+  footer.site-foot a:hover { color: var(--amber); }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main"><span lang="es">Saltar al contenido</span><span lang="en">Skip to content</span></a>
+
+<div class="backdrop" aria-hidden="true"></div>
+
+<header class="top">
+  <div class="topnav">
+    <a class="logo" href="#top">swarm<b>.</b></a>
+    <div class="nav-right">
+      <a class="nav-gh" href="https://github.com/davidgarciagordo/swarm">GitHub · MIT</a>
+      <div class="lang-toggle" role="group" aria-label="Language / Idioma">
+        <button class="es" data-lang="es" type="button" aria-pressed="true">ES</button>
+        <button class="en" data-lang="en" type="button" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+  <section class="hero wrap">
+    <div class="hero-grid">
+      <div class="hero-col">
+        <div class="hero-eyebrow label amber">
+          <span lang="es">Plugin de Claude Code · código abierto</span><span lang="en">Claude Code plugin · open source</span>
+        </div>
+        <h1 class="lockup">
+          SWARM
+          <span class="rotator">
+            <span class="roll" aria-hidden="true">
+              <span class="w"><span lang="es">descubre</span><span lang="en">discovers</span></span>
+              <span class="w"><span lang="es">analiza</span><span lang="en">analyzes</span></span>
+              <span class="w"><span lang="es">diseña</span><span lang="en">designs</span></span>
+              <span class="w"><span lang="es">implementa</span><span lang="en">implements</span></span>
+              <span class="w"><span lang="es">entrega</span><span lang="en">delivers</span></span>
+            </span>
+          </span>
+          <span class="sr-only"><span lang="es">descubre, analiza, diseña, implementa, entrega</span><span lang="en">discovers, analyzes, designs, implements, delivers</span></span>
+        </h1>
+      </div>
+      <div class="term-outer js-reveal">
+        <p id="term-cap" class="sr-only"><span lang="es">Transcripción de una ejecución real de /swarm:run: el enjambre descubre, diseña, implementa con TDD y para en un gate de aprobación antes de entregar.</span><span lang="en">Transcript of a real /swarm:run: the swarm discovers, designs, implements with TDD and stops at an approval gate before delivery.</span></p>
+        <div class="term" id="term" role="group" aria-labelledby="term-cap">
+          <div class="term-line" style="transition-delay:.1s">$ <span class="amberw">/swarm:run</span> <span class="muted">"<span lang="es">añade export CSV al listado</span><span lang="en">add CSV export to the list</span>"</span></div>
+          <div class="term-line" style="transition-delay:.3s"><span class="path">→</span> orchestrator <span class="muted">(opus)</span> · tier: full</div>
+          <div class="term-line" style="transition-delay:.5s"><span class="path">→</span> discovery-orchestrator <span class="muted">· 4 <span lang="es">preguntas</span><span lang="en">questions</span></span></div>
+          <div class="term-line" style="transition-delay:.7s"><span class="path">→</span> design-orchestrator <span class="muted">· grill</span> <span class="amberw">×3</span></div>
+          <div class="term-line" style="transition-delay:.9s"><span class="path">→</span> test-writer <span class="muted">RED</span> → implementer <span class="muted">GREEN</span></div>
+          <div class="term-line" style="transition-delay:1.1s"><span class="path">→</span> security-auditor · reviewer <span class="greenw">→ GATE</span></div>
+          <div class="term-line" style="transition-delay:1.3s"><span class="greenw">✓</span> <span class="muted">3/3 <span lang="es">fases, worktree aislado, sin mergear todavía</span><span lang="en">phases, isolated worktree, not merged yet</span></span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-rail">
+      <div class="stat-tile"><span class="stat-num js-count" data-to="36">36</span><span class="stat-cap"><span lang="es">agentes</span><span lang="en">agents</span></span></div>
+      <div class="stat-tile"><span class="stat-num js-count" data-to="5">5</span><span class="stat-cap"><span lang="es">comandos</span><span lang="en">commands</span></span></div>
+      <div class="stat-tile"><span class="stat-num js-count" data-to="7">7</span><span class="stat-cap"><span lang="es">lentes de análisis</span><span lang="en">analysis lenses</span></span></div>
+      <div class="stat-tile"><span class="stat-num">×3</span><span class="stat-cap">grill <span lang="es">adversarial</span><span lang="en">adversarial</span></span></div>
+      <div class="stat-tile"><span class="stat-num js-count" data-to="1">1</span><span class="stat-cap"><span lang="es">punto de entrada</span><span lang="en">entry point</span></span></div>
+    </div>
+    <div class="bar">
+      <span><span lang="es">MIT, código abierto</span><span lang="en">MIT, open source</span></span>
+      <span><span lang="es">sin paso de build</span><span lang="en">no build step</span></span>
+      <span><span lang="es">corre en local, sobre tu repo</span><span lang="en">runs locally, on your repo</span></span>
+    </div>
+  </section>
+
+  <section class="manifesto-sec wrap">
+    <p class="manifesto js-reveal">
+      <span lang="es">Un equipo de software sénior, en un comando.</span>
+      <span lang="en">A senior software team, in one command.</span>
+      <span class="m">
+        <span lang="es"> 36 agentes especializados que descubren, analizan, diseñan, implementan y entregan, con gates de seguridad reales, revisión adversarial y TDD, sobre tu repo, en local.</span>
+        <span lang="en"> 36 specialized agents that discover, analyze, design, implement and deliver, with real security gates, adversarial review and TDD, on your repo, locally.</span>
+      </span>
+    </p>
+  </section>
+
+  <figure class="figframe" id="pipeline">
+    <figcaption class="fig-cap"><span class="rule" aria-hidden="true"></span><h2><span aria-hidden="true">&gt;_ ───</span> <span lang="es">fig. 1 · el pipeline</span><span lang="en">fig. 1 · the pipeline</span> <span aria-hidden="true">─── #</span></h2><span class="rule" aria-hidden="true"></span></figcaption>
+    <ol class="pnode-rail">
+      <li class="pnode" style="--n:0">
+        <span class="pnode-idx">01</span>
+        <span class="pnode-dot" aria-hidden="true"></span>
+        <div><div class="pnode-stage">discovery</div>
+        <div class="pnode-card"><span lang="es">Preguntas al owner en UNA tanda: nunca un interrogatorio.</span><span lang="en">Questions to the owner in ONE batch, never an interrogation.</span></div></div>
+      </li>
+      <li class="pnode" style="--n:1">
+        <span class="pnode-idx">02</span>
+        <span class="pnode-dot" aria-hidden="true"></span>
+        <div><div class="pnode-stage"><span lang="es">análisis + diseño</span><span lang="en">analysis + design</span></div>
+        <div class="pnode-card"><span lang="es">7 lentes de auditoría read-only. Plan escrito y revisado por grill ×3 adversarial.</span><span lang="en">7 read-only audit lenses. A written plan reviewed by adversarial grill ×3.</span></div></div>
+      </li>
+      <li class="pnode" style="--n:2">
+        <span class="pnode-idx">03</span>
+        <span class="pnode-dot" aria-hidden="true"></span>
+        <div><div class="pnode-stage">TDD RED → GREEN</div>
+        <div class="pnode-card"><span lang="es">Test primero. Implementación en worktree aislado, nunca sobre tu rama activa.</span><span lang="en">Test first. Implementation in an isolated worktree, never on your active branch.</span></div></div>
+      </li>
+      <li class="pnode" style="--n:3">
+        <span class="pnode-idx">04</span>
+        <span class="pnode-dot" aria-hidden="true"></span>
+        <div><div class="pnode-stage"><span lang="es">revisión</span><span lang="en">review</span></div>
+        <div class="pnode-card"><span lang="es">Reviewer adversarial. Hallazgos con severidad, antes de tocar tu rama.</span><span lang="en">Adversarial reviewer. Severity-tagged findings, before touching your branch.</span></div>
+        <div class="pnode-gate"><span lang="es">GATE · el owner aprueba</span><span lang="en">GATE · the owner approves</span></div></div>
+      </li>
+      <li class="pnode" style="--n:7">
+        <span class="pnode-idx">05</span>
+        <span class="pnode-dot" aria-hidden="true"></span>
+        <div><div class="pnode-stage"><span lang="es">entrega</span><span lang="en">delivery</span></div>
+        <div class="pnode-card"><span lang="es">Push y PR solo por invocación explícita. swarm nunca mergea por su cuenta.</span><span lang="en">Push and PR only by explicit invocation. swarm never merges on its own.</span></div></div>
+      </li>
+    </ol>
+  </figure>
+
+  <figure class="figframe" id="roster">
+    <figcaption class="fig-cap"><span class="rule" aria-hidden="true"></span><h2><span aria-hidden="true">&gt;_ ───</span> <span lang="es">fig. 2 · los 36 agentes</span><span lang="en">fig. 2 · the 36 agents</span> <span aria-hidden="true">─── #</span></h2><span class="rule" aria-hidden="true"></span></figcaption>
+    <ul class="sr-only roster-list" id="roster-sr">
+      <li>orchestrator &middot; opus</li>
+      <li>memory-orchestrator &middot; haiku</li>
+      <li>memory-builder &middot; sonnet</li>
+      <li>memory-curator &middot; haiku</li>
+      <li>requirements-orchestrator &middot; haiku</li>
+      <li>env-checker &middot; haiku</li>
+      <li>dependency-auditor &middot; sonnet</li>
+      <li>dependency-installer &middot; sonnet</li>
+      <li>discovery-orchestrator &middot; sonnet</li>
+      <li>value-critic &middot; opus</li>
+      <li>research-analyst &middot; sonnet</li>
+      <li>options-generator &middot; opus</li>
+      <li>feasibility-spiker &middot; sonnet</li>
+      <li>analysis-orchestrator &middot; sonnet</li>
+      <li>opportunity-analyst &middot; opus</li>
+      <li>architecture-auditor &middot; opus</li>
+      <li>security-auditor &middot; opus</li>
+      <li>vulnerability-scanner &middot; haiku</li>
+      <li>performance-analyst &middot; sonnet</li>
+      <li>data-model-auditor &middot; sonnet</li>
+      <li>solid-auditor &middot; opus</li>
+      <li>design-orchestrator &middot; sonnet</li>
+      <li>pattern-advisor &middot; opus</li>
+      <li>domain-modeler &middot; opus</li>
+      <li>planner &middot; opus</li>
+      <li>implementation-orchestrator &middot; sonnet</li>
+      <li>test-writer &middot; sonnet</li>
+      <li>implementer &middot; sonnet</li>
+      <li>migration-engineer &middot; sonnet</li>
+      <li>doc-writer &middot; sonnet</li>
+      <li>quality-fixer &middot; haiku</li>
+      <li>reviewer &middot; opus</li>
+      <li>verifier &middot; opus</li>
+      <li>delivery-orchestrator &middot; haiku</li>
+      <li>release-manager &middot; sonnet</li>
+      <li>handoff-writer &middot; haiku</li>
+    </ul>
+    <div class="marquee-row" id="row-a" aria-hidden="true">
+      <div class="marquee-track" id="marquee-a">
+          <span class="tchip">orchestrator<span class="m">opus</span></span>
+          <span class="tchip">memory-orchestrator<span class="m">haiku</span></span>
+          <span class="tchip">memory-builder<span class="m">sonnet</span></span>
+          <span class="tchip">memory-curator<span class="m">haiku</span></span>
+          <span class="tchip">requirements-orchestrator<span class="m">haiku</span></span>
+          <span class="tchip">env-checker<span class="m">haiku</span></span>
+          <span class="tchip">dependency-auditor<span class="m">sonnet</span></span>
+          <span class="tchip">dependency-installer<span class="m">sonnet</span></span>
+          <span class="tchip">discovery-orchestrator<span class="m">sonnet</span></span>
+          <span class="tchip">value-critic<span class="m">opus</span></span>
+          <span class="tchip">research-analyst<span class="m">sonnet</span></span>
+          <span class="tchip">options-generator<span class="m">opus</span></span>
+          <span class="tchip">feasibility-spiker<span class="m">sonnet</span></span>
+          <span class="tchip">analysis-orchestrator<span class="m">sonnet</span></span>
+          <span class="tchip">opportunity-analyst<span class="m">opus</span></span>
+          <span class="tchip">architecture-auditor<span class="m">opus</span></span>
+          <span class="tchip">security-auditor<span class="m">opus</span></span>
+          <span class="tchip">vulnerability-scanner<span class="m">haiku</span></span>
+          <span class="tchip">orchestrator<span class="m">opus</span></span>
+          <span class="tchip">memory-orchestrator<span class="m">haiku</span></span>
+          <span class="tchip">memory-builder<span class="m">sonnet</span></span>
+          <span class="tchip">memory-curator<span class="m">haiku</span></span>
+          <span class="tchip">requirements-orchestrator<span class="m">haiku</span></span>
+          <span class="tchip">env-checker<span class="m">haiku</span></span>
+          <span class="tchip">dependency-auditor<span class="m">sonnet</span></span>
+          <span class="tchip">dependency-installer<span class="m">sonnet</span></span>
+          <span class="tchip">discovery-orchestrator<span class="m">sonnet</span></span>
+          <span class="tchip">value-critic<span class="m">opus</span></span>
+          <span class="tchip">research-analyst<span class="m">sonnet</span></span>
+          <span class="tchip">options-generator<span class="m">opus</span></span>
+          <span class="tchip">feasibility-spiker<span class="m">sonnet</span></span>
+          <span class="tchip">analysis-orchestrator<span class="m">sonnet</span></span>
+          <span class="tchip">opportunity-analyst<span class="m">opus</span></span>
+          <span class="tchip">architecture-auditor<span class="m">opus</span></span>
+          <span class="tchip">security-auditor<span class="m">opus</span></span>
+          <span class="tchip">vulnerability-scanner<span class="m">haiku</span></span>
+      </div>
+    </div>
+    <div class="marquee-row" id="row-b" data-dir="reverse" aria-hidden="true" style="margin-top:10px">
+      <div class="marquee-track" id="marquee-b">
+          <span class="tchip">performance-analyst<span class="m">sonnet</span></span>
+          <span class="tchip">data-model-auditor<span class="m">sonnet</span></span>
+          <span class="tchip">solid-auditor<span class="m">opus</span></span>
+          <span class="tchip">design-orchestrator<span class="m">sonnet</span></span>
+          <span class="tchip">pattern-advisor<span class="m">opus</span></span>
+          <span class="tchip">domain-modeler<span class="m">opus</span></span>
+          <span class="tchip">planner<span class="m">opus</span></span>
+          <span class="tchip">implementation-orchestrator<span class="m">sonnet</span></span>
+          <span class="tchip">test-writer<span class="m">sonnet</span></span>
+          <span class="tchip">implementer<span class="m">sonnet</span></span>
+          <span class="tchip">migration-engineer<span class="m">sonnet</span></span>
+          <span class="tchip">doc-writer<span class="m">sonnet</span></span>
+          <span class="tchip">quality-fixer<span class="m">haiku</span></span>
+          <span class="tchip">reviewer<span class="m">opus</span></span>
+          <span class="tchip">verifier<span class="m">opus</span></span>
+          <span class="tchip">delivery-orchestrator<span class="m">haiku</span></span>
+          <span class="tchip">release-manager<span class="m">sonnet</span></span>
+          <span class="tchip">handoff-writer<span class="m">haiku</span></span>
+          <span class="tchip">performance-analyst<span class="m">sonnet</span></span>
+          <span class="tchip">data-model-auditor<span class="m">sonnet</span></span>
+          <span class="tchip">solid-auditor<span class="m">opus</span></span>
+          <span class="tchip">design-orchestrator<span class="m">sonnet</span></span>
+          <span class="tchip">pattern-advisor<span class="m">opus</span></span>
+          <span class="tchip">domain-modeler<span class="m">opus</span></span>
+          <span class="tchip">planner<span class="m">opus</span></span>
+          <span class="tchip">implementation-orchestrator<span class="m">sonnet</span></span>
+          <span class="tchip">test-writer<span class="m">sonnet</span></span>
+          <span class="tchip">implementer<span class="m">sonnet</span></span>
+          <span class="tchip">migration-engineer<span class="m">sonnet</span></span>
+          <span class="tchip">doc-writer<span class="m">sonnet</span></span>
+          <span class="tchip">quality-fixer<span class="m">haiku</span></span>
+          <span class="tchip">reviewer<span class="m">opus</span></span>
+          <span class="tchip">verifier<span class="m">opus</span></span>
+          <span class="tchip">delivery-orchestrator<span class="m">haiku</span></span>
+          <span class="tchip">release-manager<span class="m">sonnet</span></span>
+          <span class="tchip">handoff-writer<span class="m">haiku</span></span>
+      </div>
+    </div>
+    <div class="marquee-controls">
+      <button class="marquee-pause" id="marquee-pause" type="button" aria-pressed="false">
+        <span lang="es"><span class="lbl-pause">Pausar roster</span><span class="lbl-resume">Reanudar roster</span></span><span lang="en"><span class="lbl-pause">Pause roster</span><span class="lbl-resume">Resume roster</span></span>
+      </button>
+    </div>
+  </figure>
+
+  <section class="owner-band">
+    <div class="wrap owner-grid">
+      <h2 class="js-reveal"><span lang="es">No hace falta que sepas leer el código.</span><span lang="en">You don't need to read code.</span></h2>
+      <div class="owner-list js-reveal">
+        <div class="owner-item"><p><strong><span lang="es">Describe lo que quieres.</span><span lang="en">Describe what you want.</span></strong> <span lang="es">Si el objetivo es ambiguo, swarm te pregunta en lenguaje llano antes de empezar.</span><span lang="en">If the goal is ambiguous, swarm asks in plain language before starting.</span></p></div>
+        <div class="owner-item"><p><strong><span lang="es">Nada se mergea sin que tú lo apruebes.</span><span lang="en">Nothing merges without your approval.</span></strong> <span lang="es">Cada gate (push, entrega, decisiones importantes) te pregunta primero.</span><span lang="en">Every gate (push, delivery, important decisions) asks you first.</span></p></div>
+        <div class="owner-item"><p><strong><span lang="es">Confianza, no jerga.</span><span lang="en">Trust, not jargon.</span></strong> <span lang="es">Las preguntas hablan de impacto de negocio, nunca de vocabulario interno del proyecto.</span><span lang="en">Questions speak in business impact, never in internal project vocabulary.</span></p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="install-sec wrap">
+    <span class="label amber"><span lang="es">Instalación</span><span lang="en">Install</span></span>
+    <h2><span lang="es">Local, en dos minutos.</span><span lang="en">Local, in two minutes.</span></h2>
+    <div class="sr-only" id="copy-status" role="status" aria-live="polite"></div>
+    <div class="install-block">
+      <div class="install-row"><code><span class="c">$</span> claude --plugin-dir <span class="v">/ruta/a/swarm</span></code><button class="copy-btn" data-copy="claude --plugin-dir /ruta/a/swarm"><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
+      <div class="install-row"><code><span class="c">$</span> /swarm:init</code><button class="copy-btn" data-copy="/swarm:init"><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
+      <div class="install-row"><code><span class="c">$</span> /swarm:run <span class="v">"&lt;<span lang="es">lo que quieras</span><span lang="en">whatever you want</span>&gt;"</span></code><button class="copy-btn" data-copy='/swarm:run "..."'><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
+    </div>
+    <div class="cta-row">
+      <a class="cta cta-amber" href="https://github.com/davidgarciagordo/swarm"><span lang="es">Ver en GitHub</span><span lang="en">View on GitHub</span> →</a>
+      <a class="cta" href="/plugins/"><span lang="es">Más plugins</span><span lang="en">More plugins</span></a>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <a href="https://github.com/davidgarciagordo/swarm">github.com/davidgarciagordo/swarm</a> · MIT · <a href="/">David García Gordo</a>
+</footer>
+
+<script>
+(function(){
+  // Reduced motion is checked FIRST: 'motion-active' (which is what puts every animated
+  // element into its dimmed/hidden starting state) is only added when the user did not ask
+  // to skip motion. Everything on the page rests fully lit/visible by default in the markup
+  // and CSS: .motion-active is what makes it dim, not the other way round.
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduce) document.documentElement.classList.add('motion-active');
+
+  var toggle = document.querySelector('.lang-toggle');
+  function syncLangUI(l){
+    document.documentElement.lang = l;
+    toggle.querySelectorAll('button').forEach(function(b){
+      b.setAttribute('aria-pressed', b.getAttribute('data-lang') === l ? 'true' : 'false');
+    });
+  }
+  if (toggle) {
+    toggle.addEventListener('click', function(e){
+      var btn = e.target.closest('button[data-lang]');
+      if (!btn) return;
+      var l = btn.getAttribute('data-lang');
+      try { localStorage.setItem('lang', l); } catch(err) {}
+      syncLangUI(l);
+    });
+    // Re-sync on load too: the head script may have restored a saved language from
+    // localStorage before this ran, and the static aria-pressed markup only ever assumes ES.
+    syncLangUI(document.documentElement.lang || 'es');
+  }
+
+  var pauseBtn = document.getElementById('marquee-pause');
+  var rows = [document.getElementById('row-a'), document.getElementById('row-b')];
+  if (pauseBtn) pauseBtn.addEventListener('click', function(){
+    var pressed = pauseBtn.getAttribute('aria-pressed') === 'true';
+    pauseBtn.setAttribute('aria-pressed', pressed ? 'false' : 'true');
+    rows.forEach(function(r){ if (r) r.classList.toggle('paused', !pressed); });
+  });
+
+  if (reduce) {
+    document.querySelectorAll('.js-count').forEach(function(el){ el.textContent = el.dataset.to; });
+  } else if ('IntersectionObserver' in window) {
+    var revealIo = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if (en.isIntersecting) { en.target.classList.add('is-in'); revealIo.unobserve(en.target); } });
+    }, { threshold: .2 });
+    document.querySelectorAll('.js-reveal').forEach(function(el){ revealIo.observe(el); });
+
+    var termIo = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (!en.isIntersecting) return;
+        var lines = en.target.querySelectorAll('.term-line');
+        lines.forEach(function(l){ l.classList.add('is-in'); });
+        termIo.unobserve(en.target);
+      });
+    }, { threshold: .3 });
+    var term = document.getElementById('term');
+    if (term) termIo.observe(term);
+
+    var pipeIo = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (!en.isIntersecting) return;
+        pipeIo.unobserve(en.target);
+        // CSS drives the actual stagger via transition-delay: calc(var(--n) * .22s + ...);
+        // this only flips the class that unlocks those transitions, once, on scroll.
+        en.target.querySelectorAll('.pnode').forEach(function(node){ node.classList.add('js-lit'); });
+      });
+    }, { threshold: .3 });
+    var rail = document.querySelector('.pnode-rail');
+    if (rail) pipeIo.observe(rail);
+
+    var countIo = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (!en.isIntersecting) return;
+        countIo.unobserve(en.target);
+        var els = en.target.querySelectorAll('.js-count');
+        els.forEach(function(el, i){
+          var to = parseInt(el.dataset.to, 10);
+          el.textContent = '0'; // markup ships the real number for no-JS/crawlers; JS restarts
+                                 // the visible count from 0 only once it is actually about to animate
+          var start = null, dur = 700;
+          function step(ts){
+            if (!start) start = ts;
+            var p = Math.min(1, (ts - start) / dur);
+            el.textContent = Math.round(p * to);
+            if (p < 1) requestAnimationFrame(step);
+          }
+          setTimeout(function(){ requestAnimationFrame(step); }, i * 90);
+        });
+      });
+    }, { threshold: .4 });
+    var rail2 = document.querySelector('.stat-rail');
+    if (rail2) countIo.observe(rail2);
+  } else {
+    // No IntersectionObserver: motion-active was added (reduce is false here), so without this
+    // fallback everything would stay in its dimmed resting state forever with nothing to ever
+    // trigger the reveal. Just show it all immediately.
+    document.documentElement.classList.remove('motion-active');
+  }
+
+  var copyStatus = document.getElementById('copy-status');
+  document.querySelectorAll('.copy-btn').forEach(function(btn){
+    var original = btn.innerHTML; // captured once, at wiring time, never at click time
+    btn.addEventListener('click', function(){
+      if (btn.dataset.busy) return;
+      btn.dataset.busy = '1';
+      var text = btn.getAttribute('data-copy');
+      var en = document.documentElement.lang === 'en';
+      var restore = function(){ btn.innerHTML = original; delete btn.dataset.busy; delete btn.dataset.copied; };
+      if (!navigator.clipboard) {
+        btn.textContent = en ? 'Select manually' : 'Copia manual';
+        if (copyStatus) copyStatus.textContent = en ? 'Clipboard unavailable, select the command manually.' : 'Portapapeles no disponible, selecciona el comando a mano.';
+        setTimeout(restore, 1800);
+        return;
+      }
+      navigator.clipboard.writeText(text).then(function(){
+        btn.dataset.copied = '1';
+        btn.textContent = en ? 'Copied' : 'Copiado';
+        if (copyStatus) copyStatus.textContent = en ? 'Command copied.' : 'Comando copiado.';
+        setTimeout(restore, 1200);
+      }).catch(function(){
+        btn.textContent = en ? 'Select manually' : 'Copia manual';
+        if (copyStatus) copyStatus.textContent = en ? 'Copy failed, select the command manually.' : 'No se pudo copiar, selecciona el comando a mano.';
+        setTimeout(restore, 1800);
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>
