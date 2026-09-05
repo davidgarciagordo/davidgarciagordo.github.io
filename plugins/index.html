@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#020203">
+<meta name="description" content="Cinco plugins open source para Claude Code: ahorro de tokens, revisión de diseño, cierre de specs, gates de calidad y automatización de setup. Un marketplace, cinco piezas.">
+<title>plugins · David García Gordo</title>
+<link rel="canonical" href="https://davidgarciagordo.github.io/plugins/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://davidgarciagordo.github.io/plugins/">
+<meta property="og:title" content="plugins: David García Gordo">
+<meta property="og:description" content="Un marketplace, cinco piezas. Plugins open source para Claude Code.">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1c1.2 3.6-3.6 5-3.6 8.4a3.6 3.6 0 0 0 7.2 0C11.6 6 6.8 4.6 8 1z' fill='%23F59E0B'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Space+Grotesk:wght@500;700&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<script>
+  (function () {
+    try {
+      var l = localStorage.getItem("lang");
+      if (l === "en" || l === "es") document.documentElement.lang = l;
+    } catch (e) {}
+  })();
+</script>
+<style>
+  :root {
+    --bg-1: #0a0a0f;
+    --bg-2: #020203;
+    --bg-2-rgb: 2 2 3;
+    --ink: #F5F4F2;
+    --ink-muted: rgb(245 244 242 / .58);
+    --ink-cap: rgb(245 244 242 / .62);
+    --ink-on-amber: #1a1200;
+    --amber: #F59E0B;
+    --amber-rgb: 245 158 11;
+    --amber-hot: #FBBF24;
+    --green: #22C55E;
+    --green-rgb: 34 197 94;
+    --glass: rgb(255 255 255 / .05);
+    --hairline: rgb(255 255 255 / .08);
+    --hairline-faint: rgb(255 255 255 / .045);
+    --radius: 16px;
+    --radius-tight: 6px;
+    --radius-xs: 4px;
+    --lockup: clamp(3rem, 8vw, 6.5rem);
+    --ease: cubic-bezier(.16, 1, .3, 1);
+    --track-label: .16em;
+    --track-mono: .08em;
+    --font-display: "Space Grotesk", system-ui, sans-serif;
+    --font-body: "Inter", system-ui, sans-serif;
+    --font-mono: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-padding-top: 6rem; overflow-x: clip; }
+  body {
+    background: var(--bg-2);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 18px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+  a, button { touch-action: manipulation; }
+
+  html[lang="es"] [lang="en"] { display: none !important; }
+  html[lang="en"] [lang="es"] { display: none !important; }
+
+  a { color: inherit; }
+
+  :focus-visible { outline: 2px solid var(--amber-hot); outline-offset: 3px; border-radius: var(--radius-xs); }
+
+  .skip-link {
+    position: absolute; left: 16px; top: -60px; z-index: 100;
+    background: var(--amber-hot); color: var(--ink-on-amber); font-family: var(--font-display); font-weight: 500;
+    padding: 10px 18px; border-radius: var(--radius-tight); text-decoration: none; transition: top .25s var(--ease);
+  }
+  .skip-link:focus { top: 16px; }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0);
+    white-space: nowrap; border: 0; padding: 0; margin: -1px;
+  }
+
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+  /* ============ Backdrop ============ */
+  .backdrop {
+    position: fixed; inset: 0; z-index: -1;
+    background: radial-gradient(120% 90% at 8% 0%, var(--bg-1) 0%, var(--bg-2) 62%);
+  }
+
+  /* ============ Reveal (visible by default, JS only enhances) ============ */
+  .js-reveal { opacity: 1; transform: none; }
+  .motion-active .js-reveal { opacity: 0; transform: translateY(16px); transition: opacity .6s var(--ease), transform .6s var(--ease); }
+  .motion-active .js-reveal.is-in { opacity: 1; transform: none; }
+
+  /* ============ Nav ============ */
+  header.top {
+    position: sticky; top: 0; z-index: 40;
+    background: rgb(var(--bg-2-rgb) / .72);
+    backdrop-filter: blur(14px) saturate(140%);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .topnav { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; gap: 16px; }
+  .logo {
+    font-family: var(--font-display); font-weight: 700; letter-spacing: -.01em;
+    font-size: 15px; text-decoration: none; color: var(--ink); min-height: 44px;
+    padding: 10px 4px; display: inline-flex; align-items: center;
+  }
+  .logo b { color: var(--amber); }
+  .nav-right { display: flex; align-items: center; gap: 14px; }
+  .nav-gh {
+    font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-cap); text-decoration: none;
+    border: 1px solid var(--hairline); border-radius: 999px; padding: 9px 14px; min-height: 44px;
+    display: inline-flex; align-items: center; transition: border-color .2s ease, color .2s ease;
+  }
+  .nav-gh:hover { border-color: var(--amber); color: var(--amber-hot); }
+  .lang-toggle { display: inline-flex; border: 1px solid var(--hairline); border-radius: 999px; overflow: hidden; font-family: var(--font-mono); font-size: 12px; }
+  .lang-toggle button {
+    background: transparent; border: 0; color: var(--ink-cap); cursor: pointer;
+    padding: 11px 15px; min-height: 44px; font-family: inherit; font-size: inherit;
+    border-bottom: 2px solid transparent;
+  }
+  .lang-toggle button[aria-pressed="true"] { color: var(--amber); background: var(--glass); border-bottom-color: var(--amber); }
+
+  /* ============ Micro-label ============ */
+  .label { font-family: var(--font-display); font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: var(--track-label); color: var(--ink-cap); }
+  .label.amber { color: var(--amber); }
+  .fig-cap, .bar, .pnode-idx {
+    font-family: var(--font-mono); letter-spacing: var(--track-mono);
+  }
+
+  /* ============ Hero ============ */
+  .hero { position: relative; padding-top: 72px; }
+  .hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 0; align-items: end; }
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-col, .term-outer { min-width: 0; }
+  }
+
+  .hero-col { padding: 24px 0 56px; }
+  .hero-eyebrow { margin-bottom: 22px; }
+  h1.lockup {
+    font-family: var(--font-display); font-weight: 700; text-transform: uppercase;
+    letter-spacing: -.02em; line-height: .92; font-size: var(--lockup);
+  }
+  .rotator { display: block; overflow: hidden; height: var(--lockup); }
+  .rotator > .roll { display: block; animation: roll5 12.5s var(--ease) infinite; }
+  .rotator .w { display: block; height: var(--lockup); line-height: .92; color: var(--amber); }
+  .rotator .w > span { display: inline; }
+  @media (prefers-reduced-motion: reduce) { .rotator > .roll { animation: none !important; } }
+  @keyframes roll5 {
+    0%, 16% { transform: translateY(0); }
+    20%, 36% { transform: translateY(calc(var(--lockup) * -1)); }
+    40%, 56% { transform: translateY(calc(var(--lockup) * -2)); }
+    60%, 76% { transform: translateY(calc(var(--lockup) * -3)); }
+    80%, 96% { transform: translateY(calc(var(--lockup) * -4)); }
+    100% { transform: translateY(0); }
+  }
+
+  /* Bleeding terminal artifact: the margin (breakout) and the padding (gutter) must live on
+     DIFFERENT boxes, or they cancel each other out: margin widens .term-outer's border box,
+     padding on the inner .term box is what actually keeps the content off the true edge. */
+  .term-outer { position: relative; padding-bottom: 24px; }
+  .term-outer::after {
+    content: ""; position: absolute; inset: -30% 0 auto auto; width: 55%; height: 160%;
+    background: radial-gradient(circle, rgb(var(--amber-rgb) / .16), transparent 65%);
+    pointer-events: none; z-index: -1;
+  }
+  .term {
+    position: relative; border-radius: var(--radius-tight) 0 0 var(--radius-tight);
+    background: var(--bg-2); border: 1px solid var(--hairline); border-right: 0;
+    font-family: var(--font-mono); font-size: 13px; line-height: 18px;
+    padding: 18px 20px 18px 20px; overflow: hidden;
+  }
+  @media (min-width: 901px) {
+    .term-outer { margin-right: clamp(-320px, calc(50% - 50vw), -1px); }
+    .term { padding-right: max(24px, calc(50vw - 50% + 24px)); }
+  }
+  @media (max-width: 900px) {
+    .term { border-radius: var(--radius-tight); border-right: 1px solid var(--hairline); padding-right: 20px; overflow-x: auto; }
+    .term-line { white-space: pre; }
+  }
+  .term-line {
+    opacity: 1;
+    white-space: pre;
+  }
+  .motion-active .term-line { opacity: 0; transform: translateY(4px); transition: opacity .5s var(--ease), transform .5s var(--ease); }
+  .motion-active .term-line.is-in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .motion-active .js-reveal, .motion-active .term-line { transition: none !important; opacity: 1 !important; transform: none !important; }
+  }
+  .term-line .path { color: var(--ink-cap); }
+  .term-line .amberw { color: var(--amber-hot); }
+  .term-line .greenw { color: var(--green); }
+  .term-line .muted { color: var(--ink-muted); }
+
+  /* ============ Stat rail ============ */
+  .stat-rail { display: flex; border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); }
+  @media (max-width: 720px) { .stat-rail { flex-wrap: wrap; } }
+  .stat-tile { flex: 1; min-width: 0; padding: 22px 20px; border-right: 1px solid var(--hairline); text-align: left; }
+  @media (max-width: 720px) {
+    .stat-tile { flex: 0 0 50%; }
+    .stat-tile:nth-child(2n) { border-right: 0; }
+    .stat-tile:nth-child(-n+4) { border-bottom: 1px solid var(--hairline); }
+    .stat-tile:last-child { flex: 0 0 100%; border-right: 0; }
+  }
+  .stat-tile:last-child { border-right: 0; }
+  .stat-num {
+    font-family: var(--font-display); font-weight: 700; color: var(--amber);
+    font-size: clamp(1.6rem, 3vw, 2.2rem); font-variant-numeric: tabular-nums; letter-spacing: -.01em;
+  }
+  .stat-cap { font-family: var(--font-display); font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: var(--track-label); color: var(--ink-cap); margin-top: 4px; display: block; }
+
+  .bar { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; justify-content: center; padding: 14px 0; font-size: 12px; text-transform: uppercase; color: var(--ink-cap); }
+  .bar span::before { content: "·"; color: var(--amber); margin-right: 8px; }
+
+  /* ============ Manifesto ============ */
+  .manifesto-sec { padding: 80px 0; }
+  p.manifesto { font-family: var(--font-display); font-weight: 500; letter-spacing: -.02em; line-height: 1.28; font-size: clamp(1.5rem, 3.2vw, 2.5rem); max-width: 860px; }
+  p.manifesto .m { color: var(--ink-muted); }
+
+  /* ============ Blueprint frame (figures) ============ */
+  figure.figframe {
+    position: relative; margin: 0 0 88px; padding: 52px 24px 48px;
+    background-color: var(--bg-1);
+    background-image:
+      repeating-linear-gradient(90deg, var(--hairline-faint) 0 1px, transparent 1px 25%),
+      radial-gradient(var(--hairline-faint) 1px, transparent 1px);
+    background-size: 100% 100%, 28px 28px;
+    border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline);
+  }
+  figcaption.fig-cap {
+    display: flex; align-items: center; gap: 14px; font-size: 12px; color: var(--ink-cap);
+    max-width: 1120px; margin: 0 auto 40px; padding: 0 24px;
+  }
+  .fig-cap .rule { flex: 1; height: 1px; background: var(--hairline); }
+  .fig-cap h2 { font-family: var(--font-mono); font-weight: 400; font-size: 12px; letter-spacing: var(--track-mono); color: var(--ink-cap); white-space: nowrap; }
+
+  /* ============ Pipeline rail ============ */
+  .pnode-rail { display: flex; flex-direction: column; gap: 0; max-width: 760px; margin: 0 auto; list-style: none; }
+  .pnode {
+    display: grid; grid-template-columns: 32px 32px 1fr; align-items: start; gap: 16px;
+    position: relative; padding: 18px 0;
+  }
+  .pnode:not(:last-child)::before {
+    content: ""; position: absolute; left: 60px; top: 42px; bottom: -18px; width: 1px;
+    background: var(--hairline); transform: translateX(-50%);
+  }
+  .pnode:not(:last-child)::after {
+    content: ""; position: absolute; left: 60px; top: 42px; bottom: -18px; width: 1px;
+    background: var(--amber); transform-origin: top;
+  }
+  .pnode-idx { font-size: 12px; color: var(--ink-cap); padding-top: 5px; }
+  .pnode-dot { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--amber); position: relative; margin-top: 1px; }
+  .pnode-dot::after {
+    content: ""; position: absolute; inset: 5px; border-radius: 50%; background: var(--amber);
+  }
+  .pnode-stage { font-family: var(--font-display); font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: var(--track-label); color: var(--amber); margin-bottom: 4px; }
+  .pnode-card { color: var(--ink-muted); font-size: 15px; line-height: 1.55; }
+  .pnode-card .repo-link {
+    font-family: var(--font-display); font-weight: 700; color: var(--ink); text-decoration: none;
+    display: inline-block; margin-bottom: 2px;
+  }
+  .pnode-card .repo-link:hover, .pnode-card .repo-link:focus-visible { color: var(--amber); text-decoration: underline; }
+  .pnode-card .pn-stat { color: var(--amber); font-weight: 500; }
+
+  .motion-active .pnode:not(:last-child)::after { transform: translateX(-50%) scaleY(0); }
+  .motion-active .pnode-dot { border-color: var(--hairline); }
+  .motion-active .pnode-dot::after { transform: scale(.6); opacity: .3; }
+
+  .motion-active .pnode.js-lit .pnode-dot { border-color: var(--amber); transition: border-color .4s var(--ease) calc(var(--n) * .22s + .3s); }
+  .motion-active .pnode.js-lit .pnode-dot::after { transform: scale(1); opacity: 1; box-shadow: 0 0 16px rgb(var(--amber-rgb) / .6); transition: transform .4s var(--ease) calc(var(--n) * .22s + .3s), opacity .4s var(--ease) calc(var(--n) * .22s + .3s), box-shadow .4s var(--ease) calc(var(--n) * .22s + .3s); }
+  .motion-active .pnode.js-lit:not(:last-child)::after { transform: translateX(-50%) scaleY(1); transition: transform .5s var(--ease) calc(var(--n) * .22s + .4s); }
+
+  /* ============ Plugin grid ============ */
+  .plugin-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;
+    max-width: 1120px; margin: 0 auto; padding: 0 24px;
+  }
+  .plugin-card {
+    display: flex; flex-direction: column; gap: 14px; padding: 24px;
+    border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--glass);
+    text-decoration: none; color: inherit; transition: border-color .2s ease, transform .12s ease-out;
+  }
+  @media (hover: hover) and (pointer: fine) { .plugin-card:hover { border-color: rgb(var(--amber-rgb) / .4); } }
+  .plugin-card:focus-visible { border-color: rgb(var(--amber-rgb) / .5); }
+  .plugin-card:active { transform: scale(.98); }
+  @media (prefers-reduced-motion: reduce) { .plugin-card:active { transform: none; } }
+  .plugin-card .repo { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; letter-spacing: -.01em; }
+  .plugin-card:hover .repo, .plugin-card:focus-visible .repo { color: var(--amber); }
+  .plugin-card .desc { color: var(--ink-muted); font-size: 14.5px; line-height: 1.55; flex: 1; }
+  .plugin-card .pinstall { font-family: var(--font-mono); font-size: 12px; color: var(--ink-cap); border-top: 1px solid var(--hairline-faint); padding-top: 12px; }
+  .plugin-card .pinstall .v { color: var(--amber-hot); }
+
+  /* ============ Notes band ============ */
+  .notes-band { border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); padding: 80px 0; }
+  .notes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+  @media (max-width: 900px) { .notes-grid { grid-template-columns: 1fr; } }
+  .notes-grid h2 { font-family: var(--font-display); font-weight: 700; letter-spacing: -.02em; font-size: clamp(1.8rem, 3.4vw, 2.6rem); color: var(--amber); }
+  .notes-list { display: flex; flex-direction: column; gap: 20px; background: var(--glass); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 28px; }
+  .notes-item p { color: var(--ink-muted); font-size: 15.5px; }
+  .notes-item strong { color: var(--ink); font-weight: 500; }
+  .notes-item code { font-family: var(--font-mono); color: var(--amber-hot); font-size: .92em; }
+
+  /* ============ Install ============ */
+  .install-sec { padding: 88px 0 64px; text-align: center; }
+  .install-sec .label { display: block; margin-bottom: 20px; }
+  .install-sec h2 { font-family: var(--font-display); font-weight: 700; letter-spacing: -.02em; font-size: clamp(1.8rem, 3.6vw, 2.8rem); margin-bottom: 32px; }
+  .install-block {
+    max-width: 620px; margin: 0 auto 32px; text-align: left; font-size: 14px; line-height: 2;
+    border: 1px solid var(--hairline); border-radius: var(--radius-tight); background: var(--bg-1);
+  }
+  .install-row:not(:last-child) { border-bottom: 1px solid var(--hairline-faint); }
+  .install-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 10px 4px 14px; }
+  .install-row code { font-family: var(--font-mono); white-space: pre; overflow-x: auto; display: block; min-width: 0; flex: 1 1 auto; }
+  .install-row .c { color: var(--ink-cap); }
+  .install-row .v { color: var(--amber-hot); }
+  .copy-btn {
+    flex-shrink: 0; font-family: var(--font-mono); font-size: 11px; color: var(--ink-cap);
+    background: transparent; border: 1px solid var(--hairline); border-radius: var(--radius-tight);
+    padding: 8px 10px; min-width: 44px; min-height: 44px; cursor: pointer;
+  }
+  .copy-btn[data-copied="1"] { color: var(--amber-hot); border-color: rgb(var(--amber-rgb) / .4); }
+  .cta-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .cta {
+    display: inline-flex; align-items: center; gap: 8px; text-decoration: none;
+    font-family: var(--font-display); font-weight: 500; font-size: 14px;
+    padding: 13px 26px; min-height: 44px; border-radius: 999px; border: 1px solid var(--hairline);
+    color: var(--ink); transition: border-color .2s ease, box-shadow .2s ease, color .2s ease, transform .12s ease-out;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .cta:hover { border-color: rgb(var(--amber-rgb) / .4); }
+    .cta-amber:hover { box-shadow: 0 0 26px rgb(var(--amber-rgb) / .22); }
+  }
+  .cta:active { transform: scale(.97); }
+  @media (prefers-reduced-motion: reduce) { .cta { transition: border-color .2s ease, box-shadow .2s ease, color .2s ease; } .cta:active { transform: none; } }
+  .cta-amber { background: rgb(var(--amber-rgb) / .14); border-color: rgb(var(--amber-rgb) / .45); color: var(--amber-hot); }
+
+  footer.site-foot { border-top: 1px solid var(--hairline); padding: 32px 24px; text-align: center; font-family: var(--font-mono); font-size: 12px; color: var(--ink-cap); }
+  footer.site-foot a { color: var(--ink-muted); text-decoration: none; }
+  footer.site-foot a:hover { color: var(--amber); }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main"><span lang="es">Saltar al contenido</span><span lang="en">Skip to content</span></a>
+
+<div class="backdrop" aria-hidden="true"></div>
+
+<header class="top">
+  <div class="topnav">
+    <a class="logo" href="/">plugins<b>.</b></a>
+    <div class="nav-right">
+      <a class="nav-gh" href="https://github.com/davidgarciagordo/claude-plugins">GitHub · MIT</a>
+      <div class="lang-toggle" role="group" aria-label="Language / Idioma">
+        <button class="es" data-lang="es" type="button" aria-pressed="true">ES</button>
+        <button class="en" data-lang="en" type="button" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+  <section class="hero wrap">
+    <div class="hero-grid">
+      <div class="hero-col">
+        <div class="hero-eyebrow label amber">
+          <span lang="es">Marketplace de Claude Code · código abierto</span><span lang="en">Claude Code marketplace · open source</span>
+        </div>
+        <h1 class="lockup">
+          PLUGINS
+          <span class="rotator">
+            <span class="roll" aria-hidden="true">
+              <span class="w"><span lang="es">fuerzan</span><span lang="en">enforce</span></span>
+              <span class="w"><span lang="es">cierran</span><span lang="en">close</span></span>
+              <span class="w"><span lang="es">ahorran</span><span lang="en">save</span></span>
+              <span class="w"><span lang="es">auditan</span><span lang="en">audit</span></span>
+              <span class="w"><span lang="es">automatizan</span><span lang="en">automate</span></span>
+            </span>
+          </span>
+          <span class="sr-only"><span lang="es">fuerzan, cierran, ahorran, auditan, automatizan</span><span lang="en">enforce, close, save, audit, automate</span></span>
+        </h1>
+      </div>
+      <div class="term-outer js-reveal">
+        <p id="term-cap" class="sr-only"><span lang="es">Transcripción de una instalación real: añadir el marketplace y luego instalar un plugin concreto.</span><span lang="en">Transcript of a real install: adding the marketplace, then installing one specific plugin.</span></p>
+        <div class="term" id="term" role="group" aria-labelledby="term-cap">
+          <div class="term-line" style="transition-delay:.1s">$ <span class="amberw">/plugin marketplace add</span> davidgarciagordo/claude-plugins</div>
+          <div class="term-line" style="transition-delay:.3s"><span class="path">→</span> <span class="muted"><span lang="es">6 plugins listados</span><span lang="en">6 plugins listed</span></span></div>
+          <div class="term-line" style="transition-delay:.5s">$ <span class="amberw">/plugin install</span> token-economy</div>
+          <div class="term-line" style="transition-delay:.7s"><span class="path">→</span> <span class="muted"><span lang="es">clonando davidgarciagordo/token-economy…</span><span lang="en">cloning davidgarciagordo/token-economy…</span></span></div>
+          <div class="term-line" style="transition-delay:.9s"><span class="greenw">✓</span> <span class="muted"><span lang="es">instalado. sin paso de build</span><span lang="en">installed. no build step</span></span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-rail">
+      <div class="stat-tile"><span class="stat-num js-count" data-to="6">6</span><span class="stat-cap"><span lang="es">plugins</span><span lang="en">plugins</span></span></div>
+      <div class="stat-tile"><span class="stat-num js-count" data-to="1">1</span><span class="stat-cap"><span lang="es">marketplace</span><span lang="en">marketplace</span></span></div>
+      <div class="stat-tile"><span class="stat-num js-count" data-to="4">4</span><span class="stat-cap"><span lang="es">hooks fail-closed</span><span lang="en">fail-closed hooks</span></span></div>
+      <div class="stat-tile"><span class="stat-num js-count" data-to="9">9</span><span class="stat-cap"><span lang="es">pasos forge</span><span lang="en">forge steps</span></span></div>
+      <div class="stat-tile"><span class="stat-num">MIT</span><span class="stat-cap"><span lang="es">licencia</span><span lang="en">license</span></span></div>
+    </div>
+    <div class="bar">
+      <span><span lang="es">MIT, código abierto</span><span lang="en">MIT, open source</span></span>
+      <span><span lang="es">sin paso de build</span><span lang="en">no build step</span></span>
+      <span><span lang="es">cada plugin, independiente</span><span lang="en">each plugin, independent</span></span>
+    </div>
+  </section>
+
+  <section class="manifesto-sec wrap">
+    <p class="manifesto js-reveal">
+      <span lang="es">Seis plugins, un marketplace.</span>
+      <span lang="en">Six plugins, one marketplace.</span>
+      <span class="m">
+        <span lang="es"> Cada uno resuelve un problema real de trabajar con IA en equipo — con un hook o un veredicto que lo comprueba, no solo la promesa. Se instalan sueltos o juntos.</span>
+        <span lang="en"> Each one solves a real problem of working with AI as a team — with a hook or a verdict that checks it, not just the promise. Install them loose or together.</span>
+      </span>
+    </p>
+  </section>
+
+  <figure class="figframe" id="pipeline">
+    <figcaption class="fig-cap"><span class="rule" aria-hidden="true"></span><h2><span aria-hidden="true">&gt;_ ───</span> <span lang="es">fig. 1 · el pipeline que cierran</span><span lang="en">fig. 1 · the pipeline they close</span> <span aria-hidden="true">─── #</span></h2><span class="rule" aria-hidden="true"></span></figcaption>
+    <ol class="pnode-rail">
+      <li class="pnode" style="--n:0">
+        <span class="pnode-idx">01</span>
+        <span class="pnode-dot" aria-hidden="true"></span>
+        <div><div class="pnode-stage">Spec</div>
+        <div class="pnode-card"><a class="repo-link" href="https://github.com/davidgarciagordo/claude-code-setup-optimizer/tree/main/plugins/working-methods" translate="no">working-methods</a><br><span lang="es">Flujos y orquestación multiagente como comandos.</span><span lang="en">Workflows and multi-agent orchestration as commands.</span></div></div>
+      </li>
+      <li class="pnode" style="--n:1">
+        <span class="pnode-idx">02</span>
+        <span class="pnode-dot" aria-hidden="true"></span>
+        <div><div class="pnode-stage">Grill</div>
+        <div class="pnode-card"><a class="repo-link" href="https://github.com/davidgarciagordo/forge-methodology" translate="no">forge-methodology</a><br><span lang="es">Del spec al verify con grill adversarial: los agentes se auditan entre sí.</span><span lang="en">From spec to verify with an adversarial grill: agents audit each other.</span></div></div>
+      </li>
+      <li class="pnode" style="--n:2">
+        <span class="pnode-idx">03</span>
+        <span class="pnode-dot" aria-hidden="true"></span>
+        <div><div class="pnode-stage">Plan</div>
+        <div class="pnode-card"><a class="repo-link" href="https://github.com/davidgarciagordo/token-economy" translate="no">token-economy</a><br><span lang="es">Recorta el coste multiagente sin perder cobertura.</span><span lang="en">Cuts multi-agent cost without losing coverage.</span> <span class="pn-stat"><span lang="es">×7 en la segunda pasada</span><span lang="en">×7 on the second pass</span></span></div></div>
+      </li>
+      <li class="pnode" style="--n:3">
+        <span class="pnode-idx">04</span>
+        <span class="pnode-dot" aria-hidden="true"></span>
+        <div><div class="pnode-stage"><span lang="es">Ejecución</span><span lang="en">Execution</span></div>
+        <div class="pnode-card"><a class="repo-link" href="https://github.com/davidgarciagordo/design-review" translate="no">design-review</a><br><span lang="es">Cuatro lentes de diseño en paralelo y un veredicto en navegador real.</span><span lang="en">Four design lenses in parallel and a verdict in a real browser.</span></div></div>
+      </li>
+      <li class="pnode" style="--n:4">
+        <span class="pnode-idx">05</span>
+        <span class="pnode-dot" aria-hidden="true"></span>
+        <div><div class="pnode-stage">Verify</div>
+        <div class="pnode-card"><a class="repo-link" href="https://github.com/davidgarciagordo/claude-code-setup-optimizer/tree/main/plugins/automations" translate="no">automations</a><br><span lang="es">Automatiza y afina tu instalación de Claude Code.</span><span lang="en">Automates and tunes your Claude Code setup.</span></div></div>
+      </li>
+    </ol>
+  </figure>
+
+  <figure class="figframe" id="pieces">
+    <figcaption class="fig-cap"><span class="rule" aria-hidden="true"></span><h2><span aria-hidden="true">&gt;_ ───</span> <span lang="es">fig. 2 · qué te llevas de cada uno</span><span lang="en">fig. 2 · what you get from each</span> <span aria-hidden="true">─── #</span></h2><span class="rule" aria-hidden="true"></span></figcaption>
+    <div class="plugin-grid">
+      <a class="plugin-card js-reveal" href="https://github.com/davidgarciagordo/token-economy">
+        <span class="repo" translate="no">token-economy</span>
+        <span class="desc"><span lang="es">Cuatro agentes de revisión dejan de pagar cuatro veces por leer los mismos ficheros: mismos hallazgos, una fracción del gasto en tokens de entrada, y una segunda pasada sobre el mismo objetivo sale casi gratis.</span><span lang="en">Four review agents stop paying four times to read the same files: same findings, a fraction of the input-token bill, and a second pass on the same target comes out almost free.</span></span>
+        <span class="pinstall">$ /plugin install <span class="v">token-economy</span></span>
+      </a>
+      <a class="plugin-card js-reveal" href="https://github.com/davidgarciagordo/design-review">
+        <span class="repo" translate="no">design-review</span>
+        <span class="desc"><span lang="es">Tu interfaz hecha por IA deja de salir como una plantilla SaaS correcta pero intercambiable: el pipeline no te deja darla por terminada hasta que un veredicto en navegador real dice que solo podría ser tu producto.</span><span lang="en">Your AI-built UI stops shipping as a correct-but-interchangeable SaaS template: the pipeline won't let you call it done until a real-browser verdict says it could only be your product.</span></span>
+        <span class="pinstall">$ /plugin install <span class="v">design-review</span></span>
+      </a>
+      <a class="plugin-card js-reveal" href="https://github.com/davidgarciagordo/forge-methodology">
+        <span class="repo" translate="no">forge-methodology</span>
+        <span class="desc"><span lang="es">"A la par con Stripe" deja de significar "hicimos las partes que se nos ocurrieron": cada capacidad de la referencia es una fila, y el PR no se abre hasta que cada una tiene evidencia firmada por alguien que no la construyó.</span><span lang="en">"Parity with Stripe" stops meaning "we built the parts we thought of": every capability of the reference becomes a row, and the PR won't open until each one carries evidence signed by someone who didn't build it.</span></span>
+        <span class="pinstall">$ /plugin install <span class="v">forge-methodology</span></span>
+      </a>
+      <a class="plugin-card js-reveal" href="https://github.com/davidgarciagordo/claude-code-setup-optimizer/tree/main/plugins/working-methods">
+        <span class="repo" translate="no">working-methods</span>
+        <span class="desc"><span lang="es">La metodología deja de depender de que el agente se acuerde: las fases son código, los gates devuelven un código de salida, y a ti solo te interrumpe dos veces, no todo el rato.</span><span lang="en">The methodology stops depending on the agent remembering it: phases are code, gates return exit codes, and you're interrupted exactly twice, not constantly.</span></span>
+        <span class="pinstall">$ /plugin install <span class="v">working-methods</span></span>
+      </a>
+      <a class="plugin-card js-reveal" href="https://github.com/davidgarciagordo/claude-code-setup-optimizer/tree/main/plugins/automations">
+        <span class="repo" translate="no">automations</span>
+        <span class="desc"><span lang="es">Un repo nuevo se queda con una configuración de Claude Code hecha a su medida — permisos, hooks, revisores con nombres de tus propias tablas — en una pasada, y apruebas cada pieza suelta antes de que se escriba.</span><span lang="en">A new repo gets a Claude Code setup fitted to it — permissions, hooks, reviewers named after your own tables — in one pass, and you approve each piece before it's written.</span></span>
+        <span class="pinstall">$ /plugin install <span class="v">automations</span></span>
+      </a>
+      <a class="plugin-card js-reveal" href="https://github.com/davidgarciagordo/swarm">
+        <span class="repo" translate="no">swarm</span>
+        <span class="desc"><span lang="es">El que junta a los otros cinco en un solo ciclo: un objetivo entra, un equipo de software sénior completo sale — memoria compartida, grill adversarial, TDD y verificación independiente, sin que tú orquestes nada.</span><span lang="en">The one that ties the other five into one cycle: one objective in, a full senior software team out — shared memory, adversarial grill, TDD and independent verification, without you orchestrating any of it.</span></span>
+        <span class="pinstall">$ /plugin install <span class="v">swarm</span></span>
+      </a>
+    </div>
+  </figure>
+
+  <section class="notes-band">
+    <div class="wrap notes-grid">
+      <h2 class="js-reveal"><span lang="es">Compuestos, no acoplados.</span><span lang="en">Composed, not coupled.</span></h2>
+      <div class="notes-list js-reveal">
+        <div class="notes-item"><p><strong><span lang="es">Instala solo lo que necesitas.</span><span lang="en">Install only what you need.</span></strong> <span lang="es">Cada plugin funciona solo; no hay dependencias cruzadas obligatorias.</span><span lang="en">Each plugin works alone; there are no mandatory cross-dependencies.</span></p></div>
+        <div class="notes-item"><p><strong><span lang="es">Un marketplace, seis fuentes.</span><span lang="en">One marketplace, six sources.</span></strong> <code>/plugin marketplace add</code> <span lang="es">una vez, luego instala cada pieza por separado.</span><span lang="en">once, then install each piece separately.</span></p></div>
+        <div class="notes-item"><p><strong><span lang="es">Piensan igual.</span><span lang="en">They think alike.</span></strong> <span lang="es">Comparten el mismo vocabulario: gates binarios, hallazgos con fichero:línea, nada de humo.</span><span lang="en">They share the same vocabulary: binary gates, file:line findings, no smoke.</span></p></div>
+        <div class="notes-item"><p><strong><span lang="es">Grill sí, pero no el mismo.</span><span lang="en">Grill, but not the same one.</span></strong> <code>forge-methodology</code> <span lang="es">audita el documento (</span><span lang="en">audits the document (</span><code>grill-me</code><span lang="es">, te entrevista a ti); </span><span lang="en">, interviews you); </span><code>working-methods</code> <span lang="es">audita el artefacto dentro de Claude Code (</span><span lang="en">audits the artifact inside Claude Code (</span><code>/grill</code><span lang="es">). Uno grilla el documento, el otro a su autor.</span><span lang="en">). One grills the document, the other its author.</span></p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="install-sec wrap">
+    <span class="label amber"><span lang="es">Instalación</span><span lang="en">Install</span></span>
+    <h2><span lang="es">Un comando, seis piezas.</span><span lang="en">One command, six pieces.</span></h2>
+    <div class="sr-only" id="copy-status" role="status" aria-live="polite"></div>
+    <div class="install-block">
+      <div class="install-row"><code><span class="c">$</span> /plugin marketplace add <span class="v">davidgarciagordo/claude-plugins</span></code><button class="copy-btn" data-copy="/plugin marketplace add davidgarciagordo/claude-plugins"><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
+      <div class="install-row"><code><span class="c">$</span> /plugin install <span class="v">token-economy</span></code><button class="copy-btn" data-copy="/plugin install token-economy"><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
+    </div>
+    <div class="cta-row">
+      <a class="cta cta-amber" href="https://github.com/davidgarciagordo/claude-plugins"><span lang="es">Ver el marketplace en GitHub</span><span lang="en">View the marketplace on GitHub</span> →</a>
+      <a class="cta" href="/swarm/"><span lang="es">Ver swarm</span><span lang="en">See swarm</span></a>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <a href="https://github.com/davidgarciagordo/claude-plugins">github.com/davidgarciagordo/claude-plugins</a> · MIT · <a href="/">David García Gordo</a>
+</footer>
+
+<script>
+(function(){
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduce) document.documentElement.classList.add('motion-active');
+
+  var toggle = document.querySelector('.lang-toggle');
+  function syncLangUI(l){
+    document.documentElement.lang = l;
+    toggle.querySelectorAll('button').forEach(function(b){
+      b.setAttribute('aria-pressed', b.getAttribute('data-lang') === l ? 'true' : 'false');
+    });
+  }
+  if (toggle) {
+    toggle.addEventListener('click', function(e){
+      var btn = e.target.closest('button[data-lang]');
+      if (!btn) return;
+      var l = btn.getAttribute('data-lang');
+      try { localStorage.setItem('lang', l); } catch(err) {}
+      syncLangUI(l);
+    });
+    syncLangUI(document.documentElement.lang || 'es');
+  }
+
+  if (reduce) {
+    document.querySelectorAll('.js-count').forEach(function(el){ el.textContent = el.dataset.to; });
+  } else if ('IntersectionObserver' in window) {
+    var revealIo = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if (en.isIntersecting) { en.target.classList.add('is-in'); revealIo.unobserve(en.target); } });
+    }, { threshold: .2 });
+    document.querySelectorAll('.js-reveal').forEach(function(el){ revealIo.observe(el); });
+
+    var termIo = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (!en.isIntersecting) return;
+        var lines = en.target.querySelectorAll('.term-line');
+        lines.forEach(function(l){ l.classList.add('is-in'); });
+        termIo.unobserve(en.target);
+      });
+    }, { threshold: .3 });
+    var term = document.getElementById('term');
+    if (term) termIo.observe(term);
+
+    var pipeIo = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (!en.isIntersecting) return;
+        pipeIo.unobserve(en.target);
+        en.target.querySelectorAll('.pnode').forEach(function(node){ node.classList.add('js-lit'); });
+      });
+    }, { threshold: .3 });
+    var rail = document.querySelector('.pnode-rail');
+    if (rail) pipeIo.observe(rail);
+
+    var countIo = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (!en.isIntersecting) return;
+        countIo.unobserve(en.target);
+        var els = en.target.querySelectorAll('.js-count');
+        els.forEach(function(el, i){
+          var to = parseInt(el.dataset.to, 10);
+          el.textContent = '0';
+          var start = null, dur = 700;
+          function step(ts){
+            if (!start) start = ts;
+            var p = Math.min(1, (ts - start) / dur);
+            el.textContent = Math.round(p * to);
+            if (p < 1) requestAnimationFrame(step);
+          }
+          setTimeout(function(){ requestAnimationFrame(step); }, i * 90);
+        });
+      });
+    }, { threshold: .4 });
+    var rail2 = document.querySelector('.stat-rail');
+    if (rail2) countIo.observe(rail2);
+  } else {
+    document.documentElement.classList.remove('motion-active');
+  }
+
+  var copyStatus = document.getElementById('copy-status');
+  document.querySelectorAll('.copy-btn').forEach(function(btn){
+    var original = btn.innerHTML;
+    btn.addEventListener('click', function(){
+      if (btn.dataset.busy) return;
+      btn.dataset.busy = '1';
+      var text = btn.getAttribute('data-copy');
+      var en = document.documentElement.lang === 'en';
+      var restore = function(){ btn.innerHTML = original; delete btn.dataset.busy; delete btn.dataset.copied; };
+      if (!navigator.clipboard) {
+        btn.textContent = en ? 'Select manually' : 'Copia manual';
+        if (copyStatus) copyStatus.textContent = en ? 'Clipboard unavailable, select the command manually.' : 'Portapapeles no disponible, selecciona el comando a mano.';
+        setTimeout(restore, 1800);
+        return;
+      }
+      navigator.clipboard.writeText(text).then(function(){
+        btn.dataset.copied = '1';
+        btn.textContent = en ? 'Copied' : 'Copiado';
+        if (copyStatus) copyStatus.textContent = en ? 'Command copied.' : 'Comando copiado.';
+        setTimeout(restore, 1200);
+      }).catch(function(){
+        btn.textContent = en ? 'Select manually' : 'Copia manual';
+        if (copyStatus) copyStatus.textContent = en ? 'Copy failed, select the command manually.' : 'No se pudo copiar, selecciona el comando a mano.';
+        setTimeout(restore, 1800);
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>
