@@ -14,6 +14,26 @@
 <meta property="og:description" content="Un marketplace, seis piezas. Plugins open source para Claude Code.">
 <meta name="twitter:card" content="summary">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1c1.2 3.6-3.6 5-3.6 8.4a3.6 3.6 0 0 0 7.2 0C11.6 6 6.8 4.6 8 1z' fill='%23F59E0B'/%3E%3C/svg%3E">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Claude Code plugins by David García Gordo",
+  "url": "https://davidgarciagordo.github.io/plugins/",
+  "description": "Six open-source Claude Code plugins, installable from one marketplace.",
+  "mainEntity": {
+    "@type": "ItemList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "url": "https://davidgarciagordo.github.io/plugins/token-economy/", "name": "token-economy" },
+      { "@type": "ListItem", "position": 2, "url": "https://davidgarciagordo.github.io/plugins/design-review/", "name": "design-review" },
+      { "@type": "ListItem", "position": 3, "url": "https://davidgarciagordo.github.io/plugins/forge-methodology/", "name": "forge-methodology" },
+      { "@type": "ListItem", "position": 4, "url": "https://davidgarciagordo.github.io/plugins/working-methods/", "name": "working-methods" },
+      { "@type": "ListItem", "position": 5, "url": "https://davidgarciagordo.github.io/plugins/automations/", "name": "automations" },
+      { "@type": "ListItem", "position": 6, "url": "https://davidgarciagordo.github.io/swarm/", "name": "swarm" }
+    ]
+  }
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Space+Grotesk:wght@500;700&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
@@ -477,32 +497,32 @@
   <figure class="figframe" id="pieces">
     <figcaption class="fig-cap"><span class="rule" aria-hidden="true"></span><h2><span aria-hidden="true">&gt;_ ───</span> <span lang="es">fig. 2 · qué te llevas de cada uno</span><span lang="en">fig. 2 · what you get from each</span> <span aria-hidden="true">─── #</span></h2><span class="rule" aria-hidden="true"></span></figcaption>
     <div class="plugin-grid">
-      <a class="plugin-card js-reveal" href="https://github.com/davidgarciagordo/token-economy">
+      <a class="plugin-card js-reveal" href="/plugins/token-economy/">
         <span class="repo" translate="no">token-economy</span>
         <span class="desc"><span lang="es">Cuatro agentes de revisión dejan de pagar cuatro veces por leer los mismos ficheros: mismos hallazgos, una fracción del gasto en tokens de entrada, y una segunda pasada sobre el mismo objetivo sale casi gratis.</span><span lang="en">Four review agents stop paying four times to read the same files: same findings, a fraction of the input-token bill, and a second pass on the same target comes out almost free.</span></span>
         <span class="pinstall">$ /plugin install <span class="v">token-economy</span></span>
       </a>
-      <a class="plugin-card js-reveal" href="https://github.com/davidgarciagordo/design-review">
+      <a class="plugin-card js-reveal" href="/plugins/design-review/">
         <span class="repo" translate="no">design-review</span>
         <span class="desc"><span lang="es">Tu interfaz hecha por IA deja de salir como una plantilla SaaS correcta pero intercambiable: el pipeline no te deja darla por terminada hasta que un veredicto en navegador real dice que solo podría ser tu producto.</span><span lang="en">Your AI-built UI stops shipping as a correct-but-interchangeable SaaS template: the pipeline won't let you call it done until a real-browser verdict says it could only be your product.</span></span>
         <span class="pinstall">$ /plugin install <span class="v">design-review</span></span>
       </a>
-      <a class="plugin-card js-reveal" href="https://github.com/davidgarciagordo/forge-methodology">
+      <a class="plugin-card js-reveal" href="/plugins/forge-methodology/">
         <span class="repo" translate="no">forge-methodology</span>
         <span class="desc"><span lang="es">"A la par con Stripe" deja de significar "hicimos las partes que se nos ocurrieron": cada capacidad de la referencia es una fila, y el PR no se abre hasta que cada una tiene evidencia firmada por alguien que no la construyó.</span><span lang="en">"Parity with Stripe" stops meaning "we built the parts we thought of": every capability of the reference becomes a row, and the PR won't open until each one carries evidence signed by someone who didn't build it.</span></span>
         <span class="pinstall">$ /plugin install <span class="v">forge-methodology</span></span>
       </a>
-      <a class="plugin-card js-reveal" href="https://github.com/davidgarciagordo/claude-code-setup-optimizer/tree/main/plugins/working-methods">
+      <a class="plugin-card js-reveal" href="/plugins/working-methods/">
         <span class="repo" translate="no">working-methods</span>
         <span class="desc"><span lang="es">La metodología deja de depender de que el agente se acuerde: las fases son código, los gates devuelven un código de salida, y a ti solo te interrumpe dos veces, no todo el rato.</span><span lang="en">The methodology stops depending on the agent remembering it: phases are code, gates return exit codes, and you're interrupted exactly twice, not constantly.</span></span>
         <span class="pinstall">$ /plugin install <span class="v">working-methods</span></span>
       </a>
-      <a class="plugin-card js-reveal" href="https://github.com/davidgarciagordo/claude-code-setup-optimizer/tree/main/plugins/automations">
+      <a class="plugin-card js-reveal" href="/plugins/automations/">
         <span class="repo" translate="no">automations</span>
         <span class="desc"><span lang="es">Un repo nuevo se queda con una configuración de Claude Code hecha a su medida — permisos, hooks, revisores con nombres de tus propias tablas — en una pasada, y apruebas cada pieza suelta antes de que se escriba.</span><span lang="en">A new repo gets a Claude Code setup fitted to it — permissions, hooks, reviewers named after your own tables — in one pass, and you approve each piece before it's written.</span></span>
         <span class="pinstall">$ /plugin install <span class="v">automations</span></span>
       </a>
-      <a class="plugin-card js-reveal" href="https://github.com/davidgarciagordo/swarm">
+      <a class="plugin-card js-reveal" href="/swarm/">
         <span class="repo" translate="no">swarm</span>
         <span class="desc"><span lang="es">El que junta a los otros cinco en un solo ciclo: un objetivo entra, un equipo de software sénior completo sale — memoria compartida, grill adversarial, TDD y verificación independiente, sin que tú orquestes nada.</span><span lang="en">The one that ties the other five into one cycle: one objective in, a full senior software team out — shared memory, adversarial grill, TDD and independent verification, without you orchestrating any of it.</span></span>
         <span class="pinstall">$ /plugin install <span class="v">swarm</span></span>

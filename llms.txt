@@ -1,0 +1,19 @@
+# David García Gordo
+
+> Tech Lead (backend + AI tooling) at Classlife Education, 20+ years in software, open source since 2008. Builds an open-source plugin ecosystem for Claude Code that brings senior-software-team discipline to AI coding agents: deterministic gates, adversarial review, and measured token savings instead of marketing claims.
+
+## Site
+
+- [Home / CV](https://davidgarciagordo.github.io/): background, experience, stack, and the AI-engineering ecosystem section.
+- [swarm](https://davidgarciagordo.github.io/swarm/): 39-agent Claude Code plugin that runs a full software-development cycle (discovery, analysis, design, implementation, delivery) from one plain-language objective, with adversarial review and independent verification at every gate.
+- [Plugin catalog](https://davidgarciagordo.github.io/plugins/): overview of all 6 open-source Claude Code plugins in the ecosystem, installable from one marketplace (`davidgarciagordo/claude-plugins`).
+
+## Plugins (individual pages)
+
+- [token-economy](https://davidgarciagordo.github.io/plugins/token-economy/): deterministic context-pack + frugal output-style — cuts input tokens in multi-agent Claude Code work (~2.6x per lens, ~7x on a repeated pass) without cutting coverage.
+- [design-review](https://davidgarciagordo.github.io/plugins/design-review/): 8-agent design pipeline — studies live references, runs 4 parallel design lenses, and renders the result in a real browser to emit a machine-checked alive/templated/flat verdict.
+- [forge-methodology](https://davidgarciagordo.github.io/plugins/forge-methodology/): 9-step methodology where an external reference becomes an Acceptance Matrix, and a hook blocks `gh pr create` until every row has real evidence and an independent verifier.
+- [working-methods](https://davidgarciagordo.github.io/plugins/working-methods/): enforces the Forge methodology inside Claude Code — `/forge-run` sequences 12 phases through a zero-dependency state machine with a genuinely fail-closed PR hook.
+- [automations](https://davidgarciagordo.github.io/plugins/automations/): `/optimize-my-setup` deterministically scans a repo's Claude Code config and generates a tailored setup — nothing is applied until the owner ticks it in a mandatory multi-check.
+
+All plugins are MIT-licensed and open source, published under [github.com/davidgarciagordo](https://github.com/davidgarciagordo).

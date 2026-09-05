@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#020203">
+<meta name="description" content="working-methods: la metodología deja de depender de que el agente se acuerde. /forge-run secuencia 12 fases con gates verificados por máquina para Claude Code — fail-closed de verdad, solo 2 interrupciones.">
+<title>working-methods · David García Gordo</title>
+<link rel="canonical" href="https://davidgarciagordo.github.io/plugins/working-methods/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://davidgarciagordo.github.io/plugins/working-methods/">
+<meta property="og:title" content="working-methods: David García Gordo">
+<meta property="og:description" content="La metodología deja de depender de que el agente se acuerde. Plugin de Claude Code, open source.">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1c1.2 3.6-3.6 5-3.6 8.4a3.6 3.6 0 0 0 7.2 0C11.6 6 6.8 4.6 8 1z' fill='%23F59E0B'/%3E%3C/svg%3E">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "working-methods",
+  "url": "https://davidgarciagordo.github.io/plugins/working-methods/",
+  "description": "Claude Code plugin that enforces forge-methodology inside the editor: /forge-run sequences 12 phases through a zero-dependency state machine (forge.js) with machine-checked gates and a genuinely fail-closed PR hook. Also ships /grill (adversarial lenses) and /handoff (session relay).",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any (Claude Code plugin)",
+  "softwareRequirements": "Claude Code",
+  "license": "https://opensource.org/licenses/MIT",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "David García Gordo", "url": "https://davidgarciagordo.github.io/" },
+  "codeRepository": "https://github.com/davidgarciagordo/claude-code-setup-optimizer/tree/main/plugins/working-methods",
+  "isPartOf": { "@type": "SoftwareApplication", "name": "claude-plugins", "url": "https://davidgarciagordo.github.io/plugins/" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "¿Qué hace working-methods?",
+      "acceptedAnswer": { "@type": "Answer", "text": "/forge-run secuencia las 12 fases de la metodología Forge dentro de Claude Code, con una máquina de estados sin dependencias (forge.js) que rechaza fases fuera de orden y un hook que delega en ella antes de cada gh pr create." }
+    },
+    {
+      "@type": "Question",
+      "name": "¿En qué se diferencia de forge-methodology?",
+      "acceptedAnswer": { "@type": "Answer", "text": "forge-methodology define el loop neutral y sus agentes; working-methods es la capa de enforcement dentro de Claude Code — su hook es fail-closed de verdad (bloquea también si no puede verificar el estado), más estricto que el hook por defecto de forge-methodology." }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cómo se usa?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Con /forge-run <tarea> dentro de Claude Code. También incluye /grill para auditar un documento con 3-4 lentes adversariales, y /handoff para el relevo de sesión." }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Es gratis y de código abierto?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Sí, working-methods es un plugin de Claude Code publicado bajo licencia MIT en GitHub, gratuito y de código abierto." }
+    }
+  ]
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Space+Grotesk:wght@500;700&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<script>
+  (function () {
+    try {
+      var l = localStorage.getItem("lang");
+      if (l === "en" || l === "es") document.documentElement.lang = l;
+    } catch (e) {}
+  })();
+</script>
+<style>
+  :root {
+    --bg-1: #0a0a0f; --bg-2: #020203; --bg-2-rgb: 2 2 3;
+    --ink: #F5F4F2; --ink-muted: rgb(245 244 242 / .58); --ink-cap: rgb(245 244 242 / .62);
+    --ink-on-accent: #06222e;
+    --accent: #38BDF8; --accent-rgb: 56 189 248; --accent-hot: #7DD3FC;
+    --green: #22C55E; --green-rgb: 34 197 94;
+    --glass: rgb(255 255 255 / .05); --hairline: rgb(255 255 255 / .08); --hairline-faint: rgb(255 255 255 / .045);
+    --radius: 16px; --radius-tight: 6px; --radius-xs: 4px;
+    --ease: cubic-bezier(.16, 1, .3, 1);
+    --track-label: .16em; --track-mono: .08em;
+    --font-display: "Space Grotesk", system-ui, sans-serif;
+    --font-body: "Inter", system-ui, sans-serif;
+    --font-mono: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-padding-top: 6rem; overflow-x: clip; }
+  body { background: var(--bg-2); color: var(--ink); font-family: var(--font-body); font-size: 18px; line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+  a, button { touch-action: manipulation; }
+  html[lang="es"] [lang="en"] { display: none !important; }
+  html[lang="en"] [lang="es"] { display: none !important; }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--accent-hot); outline-offset: 3px; border-radius: var(--radius-xs); }
+  .skip-link { position: absolute; left: 16px; top: -60px; z-index: 100; background: var(--accent-hot); color: var(--ink-on-accent); font-family: var(--font-display); font-weight: 500; padding: 10px 18px; border-radius: var(--radius-tight); text-decoration: none; transition: top .25s var(--ease); }
+  .skip-link:focus { top: 16px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; padding: 0; margin: -1px; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+  .backdrop { position: fixed; inset: 0; z-index: -1; background: radial-gradient(120% 90% at 8% 0%, var(--bg-1) 0%, var(--bg-2) 62%); }
+  .js-reveal { opacity: 1; transform: none; }
+  .motion-active .js-reveal { opacity: 0; transform: translateY(16px); transition: opacity .6s var(--ease), transform .6s var(--ease); }
+  .motion-active .js-reveal.is-in { opacity: 1; transform: none; }
+
+  header.top { position: sticky; top: 0; z-index: 40; background: rgb(var(--bg-2-rgb) / .72); backdrop-filter: blur(14px) saturate(140%); border-bottom: 1px solid var(--hairline); }
+  .topnav { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; padding: 12px 24px; gap: 10px 16px; }
+  @media (max-width: 480px) { .nav-cross { order: 3; width: 100%; justify-content: center; padding-top: 4px; } }
+  .logo { font-family: var(--font-display); font-weight: 700; letter-spacing: -.01em; font-size: 15px; text-decoration: none; color: var(--ink); min-height: 44px; padding: 10px 4px; display: inline-flex; align-items: center; }
+  .logo b { color: var(--accent); }
+  .nav-cross { display: flex; align-items: center; gap: 18px; }
+  .nav-cross a { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-cap); text-decoration: none; padding: 10px 2px; min-height: 44px; display: inline-flex; align-items: center; transition: color .2s ease; }
+  .nav-cross a:hover { color: var(--accent-hot); }
+  .nav-right { display: flex; align-items: center; gap: 14px; }
+  .nav-gh { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-cap); text-decoration: none; border: 1px solid var(--hairline); border-radius: 999px; padding: 9px 14px; min-height: 44px; display: inline-flex; align-items: center; transition: border-color .2s ease, color .2s ease; }
+  .nav-gh:hover { border-color: var(--accent); color: var(--accent-hot); }
+  .lang-toggle { display: inline-flex; border: 1px solid var(--hairline); border-radius: 999px; overflow: hidden; font-family: var(--font-mono); font-size: 12px; }
+  .lang-toggle button { background: transparent; border: 0; color: var(--ink-cap); cursor: pointer; padding: 11px 15px; min-height: 44px; font-family: inherit; font-size: inherit; border-bottom: 2px solid transparent; }
+  .lang-toggle button[aria-pressed="true"] { color: var(--accent); background: var(--glass); border-bottom-color: var(--accent); }
+
+  .label { font-family: var(--font-display); font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: var(--track-label); color: var(--ink-cap); }
+  .label.amber { color: var(--accent); }
+  .fig-cap, .bar { font-family: var(--font-mono); letter-spacing: var(--track-mono); }
+
+  .hero { position: relative; padding: 72px 0 40px; }
+  .hero-eyebrow { margin-bottom: 18px; }
+  h1.lockup { font-family: var(--font-display); font-weight: 700; letter-spacing: -.02em; line-height: .98; font-size: clamp(2.6rem, 7vw, 4.6rem); }
+  .hero-tag { margin-top: 18px; max-width: 46ch; color: var(--ink-muted); font-size: clamp(1.05rem, 2vw, 1.25rem); line-height: 1.5; }
+  .hero-tag b { color: var(--ink); font-weight: 500; }
+
+  .stat-rail { display: flex; border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); margin-top: 44px; }
+  @media (max-width: 640px) { .stat-rail { flex-wrap: wrap; } }
+  .stat-tile { flex: 1; min-width: 0; padding: 22px 20px; border-right: 1px solid var(--hairline); text-align: left; }
+  @media (max-width: 640px) { .stat-tile { flex: 0 0 50%; } .stat-tile:nth-child(2n) { border-right: 0; } .stat-tile:nth-child(-n+2) { border-bottom: 1px solid var(--hairline); } }
+  .stat-tile:last-child { border-right: 0; }
+  .stat-num { font-family: var(--font-display); font-weight: 700; color: var(--accent); font-size: clamp(1.5rem, 3vw, 2rem); font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+  .stat-cap { font-family: var(--font-display); font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: var(--track-label); color: var(--ink-cap); margin-top: 4px; display: block; }
+
+  .sec { padding: 64px 0; border-top: 1px solid var(--hairline); }
+  .sec h2 { font-family: var(--font-display); font-weight: 700; letter-spacing: -.02em; font-size: clamp(1.6rem, 3vw, 2.2rem); margin-bottom: 20px; }
+  .sec p { color: var(--ink-muted); font-size: 16.5px; line-height: 1.65; max-width: 68ch; }
+  .sec p + p { margin-top: 14px; }
+  .sec p b { color: var(--ink); font-weight: 500; }
+  .sec code { font-family: var(--font-mono); color: var(--accent-hot); font-size: .9em; }
+
+  .example-box { margin-top: 24px; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--glass); padding: 22px 24px; }
+  .example-box .ex-label { display: block; margin-bottom: 10px; }
+  .example-box p { color: var(--ink-muted); font-size: 15.5px; }
+
+  .adv-list { list-style: none; display: flex; flex-direction: column; gap: 16px; margin-top: 20px; }
+  .adv-list li { display: flex; gap: 14px; align-items: flex-start; }
+  .adv-list .dot { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); margin-top: 9px; }
+  .adv-list p { margin: 0; }
+  .adv-list strong { color: var(--ink); font-weight: 500; }
+
+  .compat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 20px; }
+  .compat-card { border: 1px solid var(--hairline); border-radius: var(--radius-tight); padding: 16px 18px; background: var(--bg-1); }
+  .compat-card .name { font-family: var(--font-display); font-weight: 700; font-size: 14px; }
+  .compat-card .rel { color: var(--ink-cap); font-size: 13px; margin-top: 6px; display: block; }
+
+  .faq-list { display: flex; flex-direction: column; gap: 0; margin-top: 20px; border-top: 1px solid var(--hairline-faint); }
+  .faq-item { border-bottom: 1px solid var(--hairline-faint); padding: 18px 0; }
+  .faq-item h3 { font-family: var(--font-display); font-weight: 500; font-size: 16px; margin-bottom: 8px; }
+  .faq-item p { color: var(--ink-muted); font-size: 15px; max-width: 62ch; }
+
+  .install-sec { padding: 72px 0 56px; text-align: center; border-top: 1px solid var(--hairline); }
+  .install-sec .label { display: block; margin-bottom: 20px; }
+  .install-sec h2 { font-family: var(--font-display); font-weight: 700; letter-spacing: -.02em; font-size: clamp(1.6rem, 3.4vw, 2.4rem); margin-bottom: 28px; }
+  .install-block { max-width: 560px; margin: 0 auto 28px; text-align: left; font-size: 14px; line-height: 2; border: 1px solid var(--hairline); border-radius: var(--radius-tight); background: var(--bg-1); }
+  .install-row:not(:last-child) { border-bottom: 1px solid var(--hairline-faint); }
+  .install-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 10px 4px 14px; }
+  .install-row code { font-family: var(--font-mono); white-space: pre; overflow-x: auto; display: block; min-width: 0; flex: 1 1 auto; }
+  .install-row .c { color: var(--ink-cap); }
+  .install-row .v { color: var(--accent-hot); }
+  .copy-btn { flex-shrink: 0; font-family: var(--font-mono); font-size: 11px; color: var(--ink-cap); background: transparent; border: 1px solid var(--hairline); border-radius: var(--radius-tight); padding: 8px 10px; min-width: 44px; min-height: 44px; cursor: pointer; }
+  .copy-btn[data-copied="1"] { color: var(--accent-hot); border-color: rgb(var(--accent-rgb) / .4); }
+  .cta-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .cta { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; font-family: var(--font-display); font-weight: 500; font-size: 14px; padding: 13px 26px; min-height: 44px; border-radius: 999px; border: 1px solid var(--hairline); color: var(--ink); transition: border-color .2s ease, box-shadow .2s ease, color .2s ease, transform .12s ease-out; }
+  @media (hover: hover) and (pointer: fine) { .cta:hover { border-color: rgb(var(--accent-rgb) / .4); } .cta-amber:hover { box-shadow: 0 0 26px rgb(var(--accent-rgb) / .22); } }
+  .cta:active { transform: scale(.97); }
+  @media (prefers-reduced-motion: reduce) { .cta { transition: border-color .2s ease, box-shadow .2s ease, color .2s ease; } .cta:active { transform: none; } }
+  .cta-amber { background: rgb(var(--accent-rgb) / .14); border-color: rgb(var(--accent-rgb) / .45); color: var(--accent-hot); }
+
+  footer.site-foot { border-top: 1px solid var(--hairline); padding: 32px 24px; text-align: center; font-family: var(--font-mono); font-size: 12px; color: var(--ink-cap); }
+  footer.site-foot a { color: var(--ink-muted); text-decoration: none; }
+  footer.site-foot a:hover { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main"><span lang="es">Saltar al contenido</span><span lang="en">Skip to content</span></a>
+<div class="backdrop" aria-hidden="true"></div>
+
+<header class="top">
+  <div class="topnav">
+    <a class="logo" href="/plugins/">plugins<b>.</b></a>
+    <nav class="nav-cross" aria-label="Navegación cruzada">
+      <a href="/"><span lang="es">Inicio</span><span lang="en">Home</span></a>
+      <a href="/plugins/"><span lang="es">Catálogo</span><span lang="en">Catalog</span></a>
+      <a href="/swarm/" translate="no">swarm</a>
+    </nav>
+    <div class="nav-right">
+      <a class="nav-gh" href="https://github.com/davidgarciagordo/claude-code-setup-optimizer/tree/main/plugins/working-methods">GitHub · MIT</a>
+      <div class="lang-toggle" role="group" aria-label="Language / Idioma">
+        <button class="es" data-lang="es" type="button" aria-pressed="true">ES</button>
+        <button class="en" data-lang="en" type="button" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+  <section class="hero wrap">
+    <div class="hero-eyebrow label amber"><span lang="es">Plugin de Claude Code · código abierto</span><span lang="en">Claude Code plugin · open source</span></div>
+    <h1 class="lockup" translate="no">working-methods</h1>
+    <p class="hero-tag js-reveal">
+      <span lang="es">La metodología deja de depender de que el agente se acuerde: las fases son <b>código, no prosa</b>, los gates devuelven un código de salida, y a ti solo te interrumpe dos veces, no todo el rato.</span>
+      <span lang="en">The methodology stops depending on the agent remembering it: phases are <b>code, not prose</b>, gates return exit codes, and you're interrupted exactly twice, not constantly.</span>
+    </p>
+    <div class="stat-rail">
+      <div class="stat-tile"><span class="stat-num js-count" data-to="12">12</span><span class="stat-cap"><span lang="es">fases de /forge-run</span><span lang="en">/forge-run phases</span></span></div>
+      <div class="stat-tile"><span class="stat-num js-count" data-to="2">2</span><span class="stat-cap"><span lang="es">interrupciones al owner</span><span lang="en">owner interruptions</span></span></div>
+      <div class="stat-tile"><span class="stat-num js-count" data-to="4">4</span><span class="stat-cap"><span lang="es">lentes de grill</span><span lang="en">grill lenses</span></span></div>
+      <div class="stat-tile"><span class="stat-num js-count" data-to="0">0</span><span class="stat-cap"><span lang="es">dependencias del script</span><span lang="en">script dependencies</span></span></div>
+    </div>
+  </section>
+
+  <section class="sec wrap">
+    <h2><span lang="es">Qué hace</span><span lang="en">What it does</span></h2>
+    <p><span lang="es">Una metodología que el modelo puede saltarse es una sugerencia. <code>working-methods</code> es la capa de <b>enforcement</b> de la Forja dentro de Claude Code: <code>/forge-run</code> secuencia las 12 fases mediante <code>forge.js</code>, una máquina de estados sin dependencias que rechaza ejecuciones fuera de orden. Un hook delega en ella antes de cada <code>gh pr create</code> — y es <b>fail-closed de verdad</b>: si no puede leer el manifest, se niega a dar el visto bueno en vez de dejar pasar por duda.</span><span lang="en">A methodology the model can skip is a suggestion. <code>working-methods</code> is the <b>enforcement</b> layer of Forge inside Claude Code: <code>/forge-run</code> sequences the 12 phases through <code>forge.js</code>, a zero-dependency state machine that rejects out-of-order runs. A hook defers to it before every <code>gh pr create</code> — and it's <b>genuinely fail-closed</b>: if it can't read the manifest, it refuses to vouch instead of letting it through on doubt.</span></p>
+    <p><span lang="es">Además incluye <code>/grill</code> —3-4 lentes read-only adversariales sobre cualquier documento, más una 4ª lente de completitud— y <code>/handoff</code>, el relevo de sesión que se ejecuta solo cuando no hay nadie delante.</span><span lang="en">It also ships <code>/grill</code> — 3-4 read-only adversarial lenses on any document, plus a 4th completeness lens — and <code>/handoff</code>, the session relay that runs itself when nobody is around.</span></p>
+    <div class="example-box js-reveal">
+      <span class="label amber ex-label"><span lang="es">Ejemplo real</span><span lang="en">Real example</span></span>
+      <p><span lang="es"><code>/install-family</code> una vez, luego <code>/forge-run añade claves de idempotencia al endpoint de cobro de pagos</code>. Las 12 fases corren bajo <code>docs/forge/&lt;slug&gt;/</code>; intentar <code>gh pr create</code> antes de que existan <code>spec.md</code>, <code>acceptance-matrix.md</code>, ambas actas de grill y el plan se bloquea.</span><span lang="en"><code>/install-family</code> once, then <code>/forge-run add idempotency keys to the payments charge endpoint</code>. The 12 phases run under <code>docs/forge/&lt;slug&gt;/</code>; trying <code>gh pr create</code> before <code>spec.md</code>, <code>acceptance-matrix.md</code>, both grill verdicts and the plan exist gets blocked.</span></p>
+    </div>
+  </section>
+
+  <section class="sec wrap">
+    <h2><span lang="es">Por qué importa</span><span lang="en">Why it matters</span></h2>
+    <ul class="adv-list">
+      <li><span class="dot" aria-hidden="true"></span><p><strong><span lang="es">Fail-closed de verdad.</span><span lang="en">Genuinely fail-closed.</span></strong> <span lang="es">Bloquea también cuando no puede verificar el estado — la duda nunca se convierte en un visto bueno.</span><span lang="en">It blocks even when it can't verify state — doubt never turns into a green light.</span></p></li>
+      <li><span class="dot" aria-hidden="true"></span><p><strong><span lang="es">Las fases son código, no memoria.</span><span lang="en">Phases are code, not memory.</span></strong> <span lang="es">El orden vive en <code>forge.js</code>, no en la esperanza de que el agente se acuerde.</span><span lang="en">The order lives in <code>forge.js</code>, not in the hope that the agent remembers.</span></p></li>
+      <li><span class="dot" aria-hidden="true"></span><p><strong><span lang="es">Interrumpe dos veces, no siempre.</span><span lang="en">Interrupts twice, not constantly.</span></strong> <span lang="es">Cada checkpoint es un multi-select con la recomendación ya marcada.</span><span lang="en">Each checkpoint is a multi-select with the recommendation already marked.</span></p></li>
+    </ul>
+  </section>
+
+  <section class="sec wrap">
+    <h2><span lang="es">Cómo se usa</span><span lang="en">How it's used</span></h2>
+    <p><span lang="es"><code>/forge-run &lt;tu tarea&gt;</code> dentro de Claude Code para el ciclo completo. <code>/grill &lt;documento&gt;</code> para auditar algo suelto. <code>/handoff</code> para el relevo de sesión.</span><span lang="en"><code>/forge-run &lt;your task&gt;</code> inside Claude Code for the full cycle. <code>/grill &lt;document&gt;</code> to audit something standalone. <code>/handoff</code> for the session relay.</span></p>
+  </section>
+
+  <section class="sec wrap">
+    <h2><span lang="es">Compone con</span><span lang="en">Composes with</span></h2>
+    <p><span lang="es">Requiere <code>forge-methodology</code> para el loop neutral y sus agentes; invoca <code>design-review</code> en la fase de verify sobre diffs de UI.</span><span lang="en">Requires <code>forge-methodology</code> for the neutral loop and its agents; invokes <code>design-review</code> in the verify phase on UI diffs.</span></p>
+    <div class="compat-grid">
+      <div class="compat-card"><span class="name" translate="no">forge-methodology</span><span class="rel"><span lang="es">requerido — loop neutral + agentes</span><span lang="en">required — neutral loop + agents</span></span></div>
+      <div class="compat-card"><span class="name" translate="no">design-review</span><span class="rel"><span lang="es">invocado en la fase verify</span><span lang="en">invoked in the verify phase</span></span></div>
+      <div class="compat-card"><span class="name" translate="no">token-economy</span><span class="rel"><span lang="es">recomendado — su grill ya usa un pack</span><span lang="en">recommended — its grill already uses a pack</span></span></div>
+      <div class="compat-card"><span class="name" translate="no">grill-me</span><span class="rel"><span lang="es">entrevista al humano, no al artefacto</span><span lang="en">interviews the human, not the artifact</span></span></div>
+    </div>
+  </section>
+
+  <section class="sec wrap">
+    <h2><span lang="es">Preguntas frecuentes</span><span lang="en">Frequently asked questions</span></h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <h3><span lang="es">¿Qué hace working-methods?</span><span lang="en">What does working-methods do?</span></h3>
+        <p><span lang="es"><code>/forge-run</code> secuencia las 12 fases de Forge dentro de Claude Code con una máquina de estados sin dependencias y un hook fail-closed antes de cada PR.</span><span lang="en"><code>/forge-run</code> sequences Forge's 12 phases inside Claude Code with a zero-dependency state machine and a fail-closed hook before every PR.</span></p>
+      </div>
+      <div class="faq-item">
+        <h3><span lang="es">¿En qué se diferencia de forge-methodology?</span><span lang="en">How is it different from forge-methodology?</span></h3>
+        <p><span lang="es">forge-methodology define el loop neutral; working-methods lo aplica dentro de Claude Code con un hook más estricto — bloquea incluso cuando no puede verificar el estado.</span><span lang="en">forge-methodology defines the neutral loop; working-methods enforces it inside Claude Code with a stricter hook — it blocks even when it can't verify state.</span></p>
+      </div>
+      <div class="faq-item">
+        <h3><span lang="es">¿Cómo se usa?</span><span lang="en">How is it used?</span></h3>
+        <p><span lang="es">Con <code>/forge-run &lt;tarea&gt;</code>. También trae <code>/grill</code> y <code>/handoff</code>, usables sueltos.</span><span lang="en">With <code>/forge-run &lt;task&gt;</code>. It also ships <code>/grill</code> and <code>/handoff</code>, usable standalone.</span></p>
+      </div>
+      <div class="faq-item">
+        <h3><span lang="es">¿Es gratis y de código abierto?</span><span lang="en">Is it free and open source?</span></h3>
+        <p><span lang="es">Sí — licencia MIT, publicado en GitHub.</span><span lang="en">Yes — MIT license, published on GitHub.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="install-sec wrap">
+    <span class="label amber"><span lang="es">Instalación</span><span lang="en">Install</span></span>
+    <h2><span lang="es">Un comando, doce fases.</span><span lang="en">One command, twelve phases.</span></h2>
+    <div class="sr-only" id="copy-status" role="status" aria-live="polite"></div>
+    <div class="install-block">
+      <div class="install-row"><code><span class="c">$</span> /plugin marketplace add <span class="v">davidgarciagordo/claude-plugins</span></code><button class="copy-btn" data-copy="/plugin marketplace add davidgarciagordo/claude-plugins"><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
+      <div class="install-row"><code><span class="c">$</span> /plugin install <span class="v">working-methods</span></code><button class="copy-btn" data-copy="/plugin install working-methods"><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
+    </div>
+    <div class="cta-row">
+      <a class="cta cta-amber" href="https://github.com/davidgarciagordo/claude-code-setup-optimizer/tree/main/plugins/working-methods"><span lang="es">Ver en GitHub</span><span lang="en">View on GitHub</span> →</a>
+      <a class="cta" href="/plugins/"><span lang="es">Ver el catálogo</span><span lang="en">See the catalog</span></a>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <a href="https://github.com/davidgarciagordo/claude-code-setup-optimizer/tree/main/plugins/working-methods">github.com/davidgarciagordo/claude-code-setup-optimizer</a> · MIT · <a href="/">David García Gordo</a>
+</footer>
+
+<script>
+(function(){
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduce) document.documentElement.classList.add('motion-active');
+
+  var toggle = document.querySelector('.lang-toggle');
+  function syncLangUI(l){
+    document.documentElement.lang = l;
+    toggle.querySelectorAll('button').forEach(function(b){
+      b.setAttribute('aria-pressed', b.getAttribute('data-lang') === l ? 'true' : 'false');
+    });
+  }
+  if (toggle) {
+    toggle.addEventListener('click', function(e){
+      var btn = e.target.closest('button[data-lang]');
+      if (!btn) return;
+      var l = btn.getAttribute('data-lang');
+      try { localStorage.setItem('lang', l); } catch(err) {}
+      syncLangUI(l);
+    });
+    syncLangUI(document.documentElement.lang || 'es');
+  }
+
+  if (reduce) {
+    document.querySelectorAll('.js-count').forEach(function(el){
+      var to = parseInt(el.dataset.to, 10), div = parseInt(el.dataset.div || '1', 10);
+      el.textContent = (to / div).toFixed(div > 1 ? 1 : 0).replace('.', ',') + (el.dataset.div ? '×' : '');
+    });
+  } else if ('IntersectionObserver' in window) {
+    var revealIo = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if (en.isIntersecting) { en.target.classList.add('is-in'); revealIo.unobserve(en.target); } });
+    }, { threshold: .2 });
+    document.querySelectorAll('.js-reveal').forEach(function(el){ revealIo.observe(el); });
+
+    var countIo = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (!en.isIntersecting) return;
+        countIo.unobserve(en.target);
+        var els = en.target.querySelectorAll('.js-count');
+        els.forEach(function(el, i){
+          var to = parseInt(el.dataset.to, 10);
+          var div = parseInt(el.dataset.div || '1', 10);
+          el.textContent = '0';
+          var start = null, dur = 700;
+          function step(ts){
+            if (!start) start = ts;
+            var p = Math.min(1, (ts - start) / dur);
+            var val = p * to;
+            el.textContent = div > 1 ? (val / div).toFixed(1).replace('.', ',') + '×' : Math.round(val);
+            if (p < 1) requestAnimationFrame(step);
+          }
+          setTimeout(function(){ requestAnimationFrame(step); }, i * 90);
+        });
+      });
+    }, { threshold: .4 });
+    var rail2 = document.querySelector('.stat-rail');
+    if (rail2) countIo.observe(rail2);
+  } else {
+    document.documentElement.classList.remove('motion-active');
+  }
+
+  var copyStatus = document.getElementById('copy-status');
+  document.querySelectorAll('.copy-btn').forEach(function(btn){
+    var original = btn.innerHTML;
+    btn.addEventListener('click', function(){
+      if (btn.dataset.busy) return;
+      btn.dataset.busy = '1';
+      var text = btn.getAttribute('data-copy');
+      var en = document.documentElement.lang === 'en';
+      var restore = function(){ btn.innerHTML = original; delete btn.dataset.busy; delete btn.dataset.copied; };
+      if (!navigator.clipboard) {
+        btn.textContent = en ? 'Select manually' : 'Copia manual';
+        if (copyStatus) copyStatus.textContent = en ? 'Clipboard unavailable, select the command manually.' : 'Portapapeles no disponible, selecciona el comando a mano.';
+        setTimeout(restore, 1800);
+        return;
+      }
+      navigator.clipboard.writeText(text).then(function(){
+        btn.dataset.copied = '1';
+        btn.textContent = en ? 'Copied' : 'Copiado';
+        if (copyStatus) copyStatus.textContent = en ? 'Command copied.' : 'Comando copiado.';
+        setTimeout(restore, 1200);
+      }).catch(function(){
+        btn.textContent = en ? 'Select manually' : 'Copia manual';
+        if (copyStatus) copyStatus.textContent = en ? 'Copy failed, select the command manually.' : 'No se pudo copiar, selecciona el comando a mano.';
+        setTimeout(restore, 1800);
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>

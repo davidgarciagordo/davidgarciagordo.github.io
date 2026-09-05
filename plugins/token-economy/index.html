@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#020203">
+<meta name="description" content="token-economy: deja de pagar cuatro veces por leer los mismos ficheros. Context-pack determinista + output-style frugal para Claude Code — 2,6× menos tokens por agente, ×7 en la segunda pasada.">
+<title>token-economy · David García Gordo</title>
+<link rel="canonical" href="https://davidgarciagordo.github.io/plugins/token-economy/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://davidgarciagordo.github.io/plugins/token-economy/">
+<meta property="og:title" content="token-economy: David García Gordo">
+<meta property="og:description" content="Deja de pagar cuatro veces por leer los mismos ficheros. Plugin de Claude Code, open source.">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1c1.2 3.6-3.6 5-3.6 8.4a3.6 3.6 0 0 0 7.2 0C11.6 6 6.8 4.6 8 1z' fill='%23F59E0B'/%3E%3C/svg%3E">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "token-economy",
+  "url": "https://davidgarciagordo.github.io/plugins/token-economy/",
+  "description": "Deterministic context-pack + frugal output-style plugin for Claude Code. Cuts input/orchestration tokens in multi-agent work without cutting coverage: ~2.6x fewer tokens per lens, ~7x cheaper on a second pass over the same target.",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any (Claude Code plugin)",
+  "softwareRequirements": "Claude Code",
+  "license": "https://opensource.org/licenses/MIT",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "David García Gordo", "url": "https://davidgarciagordo.github.io/" },
+  "codeRepository": "https://github.com/davidgarciagordo/token-economy",
+  "isPartOf": { "@type": "SoftwareApplication", "name": "claude-plugins", "url": "https://davidgarciagordo.github.io/plugins/" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "¿Qué hace token-economy?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Cuando varios agentes de Claude Code trabajan sobre el mismo código a la vez (una revisión, una auditoría, una migración), token-economy hace que el descubrimiento del repo pase una sola vez: un script determinista escribe un context-pack compartido y cada agente lo lee en vez de volver a escanear el repo entero." }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cuánto ahorra token-economy?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Medido en una revisión real de 4 lentes: alrededor de 2,6x menos tokens por lente frente a que cada una re-lea el repo, y hasta 7x menos en una segunda pasada sobre el mismo objetivo, porque el context-pack se reutiliza entre ejecuciones." }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cómo se instala token-economy?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Con /plugin marketplace add davidgarciagordo/claude-plugins y luego /plugin install token-economy dentro de Claude Code. No hace falta ningún paso de build ni comando adicional que aprender." }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Es gratis y de código abierto?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Sí, token-economy es un plugin de Claude Code publicado bajo licencia MIT en GitHub, gratuito y de código abierto." }
+    }
+  ]
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Space+Grotesk:wght@500;700&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<script>
+  (function () {
+    try {
+      var l = localStorage.getItem("lang");
+      if (l === "en" || l === "es") document.documentElement.lang = l;
+    } catch (e) {}
+  })();
+</script>
+<style>
+  :root {
+    --bg-1: #0a0a0f; --bg-2: #020203; --bg-2-rgb: 2 2 3;
+    --ink: #F5F4F2; --ink-muted: rgb(245 244 242 / .58); --ink-cap: rgb(245 244 242 / .62);
+    --ink-on-accent: #1a1200;
+    --accent: #F59E0B; --accent-rgb: 245 158 11; --accent-hot: #FBBF24;
+    --green: #22C55E; --green-rgb: 34 197 94;
+    --glass: rgb(255 255 255 / .05); --hairline: rgb(255 255 255 / .08); --hairline-faint: rgb(255 255 255 / .045);
+    --radius: 16px; --radius-tight: 6px; --radius-xs: 4px;
+    --ease: cubic-bezier(.16, 1, .3, 1);
+    --track-label: .16em; --track-mono: .08em;
+    --font-display: "Space Grotesk", system-ui, sans-serif;
+    --font-body: "Inter", system-ui, sans-serif;
+    --font-mono: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-padding-top: 6rem; overflow-x: clip; }
+  body { background: var(--bg-2); color: var(--ink); font-family: var(--font-body); font-size: 18px; line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+  a, button { touch-action: manipulation; }
+  html[lang="es"] [lang="en"] { display: none !important; }
+  html[lang="en"] [lang="es"] { display: none !important; }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--accent-hot); outline-offset: 3px; border-radius: var(--radius-xs); }
+  .skip-link { position: absolute; left: 16px; top: -60px; z-index: 100; background: var(--accent-hot); color: var(--ink-on-accent); font-family: var(--font-display); font-weight: 500; padding: 10px 18px; border-radius: var(--radius-tight); text-decoration: none; transition: top .25s var(--ease); }
+  .skip-link:focus { top: 16px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; padding: 0; margin: -1px; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+  .backdrop { position: fixed; inset: 0; z-index: -1; background: radial-gradient(120% 90% at 8% 0%, var(--bg-1) 0%, var(--bg-2) 62%); }
+  .js-reveal { opacity: 1; transform: none; }
+  .motion-active .js-reveal { opacity: 0; transform: translateY(16px); transition: opacity .6s var(--ease), transform .6s var(--ease); }
+  .motion-active .js-reveal.is-in { opacity: 1; transform: none; }
+
+  header.top { position: sticky; top: 0; z-index: 40; background: rgb(var(--bg-2-rgb) / .72); backdrop-filter: blur(14px) saturate(140%); border-bottom: 1px solid var(--hairline); }
+  .topnav { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; padding: 12px 24px; gap: 10px 16px; }
+  @media (max-width: 480px) { .nav-cross { order: 3; width: 100%; justify-content: center; padding-top: 4px; } }
+  .logo { font-family: var(--font-display); font-weight: 700; letter-spacing: -.01em; font-size: 15px; text-decoration: none; color: var(--ink); min-height: 44px; padding: 10px 4px; display: inline-flex; align-items: center; }
+  .logo b { color: var(--accent); }
+  .nav-cross { display: flex; align-items: center; gap: 18px; }
+  .nav-cross a { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-cap); text-decoration: none; padding: 10px 2px; min-height: 44px; display: inline-flex; align-items: center; transition: color .2s ease; }
+  .nav-cross a:hover { color: var(--accent-hot); }
+  .nav-right { display: flex; align-items: center; gap: 14px; }
+  .nav-gh { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-cap); text-decoration: none; border: 1px solid var(--hairline); border-radius: 999px; padding: 9px 14px; min-height: 44px; display: inline-flex; align-items: center; transition: border-color .2s ease, color .2s ease; }
+  .nav-gh:hover { border-color: var(--accent); color: var(--accent-hot); }
+  .lang-toggle { display: inline-flex; border: 1px solid var(--hairline); border-radius: 999px; overflow: hidden; font-family: var(--font-mono); font-size: 12px; }
+  .lang-toggle button { background: transparent; border: 0; color: var(--ink-cap); cursor: pointer; padding: 11px 15px; min-height: 44px; font-family: inherit; font-size: inherit; border-bottom: 2px solid transparent; }
+  .lang-toggle button[aria-pressed="true"] { color: var(--accent); background: var(--glass); border-bottom-color: var(--accent); }
+
+  .label { font-family: var(--font-display); font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: var(--track-label); color: var(--ink-cap); }
+  .label.amber { color: var(--accent); }
+  .fig-cap, .bar { font-family: var(--font-mono); letter-spacing: var(--track-mono); }
+
+  .hero { position: relative; padding: 72px 0 40px; }
+  .hero-eyebrow { margin-bottom: 18px; }
+  h1.lockup { font-family: var(--font-display); font-weight: 700; letter-spacing: -.02em; line-height: .98; font-size: clamp(2.6rem, 7vw, 4.6rem); }
+  .hero-tag { margin-top: 18px; max-width: 46ch; color: var(--ink-muted); font-size: clamp(1.05rem, 2vw, 1.25rem); line-height: 1.5; }
+  .hero-tag b { color: var(--ink); font-weight: 500; }
+
+  .stat-rail { display: flex; border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); margin-top: 44px; }
+  @media (max-width: 640px) { .stat-rail { flex-wrap: wrap; } }
+  .stat-tile { flex: 1; min-width: 0; padding: 22px 20px; border-right: 1px solid var(--hairline); text-align: left; }
+  @media (max-width: 640px) { .stat-tile { flex: 0 0 50%; } .stat-tile:nth-child(2n) { border-right: 0; } .stat-tile:nth-child(-n+2) { border-bottom: 1px solid var(--hairline); } }
+  .stat-tile:last-child { border-right: 0; }
+  .stat-num { font-family: var(--font-display); font-weight: 700; color: var(--accent); font-size: clamp(1.5rem, 3vw, 2rem); font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+  .stat-cap { font-family: var(--font-display); font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: var(--track-label); color: var(--ink-cap); margin-top: 4px; display: block; }
+
+  .sec { padding: 64px 0; border-top: 1px solid var(--hairline); }
+  .sec h2 { font-family: var(--font-display); font-weight: 700; letter-spacing: -.02em; font-size: clamp(1.6rem, 3vw, 2.2rem); margin-bottom: 20px; }
+  .sec p { color: var(--ink-muted); font-size: 16.5px; line-height: 1.65; max-width: 68ch; }
+  .sec p + p { margin-top: 14px; }
+  .sec p b { color: var(--ink); font-weight: 500; }
+  .sec code { font-family: var(--font-mono); color: var(--accent-hot); font-size: .9em; }
+
+  .example-box { margin-top: 24px; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--glass); padding: 22px 24px; }
+  .example-box .ex-label { display: block; margin-bottom: 10px; }
+  .example-box p { color: var(--ink-muted); font-size: 15.5px; }
+
+  .adv-list { list-style: none; display: flex; flex-direction: column; gap: 16px; margin-top: 20px; }
+  .adv-list li { display: flex; gap: 14px; align-items: flex-start; }
+  .adv-list .dot { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); margin-top: 9px; }
+  .adv-list p { margin: 0; }
+  .adv-list strong { color: var(--ink); font-weight: 500; }
+
+  .compat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 20px; }
+  .compat-card { border: 1px solid var(--hairline); border-radius: var(--radius-tight); padding: 16px 18px; background: var(--bg-1); }
+  .compat-card .name { font-family: var(--font-display); font-weight: 700; font-size: 14px; }
+  .compat-card .rel { color: var(--ink-cap); font-size: 13px; margin-top: 6px; display: block; }
+
+  .faq-list { display: flex; flex-direction: column; gap: 0; margin-top: 20px; border-top: 1px solid var(--hairline-faint); }
+  .faq-item { border-bottom: 1px solid var(--hairline-faint); padding: 18px 0; }
+  .faq-item h3 { font-family: var(--font-display); font-weight: 500; font-size: 16px; margin-bottom: 8px; }
+  .faq-item p { color: var(--ink-muted); font-size: 15px; max-width: 62ch; }
+
+  .install-sec { padding: 72px 0 56px; text-align: center; border-top: 1px solid var(--hairline); }
+  .install-sec .label { display: block; margin-bottom: 20px; }
+  .install-sec h2 { font-family: var(--font-display); font-weight: 700; letter-spacing: -.02em; font-size: clamp(1.6rem, 3.4vw, 2.4rem); margin-bottom: 28px; }
+  .install-block { max-width: 560px; margin: 0 auto 28px; text-align: left; font-size: 14px; line-height: 2; border: 1px solid var(--hairline); border-radius: var(--radius-tight); background: var(--bg-1); }
+  .install-row:not(:last-child) { border-bottom: 1px solid var(--hairline-faint); }
+  .install-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 10px 4px 14px; }
+  .install-row code { font-family: var(--font-mono); white-space: pre; overflow-x: auto; display: block; min-width: 0; flex: 1 1 auto; }
+  .install-row .c { color: var(--ink-cap); }
+  .install-row .v { color: var(--accent-hot); }
+  .copy-btn { flex-shrink: 0; font-family: var(--font-mono); font-size: 11px; color: var(--ink-cap); background: transparent; border: 1px solid var(--hairline); border-radius: var(--radius-tight); padding: 8px 10px; min-width: 44px; min-height: 44px; cursor: pointer; }
+  .copy-btn[data-copied="1"] { color: var(--accent-hot); border-color: rgb(var(--accent-rgb) / .4); }
+  .cta-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .cta { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; font-family: var(--font-display); font-weight: 500; font-size: 14px; padding: 13px 26px; min-height: 44px; border-radius: 999px; border: 1px solid var(--hairline); color: var(--ink); transition: border-color .2s ease, box-shadow .2s ease, color .2s ease, transform .12s ease-out; }
+  @media (hover: hover) and (pointer: fine) { .cta:hover { border-color: rgb(var(--accent-rgb) / .4); } .cta-amber:hover { box-shadow: 0 0 26px rgb(var(--accent-rgb) / .22); } }
+  .cta:active { transform: scale(.97); }
+  @media (prefers-reduced-motion: reduce) { .cta { transition: border-color .2s ease, box-shadow .2s ease, color .2s ease; } .cta:active { transform: none; } }
+  .cta-amber { background: rgb(var(--accent-rgb) / .14); border-color: rgb(var(--accent-rgb) / .45); color: var(--accent-hot); }
+
+  footer.site-foot { border-top: 1px solid var(--hairline); padding: 32px 24px; text-align: center; font-family: var(--font-mono); font-size: 12px; color: var(--ink-cap); }
+  footer.site-foot a { color: var(--ink-muted); text-decoration: none; }
+  footer.site-foot a:hover { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main"><span lang="es">Saltar al contenido</span><span lang="en">Skip to content</span></a>
+<div class="backdrop" aria-hidden="true"></div>
+
+<header class="top">
+  <div class="topnav">
+    <a class="logo" href="/plugins/">plugins<b>.</b></a>
+    <nav class="nav-cross" aria-label="Navegación cruzada">
+      <a href="/"><span lang="es">Inicio</span><span lang="en">Home</span></a>
+      <a href="/plugins/"><span lang="es">Catálogo</span><span lang="en">Catalog</span></a>
+      <a href="/swarm/" translate="no">swarm</a>
+    </nav>
+    <div class="nav-right">
+      <a class="nav-gh" href="https://github.com/davidgarciagordo/token-economy">GitHub · MIT</a>
+      <div class="lang-toggle" role="group" aria-label="Language / Idioma">
+        <button class="es" data-lang="es" type="button" aria-pressed="true">ES</button>
+        <button class="en" data-lang="en" type="button" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+  <section class="hero wrap">
+    <div class="hero-eyebrow label amber"><span lang="es">Plugin de Claude Code · código abierto</span><span lang="en">Claude Code plugin · open source</span></div>
+    <h1 class="lockup" translate="no">token-economy</h1>
+    <p class="hero-tag js-reveal">
+      <span lang="es">Cuatro agentes de revisión dejan de pagar <b>cuatro veces</b> por leer los mismos ficheros. Mismos hallazgos, una fracción del gasto en tokens — y la segunda pasada sobre el mismo objetivo sale casi gratis.</span>
+      <span lang="en">Four review agents stop paying <b>four times</b> to read the same files. Same findings, a fraction of the token bill — and a second pass on the same target comes out almost free.</span>
+    </p>
+    <div class="stat-rail">
+      <div class="stat-tile"><span class="stat-num js-count" data-to="26" data-div="10">2,6×</span><span class="stat-cap"><span lang="es">menos tokens por lente</span><span lang="en">fewer tokens per lens</span></span></div>
+      <div class="stat-tile"><span class="stat-num">×7</span><span class="stat-cap"><span lang="es">en la segunda pasada</span><span lang="en">on the second pass</span></span></div>
+      <div class="stat-tile"><span class="stat-num js-count" data-to="12">12</span><span class="stat-cap"><span lang="es">tests del script</span><span lang="en">script test cases</span></span></div>
+      <div class="stat-tile"><span class="stat-num js-count" data-to="0">0</span><span class="stat-cap"><span lang="es">comandos que aprender</span><span lang="en">commands to learn</span></span></div>
+    </div>
+  </section>
+
+  <section class="sec wrap">
+    <h2><span lang="es">Qué hace</span><span lang="en">What it does</span></h2>
+    <p><span lang="es">Cuando una tarea abre varios agentes a la vez —una revisión de código, una auditoría, una migración— cada uno suele re-escanear el mismo repo y redescubrir los mismos hechos. Ese re-escaneo repetido, no las respuestas, es el coste dominante en tokens del trabajo multiagente.</span><span lang="en">When a task fans out several agents at once — a code review, an audit, a migration — each one usually re-scans the same repo and re-discovers the same facts. That repeated re-scanning, not the answers, is the dominant token cost of multi-agent work.</span></p>
+    <p><span lang="es"><code>token-economy</code> hace que ese descubrimiento pase <b>una sola vez</b>: un script determinista escribe un context-pack compartido, cada agente lo lee en vez de volver a escanear, y un output-style corta la narración innecesaria del hilo principal. No instalas un comando — se dispara solo cuando el trabajo lo pide.</span><span lang="en"><code>token-economy</code> makes that discovery happen <b>once</b>: a deterministic script writes a shared context-pack, each agent reads it instead of re-scanning, and an output-style cuts unnecessary narration from the main thread. There's no command to run — it triggers itself when the work calls for it.</span></p>
+    <div class="example-box js-reveal">
+      <span class="label amber ex-label"><span lang="es">Ejemplo real</span><span lang="en">Real example</span></span>
+      <p><span lang="es">Pides una revisión con 4 lentes (arquitectura, seguridad, rendimiento, datos) sobre un mismo PR. Medido en una pasada real: ~108k tokens por lente si cada una re-lee el repo, ~42k con el pack compartido — el pack en sí cuesta ~74k una vez, amortizado entre las cuatro.</span><span lang="en">You ask for a 4-lens review (architecture, security, performance, data) on the same PR. Measured on a real pass: ~108k tokens per lens if each re-reads the repo, ~42k with the shared pack — the pack itself costs ~74k once, amortized across all four.</span></p>
+    </div>
+  </section>
+
+  <section class="sec wrap">
+    <h2><span lang="es">Por qué importa</span><span lang="en">Why it matters</span></h2>
+    <ul class="adv-list">
+      <li><span class="dot" aria-hidden="true"></span><p><strong><span lang="es">Mismo trabajo, una fracción del coste.</span><span lang="en">Same work, a fraction of the cost.</span></strong> <span lang="es">No cambia lo que los agentes encuentran, solo cuántas veces pagas por que lo busquen.</span><span lang="en">It doesn't change what the agents find, only how many times you pay for them to look.</span></p></li>
+      <li><span class="dot" aria-hidden="true"></span><p><strong><span lang="es">La segunda vez sale casi gratis.</span><span lang="en">The second time is almost free.</span></strong> <span lang="es">El pack se reusa entre pasadas: revisar lo mismo dos veces no cuesta el doble.</span><span lang="en">The pack is reused across passes: reviewing the same thing twice doesn't cost twice.</span></p></li>
+      <li><span class="dot" aria-hidden="true"></span><p><strong><span lang="es">Cero fricción de uso.</span><span lang="en">Zero friction to use.</span></strong> <span lang="es">No hay comando que memorizar — se activa solo cuando detecta trabajo multiagente.</span><span lang="en">No command to memorize — it activates on its own when it detects multi-agent work.</span></p></li>
+    </ul>
+  </section>
+
+  <section class="sec wrap">
+    <h2><span lang="es">Cómo se usa</span><span lang="en">How it's used</span></h2>
+    <p><span lang="es">Lo instalas una vez y ya está — no hay flags que aprender. En cualquier tarea que abra varios agentes sobre el mismo código, Claude construye el pack, se lo pasa a cada agente, y responde en formato corto en vez de narrar paso a paso.</span><span lang="en">You install it once and that's it — no flags to learn. On any task that fans out several agents over the same code, Claude builds the pack, hands it to each agent, and answers in short form instead of narrating step by step.</span></p>
+  </section>
+
+  <section class="sec wrap">
+    <h2><span lang="es">Compone con</span><span lang="en">Composes with</span></h2>
+    <p><span lang="es">Es el hogar independiente del mecanismo — el resto de la familia ya usa el mismo patrón por dentro, sin depender de este plugin para hacerlo.</span><span lang="en">It's the standalone home of the mechanism — the rest of the family already uses the same pattern internally, without depending on this plugin to do it.</span></p>
+    <div class="compat-grid">
+      <div class="compat-card"><span class="name" translate="no">caveman</span><span class="rel"><span lang="es">compresión de estilo — apila, sin colisión</span><span lang="en">style compression — stacks, no collision</span></span></div>
+      <div class="compat-card"><span class="name" translate="no">claude-mem</span><span class="rel"><span lang="es">backend de memoria preferido</span><span lang="en">preferred memory backend</span></span></div>
+      <div class="compat-card"><span class="name" translate="no">design-review</span><span class="rel"><span lang="es">sus lentes ya corren read-only + terse</span><span lang="en">its lenses already run read-only + terse</span></span></div>
+      <div class="compat-card"><span class="name" translate="no">working-methods</span><span class="rel"><span lang="es">su grill ya usa un pack compartido</span><span lang="en">its grill already uses a shared pack</span></span></div>
+    </div>
+  </section>
+
+  <section class="sec wrap">
+    <h2><span lang="es">Preguntas frecuentes</span><span lang="en">Frequently asked questions</span></h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <h3><span lang="es">¿Qué hace token-economy?</span><span lang="en">What does token-economy do?</span></h3>
+        <p><span lang="es">Cuando varios agentes de Claude Code trabajan sobre el mismo código a la vez, hace que el descubrimiento del repo pase una sola vez: un script determinista escribe un context-pack compartido y cada agente lo lee en vez de volver a escanear el repo entero.</span><span lang="en">When several Claude Code agents work on the same code at once, it makes repo discovery happen once: a deterministic script writes a shared context-pack and each agent reads it instead of re-scanning the whole repo.</span></p>
+      </div>
+      <div class="faq-item">
+        <h3><span lang="es">¿Cuánto ahorra?</span><span lang="en">How much does it save?</span></h3>
+        <p><span lang="es">Medido en una revisión real de 4 lentes: ~2,6× menos tokens por lente, y hasta ×7 en una segunda pasada sobre el mismo objetivo, porque el pack se reutiliza entre ejecuciones.</span><span lang="en">Measured on a real 4-lens review: ~2.6× fewer tokens per lens, and up to ×7 on a second pass over the same target, because the pack is reused across runs.</span></p>
+      </div>
+      <div class="faq-item">
+        <h3><span lang="es">¿Cómo se instala?</span><span lang="en">How do I install it?</span></h3>
+        <p><span lang="es">Con <code>/plugin marketplace add davidgarciagordo/claude-plugins</code> y luego <code>/plugin install token-economy</code> dentro de Claude Code. Sin paso de build ni comando adicional que aprender.</span><span lang="en">With <code>/plugin marketplace add davidgarciagordo/claude-plugins</code> then <code>/plugin install token-economy</code> inside Claude Code. No build step, no extra command to learn.</span></p>
+      </div>
+      <div class="faq-item">
+        <h3><span lang="es">¿Es gratis y de código abierto?</span><span lang="en">Is it free and open source?</span></h3>
+        <p><span lang="es">Sí — licencia MIT, publicado en GitHub.</span><span lang="en">Yes — MIT license, published on GitHub.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="install-sec wrap">
+    <span class="label amber"><span lang="es">Instalación</span><span lang="en">Install</span></span>
+    <h2><span lang="es">Un plugin, cero comandos que aprender.</span><span lang="en">One plugin, zero commands to learn.</span></h2>
+    <div class="sr-only" id="copy-status" role="status" aria-live="polite"></div>
+    <div class="install-block">
+      <div class="install-row"><code><span class="c">$</span> /plugin marketplace add <span class="v">davidgarciagordo/claude-plugins</span></code><button class="copy-btn" data-copy="/plugin marketplace add davidgarciagordo/claude-plugins"><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
+      <div class="install-row"><code><span class="c">$</span> /plugin install <span class="v">token-economy</span></code><button class="copy-btn" data-copy="/plugin install token-economy"><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
+    </div>
+    <div class="cta-row">
+      <a class="cta cta-amber" href="https://github.com/davidgarciagordo/token-economy"><span lang="es">Ver en GitHub</span><span lang="en">View on GitHub</span> →</a>
+      <a class="cta" href="/plugins/"><span lang="es">Ver el catálogo</span><span lang="en">See the catalog</span></a>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <a href="https://github.com/davidgarciagordo/token-economy">github.com/davidgarciagordo/token-economy</a> · MIT · <a href="/">David García Gordo</a>
+</footer>
+
+<script>
+(function(){
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduce) document.documentElement.classList.add('motion-active');
+
+  var toggle = document.querySelector('.lang-toggle');
+  function syncLangUI(l){
+    document.documentElement.lang = l;
+    toggle.querySelectorAll('button').forEach(function(b){
+      b.setAttribute('aria-pressed', b.getAttribute('data-lang') === l ? 'true' : 'false');
+    });
+  }
+  if (toggle) {
+    toggle.addEventListener('click', function(e){
+      var btn = e.target.closest('button[data-lang]');
+      if (!btn) return;
+      var l = btn.getAttribute('data-lang');
+      try { localStorage.setItem('lang', l); } catch(err) {}
+      syncLangUI(l);
+    });
+    syncLangUI(document.documentElement.lang || 'es');
+  }
+
+  if (reduce) {
+    document.querySelectorAll('.js-count').forEach(function(el){
+      var to = parseInt(el.dataset.to, 10), div = parseInt(el.dataset.div || '1', 10);
+      el.textContent = (to / div).toFixed(div > 1 ? 1 : 0).replace('.', ',') + (el.dataset.div ? '×' : '');
+    });
+  } else if ('IntersectionObserver' in window) {
+    var revealIo = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if (en.isIntersecting) { en.target.classList.add('is-in'); revealIo.unobserve(en.target); } });
+    }, { threshold: .2 });
+    document.querySelectorAll('.js-reveal').forEach(function(el){ revealIo.observe(el); });
+
+    var countIo = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (!en.isIntersecting) return;
+        countIo.unobserve(en.target);
+        var els = en.target.querySelectorAll('.js-count');
+        els.forEach(function(el, i){
+          var to = parseInt(el.dataset.to, 10);
+          var div = parseInt(el.dataset.div || '1', 10);
+          el.textContent = '0';
+          var start = null, dur = 700;
+          function step(ts){
+            if (!start) start = ts;
+            var p = Math.min(1, (ts - start) / dur);
+            var val = p * to;
+            el.textContent = div > 1 ? (val / div).toFixed(1).replace('.', ',') + '×' : Math.round(val);
+            if (p < 1) requestAnimationFrame(step);
+          }
+          setTimeout(function(){ requestAnimationFrame(step); }, i * 90);
+        });
+      });
+    }, { threshold: .4 });
+    var rail2 = document.querySelector('.stat-rail');
+    if (rail2) countIo.observe(rail2);
+  } else {
+    document.documentElement.classList.remove('motion-active');
+  }
+
+  var copyStatus = document.getElementById('copy-status');
+  document.querySelectorAll('.copy-btn').forEach(function(btn){
+    var original = btn.innerHTML;
+    btn.addEventListener('click', function(){
+      if (btn.dataset.busy) return;
+      btn.dataset.busy = '1';
+      var text = btn.getAttribute('data-copy');
+      var en = document.documentElement.lang === 'en';
+      var restore = function(){ btn.innerHTML = original; delete btn.dataset.busy; delete btn.dataset.copied; };
+      if (!navigator.clipboard) {
+        btn.textContent = en ? 'Select manually' : 'Copia manual';
+        if (copyStatus) copyStatus.textContent = en ? 'Clipboard unavailable, select the command manually.' : 'Portapapeles no disponible, selecciona el comando a mano.';
+        setTimeout(restore, 1800);
+        return;
+      }
+      navigator.clipboard.writeText(text).then(function(){
+        btn.dataset.copied = '1';
+        btn.textContent = en ? 'Copied' : 'Copiado';
+        if (copyStatus) copyStatus.textContent = en ? 'Command copied.' : 'Comando copiado.';
+        setTimeout(restore, 1200);
+      }).catch(function(){
+        btn.textContent = en ? 'Select manually' : 'Copia manual';
+        if (copyStatus) copyStatus.textContent = en ? 'Copy failed, select the command manually.' : 'No se pudo copiar, selecciona el comando a mano.';
+        setTimeout(restore, 1800);
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>
