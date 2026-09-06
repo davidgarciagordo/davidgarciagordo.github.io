@@ -258,11 +258,15 @@
   .nav-drop-menu {
     position: absolute; top: 100%; left: 50%; transform: translate(-50%, 6px);
     display: flex; flex-direction: column; gap: .15rem;
-    min-width: 168px; padding: .5rem;
+    min-width: 190px; padding: .5rem;
     background: rgb(10 10 15 / .92); backdrop-filter: blur(16px);
     border: 1px solid var(--hairline); border-radius: 10px;
     box-shadow: 0 12px 32px rgb(0 0 0 / .35);
     opacity: 0; pointer-events: none; transition: opacity .18s ease, transform .18s ease;
+  }
+  .nav-drop-menu::before {
+    content: ''; position: absolute; left: 0; right: 0; top: -12px; height: 12px;
+    pointer-events: auto;
   }
   .nav-drop:hover .nav-drop-menu, .nav-drop:focus-within .nav-drop-menu {
     opacity: 1; pointer-events: auto; transform: translate(-50%, 2px);
@@ -332,6 +336,7 @@
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    overflow-y: auto;
   }
   .nav.open ~ .panel { transform: translateX(0); }
   .panel a {
@@ -353,6 +358,11 @@
   .nav.open ~ .panel a:nth-child(5) { transition-delay: .32s; }
   .nav.open ~ .panel a:nth-child(6) { transition-delay: .38s; }
   .nav.open ~ .panel a:nth-child(7) { transition-delay: .44s; }
+  .nav.open ~ .panel a:nth-child(8) { transition-delay: .5s; }
+  .nav.open ~ .panel a:nth-child(9) { transition-delay: .56s; }
+  .nav.open ~ .panel a:nth-child(10) { transition-delay: .62s; }
+  .nav.open ~ .panel a:nth-child(11) { transition-delay: .68s; }
+  .nav.open ~ .panel a:nth-child(12) { transition-delay: .74s; }
   .panel a.panel-sub {
     font-size: 1rem; text-transform: none; letter-spacing: normal;
     color: var(--ink-muted); padding-left: .5rem; margin-top: -.5rem;
@@ -1002,6 +1012,12 @@
         <a href="#ia"><span lang="es">Ecosistema Claude Code</span><span lang="en">Claude Code ecosystem</span></a>
         <a href="/swarm/" translate="no">swarm</a>
         <a href="/plugins/" translate="no">plugins</a>
+        <span class="drop-sub" translate="no">Plugins</span>
+        <a href="/plugins/token-economy/" translate="no">token-economy</a>
+        <a href="/plugins/design-review/" translate="no">design-review</a>
+        <a href="/plugins/forge-methodology/" translate="no">forge-methodology</a>
+        <a href="/plugins/working-methods/" translate="no">working-methods</a>
+        <a href="/plugins/automations/" translate="no">automations</a>
       </div>
     </div>
     <a href="#stack">Stack</a>
@@ -1022,6 +1038,11 @@
   <a href="#ia"><span lang="es">IA</span><span lang="en">AI</span></a>
   <a href="/swarm/" class="panel-sub" translate="no">↳ swarm</a>
   <a href="/plugins/" class="panel-sub" translate="no">↳ plugins</a>
+  <a href="/plugins/token-economy/" class="panel-sub" translate="no">↳ token-economy</a>
+  <a href="/plugins/design-review/" class="panel-sub" translate="no">↳ design-review</a>
+  <a href="/plugins/forge-methodology/" class="panel-sub" translate="no">↳ forge-methodology</a>
+  <a href="/plugins/working-methods/" class="panel-sub" translate="no">↳ working-methods</a>
+  <a href="/plugins/automations/" class="panel-sub" translate="no">↳ automations</a>
   <a href="#stack">Stack</a>
   <a href="#proyectos"><span lang="es">Proyectos</span><span lang="en">Projects</span></a>
   <a href="#contacto"><span lang="es">Contacto</span><span lang="en">Contact</span></a>
