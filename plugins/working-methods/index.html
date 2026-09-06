@@ -185,6 +185,64 @@
   footer.site-foot { border-top: 1px solid var(--hairline); padding: 32px 24px; text-align: center; font-family: var(--font-mono); font-size: 12px; color: var(--ink-cap); }
   footer.site-foot a { color: var(--ink-muted); text-decoration: none; }
   footer.site-foot a:hover { color: var(--accent); }
+
+  /* ============ Full nav (dropdown + mobile panel), shared across the plugin suite ============ */
+  .nav-links2 { display: flex; align-items: center; gap: 1.5rem; }
+  .nav-links2 > a { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-cap); text-decoration: none; padding: 10px 2px; min-height: 44px; display: inline-flex; align-items: center; transition: color .2s ease; }
+  .nav-links2 > a:hover, .nav-links2 > a.active { color: var(--amber, var(--accent-hot)); }
+  @media (max-width: 900px) { .nav-links2 { display: none; } .hamburger { display: inline-flex; } }
+
+  .nav-drop { position: relative; }
+  .nav-drop-trigger { display: inline-flex; align-items: center; gap: .3rem; font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-cap); text-decoration: none; padding: 10px 2px; min-height: 44px; transition: color .2s ease; }
+  .nav-drop-trigger.active, .nav-drop:hover .nav-drop-trigger, .nav-drop:focus-within .nav-drop-trigger { color: var(--amber, var(--accent-hot)); }
+  .nav-drop-trigger svg { width: 9px; height: 9px; transition: transform .2s ease; }
+  .nav-drop:hover .nav-drop-trigger svg, .nav-drop:focus-within .nav-drop-trigger svg { transform: rotate(180deg); }
+  .nav-drop-menu {
+    position: absolute; top: 100%; left: 50%; transform: translate(-50%, 6px);
+    display: flex; flex-direction: column; gap: .15rem;
+    min-width: 190px; padding: .5rem;
+    background: rgb(10 10 15 / .92); backdrop-filter: blur(16px);
+    border: 1px solid var(--hairline); border-radius: 10px;
+    box-shadow: 0 12px 32px rgb(0 0 0 / .35);
+    opacity: 0; pointer-events: none; transition: opacity .18s ease, transform .18s ease;
+    z-index: 60;
+  }
+  .nav-drop-menu::before { content: ''; position: absolute; left: 0; right: 0; top: -12px; height: 12px; pointer-events: auto; }
+  .nav-drop:hover .nav-drop-menu, .nav-drop:focus-within .nav-drop-menu { opacity: 1; pointer-events: auto; transform: translate(-50%, 2px); }
+  .nav-drop-menu a { padding: .45rem .6rem; border-radius: 6px; font-family: var(--font-mono); font-size: 13px; color: var(--ink-cap); text-decoration: none; }
+  .nav-drop-menu a:hover, .nav-drop-menu a:focus-visible, .nav-drop-menu a.active { background: rgb(var(--amber-rgb, var(--accent-rgb)) / .12); color: var(--amber, var(--accent-hot)); }
+  .nav-drop-menu .drop-sub { color: var(--ink-faint, var(--ink-cap)); font-size: 11px; padding: .3rem .6rem 0; text-transform: uppercase; letter-spacing: .1em; }
+
+  .hamburger { display: none; width: 40px; height: 40px; background: none; border: 1px solid var(--hairline); border-radius: 10px; cursor: pointer; position: relative; flex: none; }
+  .hamburger span { position: absolute; left: 50%; top: 50%; width: 18px; height: 2px; background: var(--ink); transform: translate(-50%, -50%); transition: transform .25s var(--ease), opacity .2s ease; }
+  .hamburger span:nth-child(1) { margin-top: -6px; }
+  .hamburger span:nth-child(3) { margin-top: 6px; }
+  #nav.open .hamburger span:nth-child(1) { margin-top: 0; transform: translate(-50%, -50%) rotate(45deg); }
+  #nav.open .hamburger span:nth-child(2) { opacity: 0; }
+  #nav.open .hamburger span:nth-child(3) { margin-top: 0; transform: translate(-50%, -50%) rotate(-45deg); }
+
+  .panel {
+    position: fixed; top: 0; right: 0; z-index: 55;
+    width: min(80vw, 320px); height: 100dvh;
+    padding: 6rem 2rem 2rem;
+    background: rgb(var(--bg-2-rgb) / .92);
+    -webkit-backdrop-filter: blur(22px); backdrop-filter: blur(22px);
+    border-left: 1px solid var(--hairline);
+    transform: translateX(100%);
+    transition: transform .4s var(--ease);
+    display: flex; flex-direction: column; gap: 1.15rem;
+    overflow-y: auto;
+  }
+  #nav.open ~ .panel { transform: translateX(0); }
+  .panel a {
+    font-family: var(--font-display); font-weight: 700; font-size: 1.25rem;
+    letter-spacing: -.01em; color: var(--ink); text-decoration: none;
+    opacity: 0; transform: translateX(16px);
+    transition: opacity .3s var(--ease), transform .3s var(--ease), color .2s ease;
+  }
+  #nav.open ~ .panel a { opacity: 1; transform: translateX(0); }
+  .panel a.panel-sub { font-size: .95rem; font-weight: 500; color: var(--ink-cap); padding-left: .5rem; margin-top: -.4rem; }
+  .panel a.active, .panel a.panel-sub.active { color: var(--amber, var(--accent-hot)); }
 </style>
 </head>
 <body>
@@ -192,13 +250,28 @@
 <a class="skip-link" href="#main"><span lang="es">Saltar al contenido</span><span lang="en">Skip to content</span></a>
 <div class="backdrop" aria-hidden="true"></div>
 
-<header class="top">
+<header class="top" id="nav">
   <div class="topnav">
     <a class="logo" href="/plugins/">plugins<b>.</b></a>
-    <nav class="nav-cross" aria-label="Navegación cruzada">
-      <a href="/"><span lang="es">Inicio</span><span lang="en">Home</span></a>
-      <a href="/plugins/"><span lang="es">Catálogo</span><span lang="en">Catalog</span></a>
-      <a href="/swarm/" translate="no">swarm</a>
+    <nav class="nav-links2" aria-label="Navegación">
+      <a href="/#experiencia"><span lang="es">Experiencia</span><span lang="en">Experience</span></a>
+      <div class="nav-drop">
+      <a href="/#ia" class="nav-drop-trigger active"><span lang="es">IA</span><span lang="en">AI</span> <svg viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></a>
+      <div class="nav-drop-menu">
+        <a href="/#ia"><span lang="es">Ecosistema Claude Code</span><span lang="en">Claude Code ecosystem</span></a>
+        <a href="/swarm/" translate="no">swarm</a>
+        <a href="/plugins/" translate="no">plugins</a>
+        <span class="drop-sub" translate="no">Plugins</span>
+        <a href="/plugins/token-economy/" translate="no">token-economy</a>
+        <a href="/plugins/design-review/" translate="no">design-review</a>
+        <a href="/plugins/forge-methodology/" translate="no">forge-methodology</a>
+        <a href="/plugins/working-methods/" translate="no" class="active">working-methods</a>
+        <a href="/plugins/automations/" translate="no">automations</a>
+      </div>
+    </div>
+      <a href="/#stack">Stack</a>
+      <a href="/#proyectos"><span lang="es">Proyectos</span><span lang="en">Projects</span></a>
+      <a href="/#contacto"><span lang="es">Contacto</span><span lang="en">Contact</span></a>
     </nav>
     <div class="nav-right">
       <a class="nav-gh" href="https://github.com/davidgarciagordo/claude-code-setup-optimizer/tree/main/plugins/working-methods">GitHub · MIT</a>
@@ -206,9 +279,24 @@
         <button class="es" data-lang="es" type="button" aria-pressed="true">ES</button>
         <button class="en" data-lang="en" type="button" aria-pressed="false">EN</button>
       </div>
+      <button id="hamburger" class="hamburger" type="button" aria-expanded="false" aria-controls="panel" aria-label="Abrir menú"><span></span><span></span><span></span></button>
     </div>
   </div>
 </header>
+<nav class="panel" id="panel" aria-label="Menú móvil">
+  <a href="/#experiencia"><span lang="es">Experiencia</span><span lang="en">Experience</span></a>
+  <a href="/#ia"><span lang="es">IA</span><span lang="en">AI</span></a>
+  <a href="/swarm/" class="panel-sub" translate="no">↳ swarm</a>
+  <a href="/plugins/" class="panel-sub" translate="no">↳ plugins</a>
+  <a href="/plugins/token-economy/" class="panel-sub" translate="no">↳ token-economy</a>
+  <a href="/plugins/design-review/" class="panel-sub" translate="no">↳ design-review</a>
+  <a href="/plugins/forge-methodology/" class="panel-sub" translate="no">↳ forge-methodology</a>
+  <a href="/plugins/working-methods/" class="panel-sub active" translate="no">↳ working-methods</a>
+  <a href="/plugins/automations/" class="panel-sub" translate="no">↳ automations</a>
+  <a href="/#stack">Stack</a>
+  <a href="/#proyectos"><span lang="es">Proyectos</span><span lang="en">Projects</span></a>
+  <a href="/#contacto"><span lang="es">Contacto</span><span lang="en">Contact</span></a>
+</nav>
 
 <main id="main" tabindex="-1">
   <section class="hero wrap">
@@ -323,6 +411,24 @@
       syncLangUI(l);
     });
     syncLangUI(document.documentElement.lang || 'es');
+  }
+
+  var navHdr = document.getElementById('nav');
+  var burger = document.getElementById('hamburger');
+  var panel = document.getElementById('panel');
+  if (navHdr && burger && panel) {
+    burger.addEventListener('click', function () {
+      var open = navHdr.classList.toggle('open');
+      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      document.body.style.overflow = open ? 'hidden' : '';
+    });
+    panel.addEventListener('click', function (e) {
+      if (e.target.closest('a')) {
+        navHdr.classList.remove('open');
+        burger.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+      }
+    });
   }
 
   if (reduce) {
