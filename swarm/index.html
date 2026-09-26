@@ -5,14 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#020203">
-<meta name="description" content="swarm 0.2: un equipo de software sénior en un comando. 45 agentes para Claude Code, modelos por tier, un panel de revisión con juez ciego y verificación independiente. −58% de tokens por run.">
+<meta name="description" content="swarm 0.2: un equipo de software sénior en un comando. 45 agentes para Claude Code, modelos por tier, un panel de revisión con juez ciego y verificación independiente. −58% de tokens por run vs v0.1.">
 <title>swarm · David García Gordo</title>
 <link rel="canonical" href="https://davidgarciagordo.github.io/swarm/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://davidgarciagordo.github.io/swarm/">
 <meta property="og:title" content="swarm: David García Gordo">
 <meta property="og:description" content="Un equipo de software sénior, en un comando. 45 agentes para Claude Code, con panel de revisión y juez ciego.">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://davidgarciagordo.github.io/swarm/diagrams/architecture.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://davidgarciagordo.github.io/swarm/diagrams/architecture.webp">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1c1.2 3.6-3.6 5-3.6 8.4a3.6 3.6 0 0 0 7.2 0C11.6 6 6.8 4.6 8 1z' fill='%23F59E0B'/%3E%3C/svg%3E">
 <script type="application/ld+json">
 {
@@ -135,6 +137,10 @@
     padding: 10px 4px; display: inline-flex; align-items: center;
   }
   .logo b { color: var(--amber); }
+  .brand-group { display: flex; align-items: center; gap: 8px; }
+  .owner-link { font-family: var(--font-display); font-size: 12px; color: var(--ink-cap); text-decoration: none; white-space: nowrap; }
+  .owner-link:hover, .owner-link:focus-visible { color: var(--ink); }
+  .brand-sep { color: var(--hairline); font-size: 13px; }
   .nav-cross { display: flex; align-items: center; gap: 18px; }
   .nav-cross a {
     font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-cap); text-decoration: none;
@@ -488,7 +494,6 @@
   /* ============ Archify diagrams (poster + lazy interactive iframe) ============ */
   .dgm-list { display: flex; flex-direction: column; gap: 40px; margin-top: 28px; }
   figure.dgm { margin: 0; }
-  figure.dgm.dgm-tall { max-width: 860px; }
   .dgm-frame {
     position: relative; overflow: hidden; border-radius: 12px;
     border: 1px solid var(--hairline); background: #05060a;
@@ -532,7 +537,11 @@
 
 <header class="top" id="nav">
   <div class="topnav">
-    <a class="logo" href="#top">swarm<b>.</b></a>
+    <div class="brand-group">
+      <a class="owner-link" href="/" translate="no">David García Gordo</a>
+      <span class="brand-sep" aria-hidden="true">/</span>
+      <a class="logo" href="#top">swarm<b>.</b></a>
+    </div>
     <nav class="nav-links2" aria-label="Navegación">
       <a href="/#experiencia"><span lang="es">Experiencia</span><span lang="en">Experience</span></a>
       <div class="nav-drop">
@@ -617,7 +626,7 @@
       <div class="stat-tile"><span class="stat-num js-count" data-to="45">45</span><span class="stat-cap"><span lang="es">agentes</span><span lang="en">agents</span></span></div>
       <div class="stat-tile"><span class="stat-num js-count" data-to="3">3</span><span class="stat-cap"><span lang="es">tiers de modelo</span><span lang="en">model tiers</span></span></div>
       <div class="stat-tile"><span class="stat-num">7/10</span><span class="stat-cap"><span lang="es">umbral del juez ciego</span><span lang="en">blind-judge threshold</span></span></div>
-      <div class="stat-tile"><span class="stat-num">−58%</span><span class="stat-cap"><span lang="es">tokens por run típico</span><span lang="en">tokens per typical run</span></span></div>
+      <div class="stat-tile"><span class="stat-num">−58%</span><span class="stat-cap"><span lang="es">tokens por run típico vs v0.1</span><span lang="en">tokens per typical run vs v0.1</span></span></div>
       <div class="stat-tile"><span class="stat-num js-count" data-to="1">1</span><span class="stat-cap"><span lang="es">punto de entrada</span><span lang="en">entry point</span></span></div>
     </div>
     <div class="bar">
@@ -868,7 +877,7 @@
     <h2 id="dgm-h"><span lang="es">Cómo funciona, en diagramas</span><span lang="en">How it works, in diagrams</span></h2>
     <p><span lang="es">Diagramas interactivos hechos con Archify, sacados del propio repo: recorre los caminos, haz zoom o ábrelos a pantalla completa.</span><span lang="en">Interactive diagrams built with Archify, taken from the repo itself: trace the paths, zoom in, or open them full screen.</span></p>
     <div class="dgm-list">
-    <figure class="dgm dgm-tall" data-base="diagrams/architecture" data-es="1" data-title-es="Arquitectura de agentes (diagrama interactivo)" data-title-en="Agent architecture (interactive diagram)">
+    <figure class="dgm" data-base="diagrams/architecture" data-es="1" data-title-es="Arquitectura de agentes (diagrama interactivo)" data-title-en="Agent architecture (interactive diagram)">
       <div class="dgm-frame"><a class="dgm-poster" href="diagrams/architecture.es.html" target="_blank" rel="noopener"><img lang="es" src="diagrams/architecture.es.webp" width="1600" height="955" loading="lazy" decoding="async" alt="Diagrama de la arquitectura de swarm: el orquestador raíz, los siete dominios con sus agentes hoja, el panel de revisión y el verificador independiente."><img lang="en" src="diagrams/architecture.webp" width="1600" height="1749" loading="lazy" decoding="async" alt="Diagram of swarm&#x27;s architecture: the root orchestrator, the seven domains with their leaf agents, the review panel and the independent verifier."></a><span class="dgm-hint" aria-hidden="true"><span lang="es">toca para abrir ↗</span><span lang="en">tap to open ↗</span></span></div>
       <figcaption><span><span class="dgm-idx">fig. 1</span><b><span lang="es">Arquitectura de agentes</span><span lang="en">Agent architecture</span></b></span><a class="dgm-open" lang="es" href="diagrams/architecture.es.html" target="_blank" rel="noopener">Abrir interactivo ↗<span class="sr-only"> (pestaña nueva)</span></a><a class="dgm-open" lang="en" href="diagrams/architecture.html" target="_blank" rel="noopener">Open interactive ↗<span class="sr-only"> (new tab)</span></a></figcaption>
     </figure>
@@ -937,11 +946,11 @@
     <h2><span lang="es">Local, en dos minutos.</span><span lang="en">Local, in two minutes.</span></h2>
     <div class="sr-only" id="copy-status" role="status" aria-live="polite"></div>
     <div class="install-block">
-      <div class="install-row"><code><span class="c">$</span> /plugin marketplace add <span class="v">davidgarciagordo/claude-plugins</span></code><button class="copy-btn" data-copy="/plugin marketplace add davidgarciagordo/claude-plugins"><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
-      <div class="install-row"><code><span class="c">$</span> /plugin install <span class="v">swarm@davidgarciagordo-plugins</span></code><button class="copy-btn" data-copy="/plugin install swarm@davidgarciagordo-plugins"><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
+      <div class="install-row"><code><span class="c">$</span> /plugin marketplace add <span class="v">davidgarciagordo/swarm</span></code><button class="copy-btn" data-copy="/plugin marketplace add davidgarciagordo/swarm"><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
+      <div class="install-row"><code><span class="c">$</span> /plugin install <span class="v">swarm@swarm</span></code><button class="copy-btn" data-copy="/plugin install swarm@swarm"><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
       <div class="install-row"><code><span class="c">$</span> /swarm:run <span class="v">"&lt;<span lang="es">lo que quieras</span><span lang="en">whatever you want</span>&gt;"</span></code><button class="copy-btn" data-copy='/swarm:run "..."'><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
     </div>
-    <p class="install-alt"><span lang="es">Sin marketplace: <code>$ claude --plugin-dir /ruta/a/swarm</code></span><span lang="en">Without a marketplace: <code>$ claude --plugin-dir /path/to/swarm</code></span></p>
+    <p class="install-alt"><span lang="es">O desde el catálogo: <code>$ /plugin marketplace add davidgarciagordo/claude-plugins</code> → <code>$ /plugin install swarm@davidgarciagordo-plugins</code>. Sin marketplace: <code>$ claude --plugin-dir /ruta/a/swarm</code></span><span lang="en">Or from the catalog: <code>$ /plugin marketplace add davidgarciagordo/claude-plugins</code> → <code>$ /plugin install swarm@davidgarciagordo-plugins</code>. Without a marketplace: <code>$ claude --plugin-dir /path/to/swarm</code></span></p>
     <div class="cta-row">
       <a class="cta cta-amber" href="https://github.com/davidgarciagordo/swarm"><span lang="es">Ver en GitHub</span><span lang="en">View on GitHub</span> →</a>
       <a class="cta" href="/plugins/"><span lang="es">Más plugins</span><span lang="en">More plugins</span></a>

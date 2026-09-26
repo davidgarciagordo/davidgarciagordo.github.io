@@ -12,7 +12,9 @@
 <meta property="og:url" content="https://davidgarciagordo.github.io/plugins/automations/">
 <meta property="og:title" content="automations: David García Gordo">
 <meta property="og:description" content="Nada se aplica sin que lo marques. Plugin de Claude Code, open source.">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://davidgarciagordo.github.io/plugins/automations/diagrams/optimize-my-setup.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://davidgarciagordo.github.io/plugins/automations/diagrams/optimize-my-setup.webp">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1c1.2 3.6-3.6 5-3.6 8.4a3.6 3.6 0 0 0 7.2 0C11.6 6 6.8 4.6 8 1z' fill='%23F59E0B'/%3E%3C/svg%3E">
 <script type="application/ld+json">
 {
@@ -109,6 +111,10 @@
   @media (max-width: 480px) { .nav-cross { order: 3; width: 100%; justify-content: center; padding-top: 4px; } }
   .logo { font-family: var(--font-display); font-weight: 700; letter-spacing: -.01em; font-size: 15px; text-decoration: none; color: var(--ink); min-height: 44px; padding: 10px 4px; display: inline-flex; align-items: center; }
   .logo b { color: var(--accent); }
+  .brand-group { display: flex; align-items: center; gap: 8px; }
+  .owner-link { font-family: var(--font-display); font-size: 12px; color: var(--ink-cap); text-decoration: none; white-space: nowrap; }
+  .owner-link:hover, .owner-link:focus-visible { color: var(--ink); }
+  .brand-sep { color: var(--hairline); font-size: 13px; }
   .nav-cross { display: flex; align-items: center; gap: 18px; }
   .nav-cross a { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-cap); text-decoration: none; padding: 10px 2px; min-height: 44px; display: inline-flex; align-items: center; transition: color .2s ease; }
   .nav-cross a:hover { color: var(--accent-hot); }
@@ -289,7 +295,11 @@
 
 <header class="top" id="nav">
   <div class="topnav">
-    <a class="logo" href="/plugins/">plugins<b>.</b></a>
+    <div class="brand-group">
+      <a class="owner-link" href="/" translate="no">David García Gordo</a>
+      <span class="brand-sep" aria-hidden="true">/</span>
+      <a class="logo" href="/plugins/">plugins<b>.</b></a>
+    </div>
     <nav class="nav-links2" aria-label="Navegación">
       <a href="/#experiencia"><span lang="es">Experiencia</span><span lang="en">Experience</span></a>
       <div class="nav-drop">
@@ -345,7 +355,7 @@
     </p>
     <div class="stat-rail">
       <div class="stat-tile"><span class="stat-num js-count" data-to="8">8</span><span class="stat-cap"><span lang="es">superficies .claude escaneadas</span><span lang="en">.claude surfaces scanned</span></span></div>
-      <div class="stat-tile"><span class="stat-num js-count" data-to="4">4</span><span class="stat-cap"><span lang="es">hooks que bloquean</span><span lang="en">blocking hooks</span></span></div>
+      <div class="stat-tile"><span class="stat-num js-count" data-to="4">4</span><span class="stat-cap"><span lang="es">plantillas de hook + guard-append-only activo</span><span lang="en">hook templates + guard-append-only active</span></span></div>
       <div class="stat-tile"><span class="stat-num js-count" data-to="5">5</span><span class="stat-cap"><span lang="es">plantillas de reviewer</span><span lang="en">reviewer templates</span></span></div>
       <div class="stat-tile"><span class="stat-num js-count" data-to="0">0</span><span class="stat-cap"><span lang="es">cambios sin tu marca</span><span lang="en">changes without your tick</span></span></div>
     </div>

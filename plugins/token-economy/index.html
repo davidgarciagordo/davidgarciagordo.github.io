@@ -12,7 +12,9 @@
 <meta property="og:url" content="https://davidgarciagordo.github.io/plugins/token-economy/">
 <meta property="og:title" content="token-economy: David García Gordo">
 <meta property="og:description" content="Deja de pagar cuatro veces por leer los mismos ficheros. Plugin de Claude Code, open source.">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://davidgarciagordo.github.io/plugins/token-economy/diagrams/gate.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://davidgarciagordo.github.io/plugins/token-economy/diagrams/gate.webp">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1c1.2 3.6-3.6 5-3.6 8.4a3.6 3.6 0 0 0 7.2 0C11.6 6 6.8 4.6 8 1z' fill='%23F59E0B'/%3E%3C/svg%3E">
 <script type="application/ld+json">
 {
@@ -109,6 +111,10 @@
   @media (max-width: 480px) { .nav-cross { order: 3; width: 100%; justify-content: center; padding-top: 4px; } }
   .logo { font-family: var(--font-display); font-weight: 700; letter-spacing: -.01em; font-size: 15px; text-decoration: none; color: var(--ink); min-height: 44px; padding: 10px 4px; display: inline-flex; align-items: center; }
   .logo b { color: var(--accent); }
+  .brand-group { display: flex; align-items: center; gap: 8px; }
+  .owner-link { font-family: var(--font-display); font-size: 12px; color: var(--ink-cap); text-decoration: none; white-space: nowrap; }
+  .owner-link:hover, .owner-link:focus-visible { color: var(--ink); }
+  .brand-sep { color: var(--hairline); font-size: 13px; }
   .nav-cross { display: flex; align-items: center; gap: 18px; }
   .nav-cross a { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-cap); text-decoration: none; padding: 10px 2px; min-height: 44px; display: inline-flex; align-items: center; transition: color .2s ease; }
   .nav-cross a:hover { color: var(--accent-hot); }
@@ -289,7 +295,11 @@
 
 <header class="top" id="nav">
   <div class="topnav">
-    <a class="logo" href="/plugins/">plugins<b>.</b></a>
+    <div class="brand-group">
+      <a class="owner-link" href="/" translate="no">David García Gordo</a>
+      <span class="brand-sep" aria-hidden="true">/</span>
+      <a class="logo" href="/plugins/">plugins<b>.</b></a>
+    </div>
     <nav class="nav-links2" aria-label="Navegación">
       <a href="/#experiencia"><span lang="es">Experiencia</span><span lang="en">Experience</span></a>
       <div class="nav-drop">
@@ -357,7 +367,7 @@
     <p><span lang="es"><code>token-economy</code> hace que ese descubrimiento pase <b>una sola vez</b>: un script determinista escribe un context-pack compartido, cada agente lo lee en vez de volver a escanear, y cada lente responde en formato corto. Opcionalmente, el output-style <code>frugal</code> (lo activas tú con <code>/output-style</code>) corta la narración del hilo principal. No hay comando que ejecutar — el skill se dispara solo cuando el trabajo lo pide.</span><span lang="en"><code>token-economy</code> makes that discovery happen <b>once</b>: a deterministic script writes a shared context-pack, each agent reads it instead of re-scanning, and every lens answers in short form. Optionally, the <code>frugal</code> output-style (you turn it on with <code>/output-style</code>) cuts narration from the main thread. There's no command to run — the skill triggers itself when the work calls for it.</span></p>
     <div class="example-box js-reveal">
       <span class="label amber ex-label"><span lang="es">Ejemplo real</span><span lang="en">Real example</span></span>
-      <p><span lang="es">Pides una revisión con 4 lentes (arquitectura, seguridad, rendimiento, datos) sobre un mismo PR. Medido en una pasada real: ~108k tokens por lente si cada una re-lee el repo, ~42k con el pack compartido — el pack en sí cuesta ~74k una vez, amortizado entre las cuatro.</span><span lang="en">You ask for a 4-lens review (architecture, security, performance, data) on the same PR. Measured on a real pass: ~108k tokens per lens if each re-reads the repo, ~42k with the shared pack — the pack itself costs ~74k once, amortized across all four.</span></p>
+      <p><span lang="es">Un design-review de 4 lentes (impeccable, taste, motion, a11y) sobre un mismo componente. Medido en una pasada real: ~108k tokens por lente si cada una re-lee el repo, ~42k con el pack compartido — el pack en sí cuesta ~74k una vez, amortizado entre las cuatro.</span><span lang="en">A 4-lens design-review run (impeccable, taste, motion, a11y) on one component. Measured on a real pass: ~108k tokens per lens if each re-reads the repo, ~42k with the shared pack — the pack itself costs ~74k once, amortized across all four.</span></p>
     </div>
   </section>
 

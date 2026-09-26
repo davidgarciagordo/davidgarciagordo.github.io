@@ -12,7 +12,9 @@
 <meta property="og:url" content="https://davidgarciagordo.github.io/plugins/">
 <meta property="og:title" content="plugins: David García Gordo">
 <meta property="og:description" content="Un marketplace, seis piezas. Plugins open source para Claude Code.">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://davidgarciagordo.github.io/plugins/design-review/diagrams/pipeline.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://davidgarciagordo.github.io/plugins/design-review/diagrams/pipeline.webp">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1c1.2 3.6-3.6 5-3.6 8.4a3.6 3.6 0 0 0 7.2 0C11.6 6 6.8 4.6 8 1z' fill='%23F59E0B'/%3E%3C/svg%3E">
 <script type="application/ld+json">
 {
@@ -136,6 +138,10 @@
     padding: 10px 4px; display: inline-flex; align-items: center;
   }
   .logo b { color: var(--amber); }
+  .brand-group { display: flex; align-items: center; gap: 8px; }
+  .owner-link { font-family: var(--font-display); font-size: 12px; color: var(--ink-cap); text-decoration: none; white-space: nowrap; }
+  .owner-link:hover, .owner-link:focus-visible { color: var(--ink); }
+  .brand-sep { color: var(--hairline); font-size: 13px; }
   .nav-cross { display: flex; align-items: center; gap: 18px; }
   .nav-cross a {
     font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-cap); text-decoration: none;
@@ -457,7 +463,11 @@
 
 <header class="top" id="nav">
   <div class="topnav">
-    <a class="logo" href="/">plugins<b>.</b></a>
+    <div class="brand-group">
+      <a class="owner-link" href="/" translate="no">David García Gordo</a>
+      <span class="brand-sep" aria-hidden="true">/</span>
+      <a class="logo" href="/">plugins<b>.</b></a>
+    </div>
     <nav class="nav-links2" aria-label="Navegación">
       <a href="/#experiencia"><span lang="es">Experiencia</span><span lang="en">Experience</span></a>
       <div class="nav-drop">
@@ -562,37 +572,37 @@
   </section>
 
   <figure class="figframe" id="pipeline">
-    <figcaption class="fig-cap"><span class="rule" aria-hidden="true"></span><h2><span aria-hidden="true">&gt;_ ───</span> <span lang="es">fig. 1 · el pipeline que cierran</span><span lang="en">fig. 1 · the pipeline they close</span> <span aria-hidden="true">─── #</span></h2><span class="rule" aria-hidden="true"></span></figcaption>
+    <figcaption class="fig-cap"><span class="rule" aria-hidden="true"></span><h2><span aria-hidden="true">&gt;_ ───</span> <span lang="es">fig. 1 · las capas que forman</span><span lang="en">fig. 1 · the layers they form</span> <span aria-hidden="true">─── #</span></h2><span class="rule" aria-hidden="true"></span></figcaption>
     <ol class="pnode-rail">
       <li class="pnode" style="--n:0">
         <span class="pnode-idx">01</span>
         <span class="pnode-dot" aria-hidden="true"></span>
-        <div><div class="pnode-stage">Spec</div>
-        <div class="pnode-card"><a class="repo-link" href="/plugins/working-methods/" translate="no">working-methods</a><br><span lang="es">Flujos y orquestación multiagente como comandos.</span><span lang="en">Workflows and multi-agent orchestration as commands.</span></div></div>
+        <div><div class="pnode-stage"><span lang="es">Metodología</span><span lang="en">Methodology</span></div>
+        <div class="pnode-card"><a class="repo-link" href="/plugins/forge-methodology/" translate="no">forge-methodology</a><br><span lang="es">Del spec al verify con grill adversarial: los agentes se auditan entre sí.</span><span lang="en">From spec to verify with an adversarial grill: agents audit each other.</span></div></div>
       </li>
       <li class="pnode" style="--n:1">
         <span class="pnode-idx">02</span>
         <span class="pnode-dot" aria-hidden="true"></span>
-        <div><div class="pnode-stage">Grill</div>
-        <div class="pnode-card"><a class="repo-link" href="/plugins/forge-methodology/" translate="no">forge-methodology</a><br><span lang="es">Del spec al verify con grill adversarial: los agentes se auditan entre sí.</span><span lang="en">From spec to verify with an adversarial grill: agents audit each other.</span></div></div>
+        <div><div class="pnode-stage">Enforcement</div>
+        <div class="pnode-card"><a class="repo-link" href="/plugins/working-methods/" translate="no">working-methods</a><br><span lang="es">Impone esa metodología dentro de Claude Code: gates mecánicos, nada que saltarse.</span><span lang="en">Enforces that methodology inside Claude Code: mechanical gates, nothing to skip.</span></div></div>
       </li>
       <li class="pnode" style="--n:2">
         <span class="pnode-idx">03</span>
         <span class="pnode-dot" aria-hidden="true"></span>
-        <div><div class="pnode-stage">Plan</div>
-        <div class="pnode-card"><a class="repo-link" href="/plugins/token-economy/" translate="no">token-economy</a><br><span lang="es">Recorta el coste multiagente sin perder cobertura.</span><span lang="en">Cuts multi-agent cost without losing coverage.</span> <span class="pn-stat"><span lang="es">×7 en la segunda pasada</span><span lang="en">×7 on the second pass</span></span></div></div>
+        <div><div class="pnode-stage"><span lang="es">Coste (transversal)</span><span lang="en">Cost (cross-cutting)</span></div>
+        <div class="pnode-card"><a class="repo-link" href="/plugins/token-economy/" translate="no">token-economy</a><br><span lang="es">Recorta el coste de cualquier fase multiagente sin perder cobertura.</span><span lang="en">Cuts the cost of any multi-agent phase without losing coverage.</span> <span class="pn-stat"><span lang="es">×7 en la segunda pasada</span><span lang="en">×7 on the second pass</span></span></div></div>
       </li>
       <li class="pnode" style="--n:3">
         <span class="pnode-idx">04</span>
         <span class="pnode-dot" aria-hidden="true"></span>
-        <div><div class="pnode-stage"><span lang="es">Ejecución</span><span lang="en">Execution</span></div>
+        <div><div class="pnode-stage"><span lang="es">Diseño</span><span lang="en">Design</span></div>
         <div class="pnode-card"><a class="repo-link" href="/plugins/design-review/" translate="no">design-review</a><br><span lang="es">Cuatro lentes de diseño en paralelo y un veredicto en navegador real.</span><span lang="en">Four design lenses in parallel and a verdict in a real browser.</span></div></div>
       </li>
       <li class="pnode" style="--n:4">
         <span class="pnode-idx">05</span>
         <span class="pnode-dot" aria-hidden="true"></span>
-        <div><div class="pnode-stage">Verify</div>
-        <div class="pnode-card"><a class="repo-link" href="/plugins/automations/" translate="no">automations</a><br><span lang="es">Automatiza y afina tu instalación de Claude Code.</span><span lang="en">Automates and tunes your Claude Code setup.</span></div></div>
+        <div><div class="pnode-stage">Bootstrap</div>
+        <div class="pnode-card"><a class="repo-link" href="/plugins/automations/" translate="no">automations</a><br><span lang="es">Monta la config .claude del repo sobre la que corre todo lo anterior.</span><span lang="en">Sets up the repo's .claude config that everything above runs on.</span></div></div>
       </li>
     </ol>
   </figure>

@@ -12,7 +12,9 @@
 <meta property="og:url" content="https://davidgarciagordo.github.io/plugins/design-review/">
 <meta property="og:title" content="design-review: David García Gordo">
 <meta property="og:description" content="Tu interfaz deja de salir como una plantilla SaaS intercambiable. Plugin de Claude Code, open source.">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://davidgarciagordo.github.io/plugins/design-review/diagrams/pipeline.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://davidgarciagordo.github.io/plugins/design-review/diagrams/pipeline.webp">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1c1.2 3.6-3.6 5-3.6 8.4a3.6 3.6 0 0 0 7.2 0C11.6 6 6.8 4.6 8 1z' fill='%23F59E0B'/%3E%3C/svg%3E">
 <script type="application/ld+json">
 {
@@ -109,6 +111,10 @@
   @media (max-width: 480px) { .nav-cross { order: 3; width: 100%; justify-content: center; padding-top: 4px; } }
   .logo { font-family: var(--font-display); font-weight: 700; letter-spacing: -.01em; font-size: 15px; text-decoration: none; color: var(--ink); min-height: 44px; padding: 10px 4px; display: inline-flex; align-items: center; }
   .logo b { color: var(--accent); }
+  .brand-group { display: flex; align-items: center; gap: 8px; }
+  .owner-link { font-family: var(--font-display); font-size: 12px; color: var(--ink-cap); text-decoration: none; white-space: nowrap; }
+  .owner-link:hover, .owner-link:focus-visible { color: var(--ink); }
+  .brand-sep { color: var(--hairline); font-size: 13px; }
   .nav-cross { display: flex; align-items: center; gap: 18px; }
   .nav-cross a { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-cap); text-decoration: none; padding: 10px 2px; min-height: 44px; display: inline-flex; align-items: center; transition: color .2s ease; }
   .nav-cross a:hover { color: var(--accent-hot); }
@@ -289,7 +295,11 @@
 
 <header class="top" id="nav">
   <div class="topnav">
-    <a class="logo" href="/plugins/">plugins<b>.</b></a>
+    <div class="brand-group">
+      <a class="owner-link" href="/" translate="no">David García Gordo</a>
+      <span class="brand-sep" aria-hidden="true">/</span>
+      <a class="logo" href="/plugins/">plugins<b>.</b></a>
+    </div>
     <nav class="nav-links2" aria-label="Navegación">
       <a href="/#experiencia"><span lang="es">Experiencia</span><span lang="en">Experience</span></a>
       <div class="nav-drop">
@@ -354,7 +364,7 @@
   <section class="sec wrap">
     <h2><span lang="es">Qué hace</span><span lang="en">What it does</span></h2>
     <p><span lang="es">Los skills de diseño de terceros producen resultados genéricos y se saltan sus propios pasos de setup si nadie los fuerza. <code>design-review</code> los hace correr de verdad: primero investiga referencias reales y vivas del dominio —Dribbble, competidores, productos ya publicados— nunca memoria del modelo. Después lanza 4 lentes de diseño distintas en paralelo sobre lo construido, cada una con un playbook que corrige cómo esa herramienta se comporta mal por su cuenta.</span><span lang="en">Third-party design skills produce generic output and skip their own setup steps if nobody forces them to. <code>design-review</code> makes them actually run: it first studies real, live references for the domain — Dribbble, competitors, already-shipped products — never model memory. Then it runs 4 distinct design lenses in parallel over the result, each with a playbook that corrects how that tool misbehaves on its own.</span></p>
-    <p><span lang="es">El owner solo responde una pregunta —un multi-select con las recomendaciones ya marcadas. Al final, un agente renderiza la interfaz en un navegador real —claro, oscuro y móvil—, la compara con las referencias y escribe el veredicto en <code>verdict.json</code>. Un hook <code>PostToolUse</code> avisa (o bloquea, si lo configuras) cuando se escribe un fichero de UI sin un veredicto <code>alive</code> vigente.</span><span lang="en">The owner answers exactly one question — a multi-select with recommendations already marked. At the end, an agent renders the UI in a real browser — light, dark and mobile —, diffs it against the references and writes the verdict to <code>verdict.json</code>. A <code>PostToolUse</code> hook warns (or blocks, if you configure it) when a UI file is written without a current <code>alive</code> verdict.</span></p>
+    <p><span lang="es">El owner solo responde una pregunta —un multi-select con las recomendaciones ya marcadas. Al final, un agente renderiza la interfaz en un navegador real —claro, oscuro y móvil—, la compara con las referencias y escribe el veredicto en <code>verdict.json</code>. Un hook <code>PostToolUse</code> avisa —o, si lo configuras, te lo devuelve como error, aunque no evita la escritura, que ya ha ocurrido— cuando se escribe un fichero de UI sin un veredicto <code>alive</code> vigente.</span><span lang="en">The owner answers exactly one question — a multi-select with recommendations already marked. At the end, an agent renders the UI in a real browser — light, dark and mobile —, diffs it against the references and writes the verdict to <code>verdict.json</code>. A <code>PostToolUse</code> hook warns — or, if you configure it, hands it back as an error, though it can't prevent the write, which has already happened — when a UI file is written without a current <code>alive</code> verdict.</span></p>
     <div class="example-box js-reveal">
       <span class="label amber ex-label"><span lang="es">Ejemplo real</span><span lang="en">Real example</span></span>
       <p><span lang="es">Corres <code>/design-review:run</code> sobre una pantalla de ajustes. Sale un multi-select con hallazgos deduplicados por lente ("contraste de texto secundario 2,85:1 — falla WCAG AA", "sin movimiento de firma: entrada escalonada de la referencia #3"). El veredicto pasa de <code>templated</code> a <code>alive</code> tras aplicar los cambios — y si vuelves a tocar ese fichero sin re-verificar, el hook lo vuelve a marcar.</span><span lang="en">You run <code>/design-review:run</code> on a settings screen. Out comes a multi-select of findings deduplicated by lens ("secondary text contrast 2.85:1 — fails WCAG AA", "no signature motion: staggered entrance from reference #3"). The verdict goes from <code>templated</code> to <code>alive</code> once the changes land — and if you touch that file again without re-verifying, the hook flags it again.</span></p>
