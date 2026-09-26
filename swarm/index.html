@@ -23,7 +23,7 @@
   "name": "swarm",
   "url": "https://davidgarciagordo.github.io/swarm/",
   "description": "45-agent Claude Code plugin (v0.2) that runs a full software development cycle from one plain-language objective: discovery, 7-lens analysis, design and implementation reviewed by a scored panel (grill lenses, fact-checker, refuter, blind judge), TDD in an isolated worktree, and independent verification before delivery. Agents declare a model tier (judgement, standard, mechanical), never a model name.",
-  "softwareVersion": "0.2.0",
+  "softwareVersion": "0.2.1",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "Any (Claude Code plugin)",
   "softwareRequirements": "Claude Code",
@@ -924,10 +924,11 @@
           <tr><th scope="row"><span lang="es"><code>SKILL.md</code>, precargado en cada agente</span><span lang="en"><code>SKILL.md</code>, preloaded into every agent</span></th><td><span lang="es">398 líneas</span><span lang="en">398 lines</span></td><td><span lang="es">114 líneas</span><span lang="en">114 lines</span></td></tr>
           <tr><th scope="row"><span lang="es">Ficheros bajo demanda</span><span lang="en">On-demand files</span></th><td>1</td><td>31</td></tr>
           <tr class="total"><th scope="row"><span lang="es">Run típico, total</span><span lang="en">Typical run, total</span></th><td><span lang="es">~147,8k tok</span><span lang="en">~147.8k tok</span></td><td><span lang="es">~61,8k tok</span><span lang="en">~61.8k tok</span> <b>−58%</b></td></tr>
+          <tr class="total"><th scope="row"><span lang="es">Coste always-on, cada sesión (antes de llamar a swarm)</span><span lang="en">Always-on cost, every session (before any swarm call)</span></th><td><span lang="es">~3.581 tok</span><span lang="en">~3,581 tok</span></td><td><span lang="es">~1.196 tok</span><span lang="en">~1,196 tok</span> <b>−67%</b></td></tr>
         </tbody>
       </table>
     </div>
-    <p class="sec-foot"><span lang="es">Medido, no estimado: del commit <code>a07e655</code> al estado actual, según la sección «Cost» del README. Presupuestos: hoja ≤80 líneas, orquestador de dominio ≤150, raíz ≤250, <code>SKILL.md</code> ≤120.</span><span lang="en">Measured, not estimated: from commit <code>a07e655</code> to now, per the README's "Cost" section. Budgets: leaf ≤80 lines, domain orchestrator ≤150, root ≤250, <code>SKILL.md</code> ≤120.</span></p>
+    <p class="sec-foot"><span lang="es">Medido, no estimado: del commit <code>a07e655</code> al estado actual, según la sección «Cost» del README (el coste always-on, con <code>claude plugin details</code>). Presupuestos: hoja ≤80 líneas, orquestador de dominio ≤150, raíz ≤250, <code>SKILL.md</code> ≤120.</span><span lang="en">Measured, not estimated: from commit <code>a07e655</code> to now, per the README's "Cost" section (the always-on cost, via <code>claude plugin details</code>). Budgets: leaf ≤80 lines, domain orchestrator ≤150, root ≤250, <code>SKILL.md</code> ≤120.</span></p>
   </section>
 
   <section class="owner-band">
