@@ -5,7 +5,7 @@
 ## Site
 
 - [Home / CV](https://davidgarciagordo.github.io/): background, experience, stack, and the AI-engineering ecosystem section.
-- [swarm](https://davidgarciagordo.github.io/swarm/): 39-agent Claude Code plugin that runs a full software-development cycle (discovery, analysis, design, implementation, delivery) from one plain-language objective, with adversarial review and independent verification at every gate.
+- [swarm](https://davidgarciagordo.github.io/swarm/): 45-agent Claude Code plugin (v0.2) that runs a full software-development cycle (discovery, analysis, design, implementation, delivery) from one plain-language objective. Agents declare a model tier (judgement / standard / mechanical) instead of a model name; every plan and diff goes through a scored review panel (grill lenses, fact-checker, refuter, blind judge, KO below 7/10) and an independent verifier. Core-vs-on-demand split measured at -58% tokens per typical run.
 - [Plugin catalog](https://davidgarciagordo.github.io/plugins/): overview of all 6 open-source Claude Code plugins in the ecosystem, installable from one marketplace (`davidgarciagordo/claude-plugins`).
 
 ## Plugins (individual pages)
@@ -15,5 +15,16 @@
 - [forge-methodology](https://davidgarciagordo.github.io/plugins/forge-methodology/): 9-step methodology where an external reference becomes an Acceptance Matrix, and a hook blocks `gh pr create` until every row has real evidence and an independent verifier.
 - [working-methods](https://davidgarciagordo.github.io/plugins/working-methods/): enforces the Forge methodology inside Claude Code — `/forge-run` sequences 12 phases through a zero-dependency state machine with a genuinely fail-closed PR hook.
 - [automations](https://davidgarciagordo.github.io/plugins/automations/): `/optimize-my-setup` deterministically scans a repo's Claude Code config and generates a tailored setup — nothing is applied until the owner ticks it in a mandatory multi-check.
+
+## Diagrams
+
+Every plugin page embeds its interactive Archify diagrams (self-contained HTML, with a static WebP poster), served next to the page under `diagrams/`:
+
+- swarm: [architecture](https://davidgarciagordo.github.io/swarm/diagrams/architecture.html), [/swarm:run flow](https://davidgarciagordo.github.io/swarm/diagrams/run-flow.html), [memory write / mailbox](https://davidgarciagordo.github.io/swarm/diagrams/memory-mailbox.html), [stack packs](https://davidgarciagordo.github.io/swarm/diagrams/stack-packs.html), [writing a stack pack](https://davidgarciagordo.github.io/swarm/diagrams/extending-packs-flow.html) (Spanish variants: `.es.html`).
+- token-economy: [the gate](https://davidgarciagordo.github.io/plugins/token-economy/diagrams/gate.html).
+- design-review: [pipeline](https://davidgarciagordo.github.io/plugins/design-review/diagrams/pipeline.html), [gate hook](https://davidgarciagordo.github.io/plugins/design-review/diagrams/hook-gate.html).
+- forge-methodology: [the 9-step loop](https://davidgarciagordo.github.io/plugins/forge-methodology/diagrams/forge-loop.html), [acceptance-matrix hook](https://davidgarciagordo.github.io/plugins/forge-methodology/diagrams/hook-gate.html).
+- working-methods: [/forge-run, 12 gated phases](https://davidgarciagordo.github.io/plugins/working-methods/diagrams/forge-run.html).
+- automations: [/optimize-my-setup](https://davidgarciagordo.github.io/plugins/automations/diagrams/optimize-my-setup.html).
 
 All plugins are MIT-licensed and open source, published under [github.com/davidgarciagordo](https://github.com/davidgarciagordo).

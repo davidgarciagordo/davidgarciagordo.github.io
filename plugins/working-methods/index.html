@@ -243,6 +243,43 @@
   #nav.open ~ .panel a { opacity: 1; transform: translateX(0); }
   .panel a.panel-sub { font-size: .95rem; font-weight: 500; color: var(--ink-cap); padding-left: .5rem; margin-top: -.4rem; }
   .panel a.active, .panel a.panel-sub.active { color: var(--amber, var(--accent-hot)); }
+
+  /* ============ Archify diagrams (poster + lazy interactive iframe) ============ */
+  .dgm-list { display: flex; flex-direction: column; gap: 40px; margin-top: 28px; }
+  figure.dgm { margin: 0; }
+  figure.dgm.dgm-tall { max-width: 860px; }
+  .dgm-frame {
+    position: relative; overflow: hidden; border-radius: 12px;
+    border: 1px solid var(--hairline); background: #05060a;
+  }
+  .dgm-poster { display: block; line-height: 0; }
+  .dgm-poster img { display: block; width: 100%; height: auto; }
+  .dgm-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #05060a; }
+  .dgm-hint {
+    position: absolute; right: 10px; bottom: 10px; line-height: 1.2;
+    font-family: var(--font-mono); font-size: 11.5px; letter-spacing: var(--track-mono);
+    color: var(--ink); background: rgb(2 2 3 / .78); border: 1px solid var(--hairline);
+    border-radius: 999px; padding: 7px 12px; pointer-events: none;
+  }
+  .dgm-frame.is-live .dgm-hint { display: none; }
+  .dgm-frame.is-fit .dgm-poster { display: none; }
+  .dgm figcaption {
+    display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px;
+    margin-top: 12px; font-size: 14.5px; color: var(--ink-muted);
+  }
+  .dgm figcaption b { color: var(--ink); font-weight: 500; }
+  .dgm-idx { font-family: var(--font-mono); font-size: 12px; letter-spacing: var(--track-mono); color: var(--accent, var(--amber)); margin-right: 8px; }
+  .dgm-open {
+    font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-cap); text-decoration: none;
+    border-bottom: 1px solid var(--hairline); padding: 10px 0 2px; min-height: 44px; display: inline-flex; align-items: flex-end;
+  }
+  .dgm-open:hover { color: var(--accent-hot, var(--amber-hot)); border-bottom-color: currentColor; }
+  .dgm-note { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-cap); margin-top: 10px; }
+  /* mobile nav: re-declared after the base .hamburger rule so the burger actually shows */
+  @media (max-width: 900px) { .hamburger { display: inline-flex; } }
+  @media (max-width: 480px) { .nav-gh { display: none; } }
+  /* keep the 24px gutter: .hero/.sec/.install-sec shorthand paddings reset .wrap's sides */
+  .wrap.hero, .wrap.sec, .wrap.install-sec { padding-left: 24px; padding-right: 24px; }
 </style>
 </head>
 <body>
@@ -324,6 +361,17 @@
     </div>
   </section>
 
+  <section class="sec wrap dgm-sec" id="diagramas" aria-labelledby="dgm-h">
+    <h2 id="dgm-h"><span lang="es">Cómo funciona, en diagramas</span><span lang="en">How it works, in diagrams</span></h2>
+    <p><span lang="es">Diagramas interactivos hechos con Archify, sacados del propio repo: recorre los caminos, haz zoom o ábrelos a pantalla completa.</span><span lang="en">Interactive diagrams built with Archify, taken from the repo itself: trace the paths, zoom in, or open them full screen.</span></p><p class="dgm-note" lang="es">Los diagramas están en inglés.</p>
+    <div class="dgm-list">
+    <figure class="dgm" data-base="diagrams/forge-run" data-es="0" data-title-es="/forge-run: 12 fases con gate (diagrama interactivo)" data-title-en="/forge-run: 12 gated phases (interactive diagram)">
+      <div class="dgm-frame"><a class="dgm-poster" href="diagrams/forge-run.html" target="_blank" rel="noopener"><img src="diagrams/forge-run.webp" width="1600" height="1100" loading="lazy" decoding="async" alt="Diagrama de las 12 fases de /forge-run, cada una con los artefactos que necesita y produce, y el gate previo al PR." data-alt-en="Diagram of the 12 /forge-run phases, each with the artifacts it needs and produces, and the pre-PR gate."></a><span class="dgm-hint" aria-hidden="true"><span lang="es">toca para abrir ↗</span><span lang="en">tap to open ↗</span></span></div>
+      <figcaption><span><span class="dgm-idx">fig. 1</span><b><span lang="es">/forge-run: 12 fases con gate</span><span lang="en">/forge-run: 12 gated phases</span></b></span><a class="dgm-open" href="diagrams/forge-run.html" target="_blank" rel="noopener"><span lang="es">Abrir interactivo ↗</span><span lang="en">Open interactive ↗</span><span class="sr-only"><span lang="es"> (pestaña nueva)</span><span lang="en"> (new tab)</span></span></a></figcaption>
+    </figure>
+    </div>
+  </section>
+
   <section class="sec wrap">
     <h2><span lang="es">Por qué importa</span><span lang="en">Why it matters</span></h2>
     <ul class="adv-list">
@@ -377,7 +425,7 @@
     <div class="sr-only" id="copy-status" role="status" aria-live="polite"></div>
     <div class="install-block">
       <div class="install-row"><code><span class="c">$</span> /plugin marketplace add <span class="v">davidgarciagordo/claude-plugins</span></code><button class="copy-btn" data-copy="/plugin marketplace add davidgarciagordo/claude-plugins"><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
-      <div class="install-row"><code><span class="c">$</span> /plugin install <span class="v">working-methods</span></code><button class="copy-btn" data-copy="/plugin install working-methods"><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
+      <div class="install-row"><code><span class="c">$</span> /plugin install <span class="v">working-methods@davidgarciagordo-plugins</span></code><button class="copy-btn" data-copy="/plugin install working-methods@davidgarciagordo-plugins"><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
     </div>
     <div class="cta-row">
       <a class="cta cta-amber" href="https://github.com/davidgarciagordo/claude-code-setup-optimizer/tree/main/plugins/working-methods"><span lang="es">Ver en GitHub</span><span lang="en">View on GitHub</span> →</a>
@@ -498,5 +546,66 @@
   });
 })();
 </script>
+<script>
+(function(){
+  // Archify diagrams: the poster <img> (same aspect ratio, so no layout shift) is the no-JS and
+  // mobile fallback; on wide screens the interactive diagram is mounted over it when near the viewport.
+  var figs = document.querySelectorAll('figure.dgm[data-base]');
+  if (!figs.length) return;
+  var wide = window.matchMedia ? matchMedia('(min-width: 760px)') : { matches: true };
+  function lang(){ return document.documentElement.lang === 'en' ? 'en' : 'es'; }
+  function srcFor(f){ return f.dataset.base + (lang() === 'es' && f.dataset.es === '1' ? '.es' : '') + '.html?embed=1&theme=dark'; }
+  function titleFor(f){ return lang() === 'en' ? f.dataset.titleEn : f.dataset.titleEs; }
+  function mount(f){
+    if (!wide.matches) return;
+    var frame = f.querySelector('.dgm-frame');
+    var ifr = frame.querySelector('iframe');
+    if (!ifr) {
+      ifr = document.createElement('iframe');
+      ifr.setAttribute('loading', 'lazy');
+      ifr.addEventListener('load', function(){ setTimeout(function(){ fit(f); }, 300); });
+      frame.appendChild(ifr);
+      frame.classList.add('is-live');
+      var poster = frame.querySelector('.dgm-poster');
+      poster.setAttribute('tabindex', '-1');
+      poster.setAttribute('aria-hidden', 'true');
+    }
+    var s = srcFor(f);
+    if (ifr.getAttribute('src') !== s) { frame.style.height = ''; frame.classList.remove('is-fit'); ifr.setAttribute('src', s); }
+    ifr.setAttribute('title', titleFor(f));
+  }
+  // Width-bound diagrams render shorter than their poster (which carries the viewer's toolbar):
+  // once loaded, trim the frame to the drawn height instead of leaving an empty band.
+  function fit(f){
+    var frame = f.querySelector('.dgm-frame'), ifr = frame.querySelector('iframe');
+    try {
+      var d = ifr.contentDocument, svg = d && d.querySelector('svg');
+      if (!svg) return;
+      var sw = svg.getBoundingClientRect().width, fw = frame.clientWidth, h = d.body.scrollHeight;
+      if (sw >= fw - 24 && h > 80 && h < frame.clientHeight - 32) { frame.style.height = (h + 8) + 'px'; frame.classList.add('is-fit'); }
+    } catch (e) {}
+  }
+  function syncAlt(){
+    figs.forEach(function(f){
+      f.querySelectorAll('img[data-alt-en]').forEach(function(img){
+        if (!img.dataset.altEs) img.dataset.altEs = img.alt;
+        img.alt = lang() === 'en' ? img.dataset.altEn : img.dataset.altEs;
+      });
+      if (f.querySelector('iframe')) mount(f);
+    });
+  }
+  syncAlt();
+  new MutationObserver(syncAlt).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if (en.isIntersecting && wide.matches) { io.unobserve(en.target); mount(en.target); } });
+    }, { rootMargin: '400px 0px' });
+    figs.forEach(function(f){ io.observe(f); });
+  } else {
+    figs.forEach(mount);
+  }
+})();
+</script>
+
 </body>
 </html>

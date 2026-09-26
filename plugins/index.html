@@ -248,7 +248,7 @@
   .stat-cap { font-family: var(--font-display); font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: var(--track-label); color: var(--ink-cap); margin-top: 4px; display: block; }
 
   .bar { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; justify-content: center; padding: 14px 0; font-size: 12px; text-transform: uppercase; color: var(--ink-cap); }
-  .bar span::before { content: "·"; color: var(--amber); margin-right: 8px; }
+  .bar > span::before { content: "·"; color: var(--amber); margin-right: 8px; }
 
   /* ============ Manifesto ============ */
   .manifesto-sec { padding: 80px 0; }
@@ -310,7 +310,7 @@
 
   /* ============ Plugin grid ============ */
   .plugin-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 16px;
     max-width: 1120px; margin: 0 auto; padding: 0 24px;
   }
   .plugin-card {
@@ -433,6 +433,20 @@
   #nav.open ~ .panel a { opacity: 1; transform: translateX(0); }
   .panel a.panel-sub { font-size: .95rem; font-weight: 500; color: var(--ink-cap); padding-left: .5rem; margin-top: -.4rem; }
   .panel a.active, .panel a.panel-sub.active { color: var(--amber, var(--accent-hot)); }
+
+  .plugin-card .pthumb { display: block; margin: -4px -4px 4px; border-radius: 10px; overflow: hidden; border: 1px solid var(--hairline-faint); background: #05060a; aspect-ratio: 16 / 7; }
+  .plugin-card .pthumb img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 12%; transition: transform .5s var(--ease); }
+  @media (hover: hover) and (pointer: fine) { .plugin-card:hover .pthumb img { transform: scale(1.04); } }
+  @media (prefers-reduced-motion: reduce) { .plugin-card .pthumb img { transition: none; } }
+  .plugin-card .pinstall { overflow-wrap: anywhere; }
+
+  @media (max-width: 520px) { .fig-cap h2 { white-space: normal; text-align: center; } .fig-cap h2 [aria-hidden="true"] { display: none; } }
+
+  /* mobile nav: re-declared after the base .hamburger rule so the burger actually shows */
+  @media (max-width: 900px) { .hamburger { display: inline-flex; } }
+  @media (max-width: 480px) { .nav-gh { display: none; } }
+  /* keep the 24px gutter: section shorthand paddings reset .wrap's sides */
+  .wrap.manifesto-sec, .wrap.install-sec, .wrap.sec { padding-left: 24px; padding-right: 24px; }
 </style>
 </head>
 <body>
@@ -525,7 +539,7 @@
     <div class="stat-rail">
       <div class="stat-tile"><span class="stat-num js-count" data-to="6">6</span><span class="stat-cap"><span lang="es">plugins</span><span lang="en">plugins</span></span></div>
       <div class="stat-tile"><span class="stat-num js-count" data-to="1">1</span><span class="stat-cap"><span lang="es">marketplace</span><span lang="en">marketplace</span></span></div>
-      <div class="stat-tile"><span class="stat-num js-count" data-to="4">4</span><span class="stat-cap"><span lang="es">hooks fail-closed</span><span lang="en">fail-closed hooks</span></span></div>
+      <div class="stat-tile"><span class="stat-num js-count" data-to="45">45</span><span class="stat-cap"><span lang="es">agentes en swarm</span><span lang="en">agents in swarm</span></span></div>
       <div class="stat-tile"><span class="stat-num js-count" data-to="9">9</span><span class="stat-cap"><span lang="es">pasos forge</span><span lang="en">forge steps</span></span></div>
       <div class="stat-tile"><span class="stat-num">MIT</span><span class="stat-cap"><span lang="es">licencia</span><span lang="en">license</span></span></div>
     </div>
@@ -554,31 +568,31 @@
         <span class="pnode-idx">01</span>
         <span class="pnode-dot" aria-hidden="true"></span>
         <div><div class="pnode-stage">Spec</div>
-        <div class="pnode-card"><a class="repo-link" href="https://github.com/davidgarciagordo/claude-code-setup-optimizer/tree/main/plugins/working-methods" translate="no">working-methods</a><br><span lang="es">Flujos y orquestación multiagente como comandos.</span><span lang="en">Workflows and multi-agent orchestration as commands.</span></div></div>
+        <div class="pnode-card"><a class="repo-link" href="/plugins/working-methods/" translate="no">working-methods</a><br><span lang="es">Flujos y orquestación multiagente como comandos.</span><span lang="en">Workflows and multi-agent orchestration as commands.</span></div></div>
       </li>
       <li class="pnode" style="--n:1">
         <span class="pnode-idx">02</span>
         <span class="pnode-dot" aria-hidden="true"></span>
         <div><div class="pnode-stage">Grill</div>
-        <div class="pnode-card"><a class="repo-link" href="https://github.com/davidgarciagordo/forge-methodology" translate="no">forge-methodology</a><br><span lang="es">Del spec al verify con grill adversarial: los agentes se auditan entre sí.</span><span lang="en">From spec to verify with an adversarial grill: agents audit each other.</span></div></div>
+        <div class="pnode-card"><a class="repo-link" href="/plugins/forge-methodology/" translate="no">forge-methodology</a><br><span lang="es">Del spec al verify con grill adversarial: los agentes se auditan entre sí.</span><span lang="en">From spec to verify with an adversarial grill: agents audit each other.</span></div></div>
       </li>
       <li class="pnode" style="--n:2">
         <span class="pnode-idx">03</span>
         <span class="pnode-dot" aria-hidden="true"></span>
         <div><div class="pnode-stage">Plan</div>
-        <div class="pnode-card"><a class="repo-link" href="https://github.com/davidgarciagordo/token-economy" translate="no">token-economy</a><br><span lang="es">Recorta el coste multiagente sin perder cobertura.</span><span lang="en">Cuts multi-agent cost without losing coverage.</span> <span class="pn-stat"><span lang="es">×7 en la segunda pasada</span><span lang="en">×7 on the second pass</span></span></div></div>
+        <div class="pnode-card"><a class="repo-link" href="/plugins/token-economy/" translate="no">token-economy</a><br><span lang="es">Recorta el coste multiagente sin perder cobertura.</span><span lang="en">Cuts multi-agent cost without losing coverage.</span> <span class="pn-stat"><span lang="es">×7 en la segunda pasada</span><span lang="en">×7 on the second pass</span></span></div></div>
       </li>
       <li class="pnode" style="--n:3">
         <span class="pnode-idx">04</span>
         <span class="pnode-dot" aria-hidden="true"></span>
         <div><div class="pnode-stage"><span lang="es">Ejecución</span><span lang="en">Execution</span></div>
-        <div class="pnode-card"><a class="repo-link" href="https://github.com/davidgarciagordo/design-review" translate="no">design-review</a><br><span lang="es">Cuatro lentes de diseño en paralelo y un veredicto en navegador real.</span><span lang="en">Four design lenses in parallel and a verdict in a real browser.</span></div></div>
+        <div class="pnode-card"><a class="repo-link" href="/plugins/design-review/" translate="no">design-review</a><br><span lang="es">Cuatro lentes de diseño en paralelo y un veredicto en navegador real.</span><span lang="en">Four design lenses in parallel and a verdict in a real browser.</span></div></div>
       </li>
       <li class="pnode" style="--n:4">
         <span class="pnode-idx">05</span>
         <span class="pnode-dot" aria-hidden="true"></span>
         <div><div class="pnode-stage">Verify</div>
-        <div class="pnode-card"><a class="repo-link" href="https://github.com/davidgarciagordo/claude-code-setup-optimizer/tree/main/plugins/automations" translate="no">automations</a><br><span lang="es">Automatiza y afina tu instalación de Claude Code.</span><span lang="en">Automates and tunes your Claude Code setup.</span></div></div>
+        <div class="pnode-card"><a class="repo-link" href="/plugins/automations/" translate="no">automations</a><br><span lang="es">Automatiza y afina tu instalación de Claude Code.</span><span lang="en">Automates and tunes your Claude Code setup.</span></div></div>
       </li>
     </ol>
   </figure>
@@ -587,34 +601,40 @@
     <figcaption class="fig-cap"><span class="rule" aria-hidden="true"></span><h2><span aria-hidden="true">&gt;_ ───</span> <span lang="es">fig. 2 · qué te llevas de cada uno</span><span lang="en">fig. 2 · what you get from each</span> <span aria-hidden="true">─── #</span></h2><span class="rule" aria-hidden="true"></span></figcaption>
     <div class="plugin-grid">
       <a class="plugin-card js-reveal" href="/plugins/token-economy/">
+        <span class="pthumb" aria-hidden="true"><img lang="es" src="/plugins/token-economy/diagrams/gate.es.webp" width="1600" height="650" loading="lazy" decoding="async" alt=""><img lang="en" src="/plugins/token-economy/diagrams/gate.webp" width="1600" height="650" loading="lazy" decoding="async" alt=""></span>
         <span class="repo" translate="no">token-economy</span>
         <span class="desc"><span lang="es">Cuatro agentes de revisión dejan de pagar cuatro veces por leer los mismos ficheros: mismos hallazgos, una fracción del gasto en tokens de entrada, y una segunda pasada sobre el mismo objetivo sale casi gratis.</span><span lang="en">Four review agents stop paying four times to read the same files: same findings, a fraction of the input-token bill, and a second pass on the same target comes out almost free.</span></span>
-        <span class="pinstall">$ /plugin install <span class="v">token-economy</span></span>
+        <span class="pinstall">$ /plugin install <span class="v">token-economy@davidgarciagordo-plugins</span></span>
       </a>
       <a class="plugin-card js-reveal" href="/plugins/design-review/">
+        <span class="pthumb" aria-hidden="true"><img src="/plugins/design-review/diagrams/pipeline.webp" width="1600" height="760" loading="lazy" decoding="async" alt=""></span>
         <span class="repo" translate="no">design-review</span>
         <span class="desc"><span lang="es">Tu interfaz hecha por IA deja de salir como una plantilla SaaS correcta pero intercambiable: el pipeline no te deja darla por terminada hasta que un veredicto en navegador real dice que solo podría ser tu producto.</span><span lang="en">Your AI-built UI stops shipping as a correct-but-interchangeable SaaS template: the pipeline won't let you call it done until a real-browser verdict says it could only be your product.</span></span>
-        <span class="pinstall">$ /plugin install <span class="v">design-review</span></span>
+        <span class="pinstall">$ /plugin install <span class="v">design-review@davidgarciagordo-plugins</span></span>
       </a>
       <a class="plugin-card js-reveal" href="/plugins/forge-methodology/">
+        <span class="pthumb" aria-hidden="true"><img lang="es" src="/plugins/forge-methodology/diagrams/forge-loop.es.webp" width="1600" height="900" loading="lazy" decoding="async" alt=""><img lang="en" src="/plugins/forge-methodology/diagrams/forge-loop.webp" width="1600" height="900" loading="lazy" decoding="async" alt=""></span>
         <span class="repo" translate="no">forge-methodology</span>
         <span class="desc"><span lang="es">"A la par con Stripe" deja de significar "hicimos las partes que se nos ocurrieron": cada capacidad de la referencia es una fila, y el PR no se abre hasta que cada una tiene evidencia firmada por alguien que no la construyó.</span><span lang="en">"Parity with Stripe" stops meaning "we built the parts we thought of": every capability of the reference becomes a row, and the PR won't open until each one carries evidence signed by someone who didn't build it.</span></span>
-        <span class="pinstall">$ /plugin install <span class="v">forge-methodology</span></span>
+        <span class="pinstall">$ /plugin install <span class="v">forge-methodology@davidgarciagordo-plugins</span></span>
       </a>
       <a class="plugin-card js-reveal" href="/plugins/working-methods/">
+        <span class="pthumb" aria-hidden="true"><img src="/plugins/working-methods/diagrams/forge-run.webp" width="1600" height="1100" loading="lazy" decoding="async" alt=""></span>
         <span class="repo" translate="no">working-methods</span>
         <span class="desc"><span lang="es">La metodología deja de depender de que el agente se acuerde: las fases son código, los gates devuelven un código de salida, y a ti solo te interrumpe dos veces, no todo el rato.</span><span lang="en">The methodology stops depending on the agent remembering it: phases are code, gates return exit codes, and you're interrupted exactly twice, not constantly.</span></span>
-        <span class="pinstall">$ /plugin install <span class="v">working-methods</span></span>
+        <span class="pinstall">$ /plugin install <span class="v">working-methods@davidgarciagordo-plugins</span></span>
       </a>
       <a class="plugin-card js-reveal" href="/plugins/automations/">
+        <span class="pthumb" aria-hidden="true"><img src="/plugins/automations/diagrams/optimize-my-setup.webp" width="1600" height="1100" loading="lazy" decoding="async" alt=""></span>
         <span class="repo" translate="no">automations</span>
         <span class="desc"><span lang="es">Un repo nuevo se queda con una configuración de Claude Code hecha a su medida — permisos, hooks, revisores con nombres de tus propias tablas — en una pasada, y apruebas cada pieza suelta antes de que se escriba.</span><span lang="en">A new repo gets a Claude Code setup fitted to it — permissions, hooks, reviewers named after your own tables — in one pass, and you approve each piece before it's written.</span></span>
-        <span class="pinstall">$ /plugin install <span class="v">automations</span></span>
+        <span class="pinstall">$ /plugin install <span class="v">automations@davidgarciagordo-plugins</span></span>
       </a>
       <a class="plugin-card js-reveal" href="/swarm/">
+        <span class="pthumb" aria-hidden="true"><img lang="es" src="/swarm/diagrams/architecture.es.webp" width="1600" height="955" loading="lazy" decoding="async" alt=""><img lang="en" src="/swarm/diagrams/architecture.webp" width="1600" height="1749" loading="lazy" decoding="async" alt=""></span>
         <span class="repo" translate="no">swarm</span>
         <span class="desc"><span lang="es">El que junta a los otros cinco en un solo ciclo: un objetivo entra, un equipo de software sénior completo sale — memoria compartida, grill adversarial, TDD y verificación independiente, sin que tú orquestes nada.</span><span lang="en">The one that ties the other five into one cycle: one objective in, a full senior software team out — shared memory, adversarial grill, TDD and independent verification, without you orchestrating any of it.</span></span>
-        <span class="pinstall">$ /plugin install <span class="v">swarm</span></span>
+        <span class="pinstall">$ /plugin install <span class="v">swarm@davidgarciagordo-plugins</span></span>
       </a>
     </div>
   </figure>
@@ -637,7 +657,7 @@
     <div class="sr-only" id="copy-status" role="status" aria-live="polite"></div>
     <div class="install-block">
       <div class="install-row"><code><span class="c">$</span> /plugin marketplace add <span class="v">davidgarciagordo/claude-plugins</span></code><button class="copy-btn" data-copy="/plugin marketplace add davidgarciagordo/claude-plugins"><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
-      <div class="install-row"><code><span class="c">$</span> /plugin install <span class="v">token-economy</span></code><button class="copy-btn" data-copy="/plugin install token-economy"><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
+      <div class="install-row"><code><span class="c">$</span> /plugin install <span class="v">token-economy@davidgarciagordo-plugins</span></code><button class="copy-btn" data-copy="/plugin install token-economy@davidgarciagordo-plugins"><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
     </div>
     <div class="cta-row">
       <a class="cta cta-amber" href="https://github.com/davidgarciagordo/claude-plugins"><span lang="es">Ver el marketplace en GitHub</span><span lang="en">View the marketplace on GitHub</span> →</a>

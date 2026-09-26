@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#020203">
-<meta name="description" content="swarm: un equipo de software sénior en un comando. 39 agentes especializados para Claude Code, con gates de seguridad reales y revisión adversarial.">
+<meta name="description" content="swarm 0.2: un equipo de software sénior en un comando. 45 agentes para Claude Code, modelos por tier, un panel de revisión con juez ciego y verificación independiente. −58% de tokens por run.">
 <title>swarm · David García Gordo</title>
 <link rel="canonical" href="https://davidgarciagordo.github.io/swarm/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://davidgarciagordo.github.io/swarm/">
 <meta property="og:title" content="swarm: David García Gordo">
-<meta property="og:description" content="Un equipo de software sénior, en un comando. 39 agentes para Claude Code.">
+<meta property="og:description" content="Un equipo de software sénior, en un comando. 45 agentes para Claude Code, con panel de revisión y juez ciego.">
 <meta name="twitter:card" content="summary">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1c1.2 3.6-3.6 5-3.6 8.4a3.6 3.6 0 0 0 7.2 0C11.6 6 6.8 4.6 8 1z' fill='%23F59E0B'/%3E%3C/svg%3E">
 <script type="application/ld+json">
@@ -20,7 +20,8 @@
   "@type": "SoftwareApplication",
   "name": "swarm",
   "url": "https://davidgarciagordo.github.io/swarm/",
-  "description": "39-agent Claude Code plugin that runs a full software development cycle from one plain-language objective: discovery, 7-lens analysis, design with adversarial grill x3, TDD implementation in an isolated worktree, severity-tagged review, and independent verification before delivery.",
+  "description": "45-agent Claude Code plugin (v0.2) that runs a full software development cycle from one plain-language objective: discovery, 7-lens analysis, design and implementation reviewed by a scored panel (grill lenses, fact-checker, refuter, blind judge), TDD in an isolated worktree, and independent verification before delivery. Agents declare a model tier (judgement, standard, mechanical), never a model name.",
+  "softwareVersion": "0.2.0",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "Any (Claude Code plugin)",
   "softwareRequirements": "Claude Code",
@@ -247,7 +248,7 @@
   .stat-cap { font-family: var(--font-display); font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: var(--track-label); color: var(--ink-cap); margin-top: 4px; display: block; }
 
   .bar { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; justify-content: center; padding: 14px 0; font-size: 12px; text-transform: uppercase; color: var(--ink-cap); }
-  .bar span::before { content: "·"; color: var(--amber); margin-right: 8px; }
+  .bar > span::before { content: "·"; color: var(--amber); margin-right: 8px; }
 
   /* ============ Manifesto ============ */
   .manifesto-sec { padding: 80px 0; }
@@ -456,6 +457,71 @@
   #nav.open ~ .panel a { opacity: 1; transform: translateX(0); }
   .panel a.panel-sub { font-size: .95rem; font-weight: 500; color: var(--ink-cap); padding-left: .5rem; margin-top: -.4rem; }
   .panel a.active, .panel a.panel-sub.active { color: var(--amber, var(--accent-hot)); }
+
+  /* ============ Sections (0.2: tiers, cost, diagrams) ============ */
+  .sec { padding: 72px 24px; border-top: 1px solid var(--hairline); }
+  .sec .label { display: block; margin-bottom: 14px; }
+  .sec h2 { font-family: var(--font-display); font-weight: 700; letter-spacing: -.02em; font-size: clamp(1.6rem, 3vw, 2.3rem); margin-bottom: 18px; }
+  .sec p { color: var(--ink-muted); font-size: 16.5px; line-height: 1.65; max-width: 70ch; }
+  .sec p b { color: var(--ink); font-weight: 500; }
+  .sec code { font-family: var(--font-mono); color: var(--amber-hot); font-size: .88em; overflow-wrap: anywhere; }
+  .sec .sec-foot { font-size: 14.5px; margin-top: 18px; }
+  .tier-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-top: 28px; }
+  .tier-card { border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--glass); padding: 22px 22px 20px; }
+  .tier-n { font-family: var(--font-display); font-weight: 700; font-size: 2rem; color: var(--amber); font-variant-numeric: tabular-nums; margin-right: 10px; }
+  .tier-name { font-family: var(--font-mono); font-size: 14px; letter-spacing: var(--track-mono); color: var(--ink); }
+  .tier-card p { font-size: 15px; margin-top: 8px; }
+  .cost-wrap { margin-top: 26px; border: 1px solid var(--hairline); border-radius: var(--radius-tight); background: var(--bg-1); max-width: 760px; }
+  .cost-table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  .cost-table th, .cost-table td { padding: 13px 16px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--hairline-faint); }
+  .cost-table thead th { font-family: var(--font-display); font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: var(--track-label); color: var(--ink-cap); }
+  .cost-table tbody th { font-weight: 400; color: var(--ink-muted); }
+  .cost-table td { font-family: var(--font-mono); font-size: 14px; color: var(--ink); white-space: nowrap; }
+  .cost-table tr:last-child th, .cost-table tr:last-child td { border-bottom: 0; }
+  .cost-table tr.total th { color: var(--ink); font-weight: 500; }
+  .cost-table td b { color: var(--green); font-weight: 400; margin-left: 6px; }
+  @media (max-width: 520px) {
+    .cost-table th, .cost-table td { padding: 11px 10px; }
+    .cost-table td { white-space: normal; font-size: 13px; }
+  }
+
+  /* ============ Archify diagrams (poster + lazy interactive iframe) ============ */
+  .dgm-list { display: flex; flex-direction: column; gap: 40px; margin-top: 28px; }
+  figure.dgm { margin: 0; }
+  figure.dgm.dgm-tall { max-width: 860px; }
+  .dgm-frame {
+    position: relative; overflow: hidden; border-radius: 12px;
+    border: 1px solid var(--hairline); background: #05060a;
+  }
+  .dgm-poster { display: block; line-height: 0; }
+  .dgm-poster img { display: block; width: 100%; height: auto; }
+  .dgm-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #05060a; }
+  .dgm-hint {
+    position: absolute; right: 10px; bottom: 10px; line-height: 1.2;
+    font-family: var(--font-mono); font-size: 11.5px; letter-spacing: var(--track-mono);
+    color: var(--ink); background: rgb(2 2 3 / .78); border: 1px solid var(--hairline);
+    border-radius: 999px; padding: 7px 12px; pointer-events: none;
+  }
+  .dgm-frame.is-live .dgm-hint { display: none; }
+  .dgm-frame.is-fit .dgm-poster { display: none; }
+  .dgm figcaption {
+    display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px;
+    margin-top: 12px; font-size: 14.5px; color: var(--ink-muted);
+  }
+  .dgm figcaption b { color: var(--ink); font-weight: 500; }
+  .dgm-idx { font-family: var(--font-mono); font-size: 12px; letter-spacing: var(--track-mono); color: var(--accent, var(--amber)); margin-right: 8px; }
+  .dgm-open {
+    font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-cap); text-decoration: none;
+    border-bottom: 1px solid var(--hairline); padding: 10px 0 2px; min-height: 44px; display: inline-flex; align-items: flex-end;
+  }
+  .dgm-open:hover { color: var(--accent-hot, var(--amber-hot)); border-bottom-color: currentColor; }
+  .dgm-note { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-cap); margin-top: 10px; }
+  /* mobile nav: re-declared after the base .hamburger rule so the burger actually shows */
+  @media (max-width: 900px) { .hamburger { display: inline-flex; } }
+  @media (max-width: 480px) { .nav-gh { display: none; } }
+  /* keep the 24px gutter: section shorthand paddings reset .wrap's sides */
+  .wrap.manifesto-sec, .wrap.install-sec, .wrap.sec { padding-left: 24px; padding-right: 24px; }
+  @media (max-width: 520px) { .fig-cap h2 { white-space: normal; text-align: center; } .fig-cap h2 [aria-hidden="true"] { display: none; } }
 </style>
 </head>
 <body>
@@ -537,21 +603,21 @@
         <p id="term-cap" class="sr-only"><span lang="es">Transcripción de una ejecución real de /swarm:run: el enjambre descubre, diseña, implementa con TDD y para en un gate de aprobación antes de entregar.</span><span lang="en">Transcript of a real /swarm:run: the swarm discovers, designs, implements with TDD and stops at an approval gate before delivery.</span></p>
         <div class="term" id="term" role="group" aria-labelledby="term-cap">
           <div class="term-line" style="transition-delay:.1s">$ <span class="amberw">/swarm:run</span> <span class="muted">"<span lang="es">añade export CSV al listado</span><span lang="en">add CSV export to the list</span>"</span></div>
-          <div class="term-line" style="transition-delay:.3s"><span class="path">→</span> orchestrator <span class="muted">(opus)</span> · tier: full</div>
+          <div class="term-line" style="transition-delay:.3s"><span class="path">→</span> orchestrator <span class="muted">(judgement)</span> · tier: full</div>
           <div class="term-line" style="transition-delay:.5s"><span class="path">→</span> discovery-orchestrator <span class="muted">· 4 <span lang="es">preguntas</span><span lang="en">questions</span></span></div>
-          <div class="term-line" style="transition-delay:.7s"><span class="path">→</span> design-orchestrator <span class="muted">· grill</span> <span class="amberw">×3</span></div>
+          <div class="term-line" style="transition-delay:.7s"><span class="path">→</span> design-orchestrator <span class="muted">· review panel ·</span> <span class="amberw">blind-judge</span></div>
           <div class="term-line" style="transition-delay:.9s"><span class="path">→</span> test-writer <span class="muted">RED</span> → implementer <span class="muted">GREEN</span></div>
-          <div class="term-line" style="transition-delay:1.1s"><span class="path">→</span> security-auditor · reviewer <span class="greenw">→ GATE</span></div>
+          <div class="term-line" style="transition-delay:1.1s"><span class="path">→</span> review panel <span class="muted">(diff)</span> · verifier <span class="greenw">→ GATE</span></div>
           <div class="term-line" style="transition-delay:1.3s"><span class="greenw">✓</span> <span class="muted">3/3 <span lang="es">fases, worktree aislado, sin mergear todavía</span><span lang="en">phases, isolated worktree, not merged yet</span></span></div>
         </div>
       </div>
     </div>
 
     <div class="stat-rail">
-      <div class="stat-tile"><span class="stat-num js-count" data-to="39">39</span><span class="stat-cap"><span lang="es">agentes</span><span lang="en">agents</span></span></div>
-      <div class="stat-tile"><span class="stat-num js-count" data-to="5">5</span><span class="stat-cap"><span lang="es">comandos</span><span lang="en">commands</span></span></div>
-      <div class="stat-tile"><span class="stat-num js-count" data-to="7">7</span><span class="stat-cap"><span lang="es">lentes de análisis</span><span lang="en">analysis lenses</span></span></div>
-      <div class="stat-tile"><span class="stat-num">×3</span><span class="stat-cap">grill <span lang="es">adversarial</span><span lang="en">adversarial</span></span></div>
+      <div class="stat-tile"><span class="stat-num js-count" data-to="45">45</span><span class="stat-cap"><span lang="es">agentes</span><span lang="en">agents</span></span></div>
+      <div class="stat-tile"><span class="stat-num js-count" data-to="3">3</span><span class="stat-cap"><span lang="es">tiers de modelo</span><span lang="en">model tiers</span></span></div>
+      <div class="stat-tile"><span class="stat-num">7/10</span><span class="stat-cap"><span lang="es">umbral del juez ciego</span><span lang="en">blind-judge threshold</span></span></div>
+      <div class="stat-tile"><span class="stat-num">−58%</span><span class="stat-cap"><span lang="es">tokens por run típico</span><span lang="en">tokens per typical run</span></span></div>
       <div class="stat-tile"><span class="stat-num js-count" data-to="1">1</span><span class="stat-cap"><span lang="es">punto de entrada</span><span lang="en">entry point</span></span></div>
     </div>
     <div class="bar">
@@ -566,8 +632,8 @@
       <span lang="es">Un equipo de software sénior, en un comando.</span>
       <span lang="en">A senior software team, in one command.</span>
       <span class="m">
-        <span lang="es"> 39 agentes especializados que descubren, analizan, diseñan, implementan y entregan, con gates de seguridad reales, revisión adversarial y TDD, sobre tu repo, en local.</span>
-        <span lang="en"> 39 specialized agents that discover, analyze, design, implement and deliver, with real security gates, adversarial review and TDD, on your repo, locally.</span>
+        <span lang="es"> 45 agentes de responsabilidad única que descubren, analizan, diseñan, implementan y entregan: un panel de revisión puntúa cada plan y cada diff, TDD en worktree aislado y un verificador que nunca construyó lo que revisa. Sobre tu repo, en local.</span>
+        <span lang="en"> 45 single-responsibility agents that discover, analyze, design, implement and deliver: a review panel scores every plan and every diff, TDD in an isolated worktree, and a verifier that never built what it checks. On your repo, locally.</span>
       </span>
     </p>
   </section>
@@ -579,14 +645,14 @@
         <span class="pnode-idx">01</span>
         <span class="pnode-dot" aria-hidden="true"></span>
         <div><div class="pnode-stage"><span lang="es">objetivo</span><span lang="en">objective</span></div>
-        <div class="pnode-card"><span lang="es">Escribes lo que quieres, tal cual. Si es ambiguo, el gate de interpretación te pregunta en lenguaje llano antes de decidir nada — nunca ejecuta a ciegas.</span><span lang="en">You write what you want, as-is. If it's ambiguous, the interpretation gate asks in plain language before deciding anything — it never executes blind.</span></div>
+        <div class="pnode-card"><span lang="es">Escribes lo que quieres, tal cual. Si es ambiguo, el gate de interpretación te pregunta en lenguaje llano antes de decidir nada. Después el orquestador clasifica el tier: <b>direct</b> (responde sin abrir run), <b>light</b> o <b>full</b>.</span><span lang="en">You write what you want, as-is. If it's ambiguous, the interpretation gate asks in plain language before deciding anything. Then the orchestrator classifies the tier: <b>direct</b> (answers without opening a run), <b>light</b> or <b>full</b>.</span></div>
         <div class="pnode-gate"><span lang="es">GATE · pregunta solo si hace falta</span><span lang="en">GATE · asks only when needed</span></div></div>
       </li>
       <li class="pnode" style="--n:1">
         <span class="pnode-idx">02</span>
         <span class="pnode-dot" aria-hidden="true"></span>
         <div><div class="pnode-stage"><span lang="es">memoria unificada</span><span lang="en">unified memory</span></div>
-        <div class="pnode-card"><span class="muted"><span lang="es">memory-orchestrator</span><span lang="en">memory-orchestrator</span> · haiku</span> <span lang="es">comprueba un hash del repo. Si no cambió, reusa el context-pack ya construido; si cambió,</span><span lang="en">checks a hash of the repo. If it didn't change, it reuses the already-built context-pack; if it did,</span> <span class="muted">memory-builder · sonnet</span> <span lang="es">lo re-escanea UNA vez. Ningún otro agente vuelve a leer el repo entero.</span><span lang="en">rescans it ONCE. No other agent reads the whole repo again.</span> <span class="pn-stat"><span lang="es">1 escaneo, compartido por los 38 agentes restantes</span><span lang="en">1 scan, shared by the other 38 agents</span></span></div></div>
+        <div class="pnode-card"><span class="muted">memory-orchestrator · mechanical</span> <span lang="es">comprueba un hash del repo. Si no cambió, reusa el context-pack ya construido; si cambió,</span><span lang="en">checks a hash of the repo. If it didn't change, it reuses the already-built context-pack; if it did,</span> <span class="muted">memory-builder · mechanical</span> <span lang="es">lo re-escanea UNA vez. Ningún otro agente vuelve a leer el repo entero.</span><span lang="en">rescans it ONCE. No other agent reads the whole repo again.</span> <span class="pn-stat"><span lang="es">1 escaneo, compartido por todos los agentes del run</span><span lang="en">1 scan, shared by every agent in the run</span></span></div></div>
       </li>
       <li class="pnode" style="--n:2">
         <span class="pnode-idx">03</span>
@@ -604,173 +670,191 @@
         <span class="pnode-idx">05</span>
         <span class="pnode-dot" aria-hidden="true"></span>
         <div><div class="pnode-stage"><span lang="es">diseño + spec</span><span lang="en">design + spec</span></div>
-        <div class="pnode-card"><span class="muted">pattern-advisor + domain-modeler</span> <span lang="es">informan a</span><span lang="en">feed</span> <span class="muted">planner · opus</span><span lang="es">, que escribe el plan en un fichero versionado — no se queda solo en la conversación.</span><span lang="en">, which writes the plan to a versioned file — never left sitting only in the conversation.</span></div></div>
+        <div class="pnode-card"><span class="muted">pattern-advisor + domain-modeler</span> <span lang="es">informan a</span><span lang="en">feed</span> <span class="muted">planner · judgement</span><span lang="es">, que escribe el plan en un fichero versionado — no se queda solo en la conversación.</span><span lang="en">, which writes the plan to a versioned file — never left sitting only in the conversation.</span></div></div>
       </li>
       <li class="pnode" style="--n:5">
         <span class="pnode-idx">06</span>
         <span class="pnode-dot" aria-hidden="true"></span>
-        <div><div class="pnode-stage">grill ×3</div>
-        <div class="pnode-card"><span lang="es">Tres lentes adversariales — arquitecto, operador, ingeniero — atacan el spec ANTES de escribir código. Cada hallazgo cita fichero:línea o no cuenta.</span><span lang="en">Three adversarial lenses — architect, operator, engineer — attack the spec BEFORE any code is written. Every finding cites file:line or it doesn't count.</span>
-        <span class="pnode-loop">↺ <b><span lang="es">no es lineal:</span><span lang="en">not linear:</span></b> <span lang="es">si hay hallazgos P1, planner reescribe el paso 05 y grill vuelve a arbitrar.</span><span lang="en">if there are P1 findings, planner rewrites step 05 and grill arbitrates again.</span></span></div>
-        <div class="pnode-gate"><span lang="es">GATE · ×3 lentes, antes del código</span><span lang="en">GATE · ×3 lenses, before any code</span></div></div>
+        <div><div class="pnode-stage"><span lang="es">panel de revisión</span><span lang="en">review panel</span></div>
+        <div class="pnode-card"><span class="muted">review-orchestrator</span> <span lang="es">lanza lentes independientes de un solo objetivo —completeness-critic, fact-checker, simplicity-critic y las tres de grill (arquitecto, operador, ingeniero)— ANTES de escribir código. Un script determinista deduplica, <b>refuter</b> ataca cada hallazgo bloqueante y <b>blind-judge</b> puntúa de 0 a 10 con un modelo distinto al del autor.</span><span lang="en">launches independent single-objective lenses — completeness-critic, fact-checker, simplicity-critic and the three grill lenses (architect, operator, engineer) — BEFORE any code is written. A deterministic script dedups, <b>refuter</b> attacks every blocking finding and <b>blind-judge</b> scores 0-10 on a model other than the author's.</span>
+        <span class="pnode-loop">↺ <b><span lang="es">no es lineal:</span><span lang="en">not linear:</span></b> <span lang="es">por debajo de 7 es KO y el plan vuelve al paso 05; máximo dos rondas, un segundo KO escala al owner.</span><span lang="en">below 7 is a KO and the plan goes back to step 05; at most two rounds, a second KO escalates to the owner.</span></span></div>
+        <div class="pnode-gate"><span lang="es">GATE · juez ciego ≥ 7/10</span><span lang="en">GATE · blind judge ≥ 7/10</span></div></div>
       </li>
       <li class="pnode loop-seg" style="--n:6">
         <span class="pnode-idx">07</span>
         <span class="pnode-dot" aria-hidden="true"></span>
         <div><div class="pnode-stage">TDD RED → GREEN</div>
-        <div class="pnode-card"><span lang="es">Test primero. Implementación en worktree aislado, nunca sobre tu rama activa, siguiendo el plan escrito en el paso anterior.</span><span lang="en">Test first. Implementation in an isolated worktree, never on your active branch, following the plan written in the previous step.</span></div></div>
+        <div class="pnode-card"><span class="muted">test-writer → implementer · standard</span> <span lang="es">Test primero. Una fase del plan por invocación, en worktree aislado —nunca sobre tu rama activa—; <span class="muted">migration-engineer</span> y <span class="muted">doc-writer</span> solo si la fase los necesita, y <span class="muted">quality-fixer</span> corre los <code>--fix</code> deterministas.</span><span lang="en">Test first. One plan phase per invocation, in an isolated worktree — never on your active branch —; <span class="muted">migration-engineer</span> and <span class="muted">doc-writer</span> only when the phase needs them, and <span class="muted">quality-fixer</span> runs the deterministic <code>--fix</code>es.</span></div></div>
       </li>
       <li class="pnode" style="--n:7">
         <span class="pnode-idx">08</span>
         <span class="pnode-dot" aria-hidden="true"></span>
         <div><div class="pnode-stage"><span lang="es">revisión</span><span lang="en">review</span></div>
-        <div class="pnode-card"><span class="muted">reviewer · opus</span> <span lang="es">revisa el diff con severidad, en el worktree aislado — antes de que toque tu rama.</span><span lang="en">reviews the diff with severity tags, in the isolated worktree — before it touches your branch.</span>
+        <div class="pnode-card"><span lang="es">El mismo panel revisa el diff en el worktree aislado, con juez ciego incluido, antes del merge local a la rama del run — nunca sobre tu rama.</span><span lang="en">The same panel reviews the diff in the isolated worktree, blind judge included, before the local merge to the run's branch — never on your branch.</span>
         <span class="pnode-loop">↺ <b><span lang="es">tampoco es lineal:</span><span lang="en">not linear either:</span></b> <span lang="es">hasta 2 rondas de arreglo con el paso 07 antes de fusionar.</span><span lang="en">up to 2 rounds of fixes with step 07 before merging.</span></span></div></div>
       </li>
       <li class="pnode" style="--n:8">
         <span class="pnode-idx">09</span>
         <span class="pnode-dot" aria-hidden="true"></span>
         <div><div class="pnode-stage"><span lang="es">verificación</span><span lang="en">verification</span></div>
-        <div class="pnode-card"><span class="muted">verifier · opus</span><span lang="es">, un agente que NUNCA construyó lo que revisa, confirma que el "hecho" es real antes de cerrar — con una segunda pasada si algo se corrigió. Sin esto, un agente podría marcarse a sí mismo aprobado.</span><span lang="en">, an agent that NEVER built what it checks, confirms "done" is real before closing — with one more pass if something got fixed. Without this, an agent could mark its own work approved.</span></div>
+        <div class="pnode-card"><span class="muted">verifier · judgement</span><span lang="es">, un agente read-only que NUNCA construyó lo que revisa, comprueba que el veredicto del dominio sale de hallazgos reales persistidos. Un KO devuelve el trabajo una vez; un segundo KO cierra el run <b>BLOCKED</b> en vez de en un verde falso.</span><span lang="en">, a read-only agent that NEVER built what it checks, confirms the domain's verdict traces to real persisted findings. A KO sends the work back once; a second KO closes the run <b>BLOCKED</b> instead of in a false green.</span></div>
         <div class="pnode-gate"><span lang="es">GATE · independiente de quien ejecutó</span><span lang="en">GATE · independent of who executed</span></div></div>
       </li>
       <li class="pnode" style="--n:11">
         <span class="pnode-idx">10</span>
         <span class="pnode-dot" aria-hidden="true"></span>
         <div><div class="pnode-stage"><span lang="es">entrega</span><span lang="en">delivery</span></div>
-        <div class="pnode-card"><span lang="es">Push y PR solo por invocación explícita. swarm nunca mergea por su cuenta.</span><span lang="en">Push and PR only by explicit invocation. swarm never merges on its own.</span></div>
+        <div class="pnode-card"><span lang="es">Push y PR solo por invocación explícita y separada, tras una aprobación que nombra remoto, rama y base. swarm nunca mergea la PR.</span><span lang="en">Push and PR only by a separate, explicit invocation, after an approval that names remote, branch and base. swarm never merges the PR.</span></div>
         <div class="pnode-gate"><span lang="es">GATE · el owner aprueba</span><span lang="en">GATE · the owner approves</span></div></div>
       </li>
     </ol>
   </figure>
 
   <figure class="figframe" id="roster">
-    <figcaption class="fig-cap"><span class="rule" aria-hidden="true"></span><h2><span aria-hidden="true">&gt;_ ───</span> <span lang="es">fig. 2 · los 39 agentes</span><span lang="en">fig. 2 · the 39 agents</span> <span aria-hidden="true">─── #</span></h2><span class="rule" aria-hidden="true"></span></figcaption>
+    <figcaption class="fig-cap"><span class="rule" aria-hidden="true"></span><h2><span aria-hidden="true">&gt;_ ───</span> <span lang="es">fig. 2 · los 45 agentes</span><span lang="en">fig. 2 · the 45 agents</span> <span aria-hidden="true">─── #</span></h2><span class="rule" aria-hidden="true"></span></figcaption>
     <ul class="sr-only roster-list" id="roster-sr">
-      <li>orchestrator &middot; opus</li>
-      <li>memory-orchestrator &middot; haiku</li>
-      <li>memory-builder &middot; sonnet</li>
-      <li>memory-curator &middot; haiku</li>
-      <li>requirements-orchestrator &middot; haiku</li>
-      <li>env-checker &middot; haiku</li>
-      <li>dependency-auditor &middot; sonnet</li>
-      <li>dependency-installer &middot; sonnet</li>
-      <li>discovery-orchestrator &middot; sonnet</li>
-      <li>value-critic &middot; opus</li>
-      <li>research-analyst &middot; sonnet</li>
-      <li>options-generator &middot; opus</li>
-      <li>feasibility-spiker &middot; sonnet</li>
-      <li>analysis-orchestrator &middot; sonnet</li>
-      <li>opportunity-analyst &middot; opus</li>
-      <li>architecture-auditor &middot; opus</li>
-      <li>security-auditor &middot; opus</li>
-      <li>vulnerability-scanner &middot; haiku</li>
-      <li>performance-analyst &middot; sonnet</li>
-      <li>data-model-auditor &middot; sonnet</li>
-      <li>solid-auditor &middot; opus</li>
-      <li>design-orchestrator &middot; sonnet</li>
-      <li>pattern-advisor &middot; opus</li>
-      <li>domain-modeler &middot; opus</li>
-      <li>planner &middot; opus</li>
-      <li>grill-architect &middot; sonnet</li>
-      <li>grill-operator &middot; sonnet</li>
-      <li>grill-engineer &middot; sonnet</li>
-      <li>implementation-orchestrator &middot; sonnet</li>
-      <li>test-writer &middot; sonnet</li>
-      <li>implementer &middot; sonnet</li>
-      <li>migration-engineer &middot; sonnet</li>
-      <li>doc-writer &middot; sonnet</li>
-      <li>quality-fixer &middot; haiku</li>
-      <li>reviewer &middot; opus</li>
-      <li>verifier &middot; opus</li>
-      <li>delivery-orchestrator &middot; haiku</li>
-      <li>release-manager &middot; sonnet</li>
-      <li>handoff-writer &middot; haiku</li>
+      <li>orchestrator &middot; judgement</li>
+      <li>memory-orchestrator &middot; mechanical</li>
+      <li>memory-builder &middot; mechanical</li>
+      <li>memory-curator &middot; mechanical</li>
+      <li>requirements-orchestrator &middot; judgement</li>
+      <li>env-checker &middot; mechanical</li>
+      <li>dependency-auditor &middot; mechanical</li>
+      <li>dependency-installer &middot; mechanical</li>
+      <li>discovery-orchestrator &middot; judgement</li>
+      <li>value-critic &middot; judgement</li>
+      <li>research-analyst &middot; judgement</li>
+      <li>options-generator &middot; judgement</li>
+      <li>feasibility-spiker &middot; standard</li>
+      <li>analysis-orchestrator &middot; judgement</li>
+      <li>opportunity-analyst &middot; judgement</li>
+      <li>architecture-auditor &middot; judgement</li>
+      <li>security-auditor &middot; judgement</li>
+      <li>vulnerability-scanner &middot; mechanical</li>
+      <li>performance-analyst &middot; judgement</li>
+      <li>data-model-auditor &middot; judgement</li>
+      <li>solid-auditor &middot; judgement</li>
+      <li>design-orchestrator &middot; judgement</li>
+      <li>pattern-advisor &middot; judgement</li>
+      <li>domain-modeler &middot; judgement</li>
+      <li>planner &middot; judgement</li>
+      <li>review-orchestrator &middot; judgement</li>
+      <li>completeness-critic &middot; judgement</li>
+      <li>fact-checker &middot; judgement</li>
+      <li>simplicity-critic &middot; judgement</li>
+      <li>grill-architect &middot; judgement</li>
+      <li>grill-operator &middot; judgement</li>
+      <li>grill-engineer &middot; judgement</li>
+      <li>refuter &middot; judgement</li>
+      <li>blind-judge &middot; judgement</li>
+      <li>implementation-orchestrator &middot; judgement</li>
+      <li>test-writer &middot; standard</li>
+      <li>implementer &middot; standard</li>
+      <li>migration-engineer &middot; standard</li>
+      <li>doc-writer &middot; standard</li>
+      <li>quality-fixer &middot; standard</li>
+      <li>reviewer &middot; judgement</li>
+      <li>verifier &middot; judgement</li>
+      <li>delivery-orchestrator &middot; judgement</li>
+      <li>release-manager &middot; standard</li>
+      <li>handoff-writer &middot; standard</li>
     </ul>
     <div class="marquee-row" id="row-a" aria-hidden="true">
       <div class="marquee-track" id="marquee-a">
-          <span class="tchip">orchestrator<span class="m">opus</span></span>
-          <span class="tchip">memory-orchestrator<span class="m">haiku</span></span>
-          <span class="tchip">memory-builder<span class="m">sonnet</span></span>
-          <span class="tchip">memory-curator<span class="m">haiku</span></span>
-          <span class="tchip">requirements-orchestrator<span class="m">haiku</span></span>
-          <span class="tchip">env-checker<span class="m">haiku</span></span>
-          <span class="tchip">dependency-auditor<span class="m">sonnet</span></span>
-          <span class="tchip">dependency-installer<span class="m">sonnet</span></span>
-          <span class="tchip">discovery-orchestrator<span class="m">sonnet</span></span>
-          <span class="tchip">value-critic<span class="m">opus</span></span>
-          <span class="tchip">research-analyst<span class="m">sonnet</span></span>
-          <span class="tchip">options-generator<span class="m">opus</span></span>
-          <span class="tchip">feasibility-spiker<span class="m">sonnet</span></span>
-          <span class="tchip">analysis-orchestrator<span class="m">sonnet</span></span>
-          <span class="tchip">opportunity-analyst<span class="m">opus</span></span>
-          <span class="tchip">architecture-auditor<span class="m">opus</span></span>
-          <span class="tchip">security-auditor<span class="m">opus</span></span>
-          <span class="tchip">vulnerability-scanner<span class="m">haiku</span></span>
-          <span class="tchip">orchestrator<span class="m">opus</span></span>
-          <span class="tchip">memory-orchestrator<span class="m">haiku</span></span>
-          <span class="tchip">memory-builder<span class="m">sonnet</span></span>
-          <span class="tchip">memory-curator<span class="m">haiku</span></span>
-          <span class="tchip">requirements-orchestrator<span class="m">haiku</span></span>
-          <span class="tchip">env-checker<span class="m">haiku</span></span>
-          <span class="tchip">dependency-auditor<span class="m">sonnet</span></span>
-          <span class="tchip">dependency-installer<span class="m">sonnet</span></span>
-          <span class="tchip">discovery-orchestrator<span class="m">sonnet</span></span>
-          <span class="tchip">value-critic<span class="m">opus</span></span>
-          <span class="tchip">research-analyst<span class="m">sonnet</span></span>
-          <span class="tchip">options-generator<span class="m">opus</span></span>
-          <span class="tchip">feasibility-spiker<span class="m">sonnet</span></span>
-          <span class="tchip">analysis-orchestrator<span class="m">sonnet</span></span>
-          <span class="tchip">opportunity-analyst<span class="m">opus</span></span>
-          <span class="tchip">architecture-auditor<span class="m">opus</span></span>
-          <span class="tchip">security-auditor<span class="m">opus</span></span>
-          <span class="tchip">vulnerability-scanner<span class="m">haiku</span></span>
+          <span class="tchip">orchestrator<span class="m">judgement</span></span>
+          <span class="tchip">memory-orchestrator<span class="m">mechanical</span></span>
+          <span class="tchip">memory-builder<span class="m">mechanical</span></span>
+          <span class="tchip">memory-curator<span class="m">mechanical</span></span>
+          <span class="tchip">requirements-orchestrator<span class="m">judgement</span></span>
+          <span class="tchip">env-checker<span class="m">mechanical</span></span>
+          <span class="tchip">dependency-auditor<span class="m">mechanical</span></span>
+          <span class="tchip">dependency-installer<span class="m">mechanical</span></span>
+          <span class="tchip">discovery-orchestrator<span class="m">judgement</span></span>
+          <span class="tchip">value-critic<span class="m">judgement</span></span>
+          <span class="tchip">research-analyst<span class="m">judgement</span></span>
+          <span class="tchip">options-generator<span class="m">judgement</span></span>
+          <span class="tchip">feasibility-spiker<span class="m">standard</span></span>
+          <span class="tchip">analysis-orchestrator<span class="m">judgement</span></span>
+          <span class="tchip">opportunity-analyst<span class="m">judgement</span></span>
+          <span class="tchip">architecture-auditor<span class="m">judgement</span></span>
+          <span class="tchip">security-auditor<span class="m">judgement</span></span>
+          <span class="tchip">vulnerability-scanner<span class="m">mechanical</span></span>
+          <span class="tchip">performance-analyst<span class="m">judgement</span></span>
+          <span class="tchip">data-model-auditor<span class="m">judgement</span></span>
+          <span class="tchip">solid-auditor<span class="m">judgement</span></span>
+          <span class="tchip">design-orchestrator<span class="m">judgement</span></span>
+          <span class="tchip">pattern-advisor<span class="m">judgement</span></span>
+          <span class="tchip">orchestrator<span class="m">judgement</span></span>
+          <span class="tchip">memory-orchestrator<span class="m">mechanical</span></span>
+          <span class="tchip">memory-builder<span class="m">mechanical</span></span>
+          <span class="tchip">memory-curator<span class="m">mechanical</span></span>
+          <span class="tchip">requirements-orchestrator<span class="m">judgement</span></span>
+          <span class="tchip">env-checker<span class="m">mechanical</span></span>
+          <span class="tchip">dependency-auditor<span class="m">mechanical</span></span>
+          <span class="tchip">dependency-installer<span class="m">mechanical</span></span>
+          <span class="tchip">discovery-orchestrator<span class="m">judgement</span></span>
+          <span class="tchip">value-critic<span class="m">judgement</span></span>
+          <span class="tchip">research-analyst<span class="m">judgement</span></span>
+          <span class="tchip">options-generator<span class="m">judgement</span></span>
+          <span class="tchip">feasibility-spiker<span class="m">standard</span></span>
+          <span class="tchip">analysis-orchestrator<span class="m">judgement</span></span>
+          <span class="tchip">opportunity-analyst<span class="m">judgement</span></span>
+          <span class="tchip">architecture-auditor<span class="m">judgement</span></span>
+          <span class="tchip">security-auditor<span class="m">judgement</span></span>
+          <span class="tchip">vulnerability-scanner<span class="m">mechanical</span></span>
+          <span class="tchip">performance-analyst<span class="m">judgement</span></span>
+          <span class="tchip">data-model-auditor<span class="m">judgement</span></span>
+          <span class="tchip">solid-auditor<span class="m">judgement</span></span>
+          <span class="tchip">design-orchestrator<span class="m">judgement</span></span>
+          <span class="tchip">pattern-advisor<span class="m">judgement</span></span>
       </div>
     </div>
     <div class="marquee-row" id="row-b" data-dir="reverse" aria-hidden="true" style="margin-top:10px">
       <div class="marquee-track" id="marquee-b">
-          <span class="tchip">performance-analyst<span class="m">sonnet</span></span>
-          <span class="tchip">data-model-auditor<span class="m">sonnet</span></span>
-          <span class="tchip">solid-auditor<span class="m">opus</span></span>
-          <span class="tchip">design-orchestrator<span class="m">sonnet</span></span>
-          <span class="tchip">pattern-advisor<span class="m">opus</span></span>
-          <span class="tchip">domain-modeler<span class="m">opus</span></span>
-          <span class="tchip">planner<span class="m">opus</span></span>
-          <span class="tchip">grill-architect<span class="m">sonnet</span></span>
-          <span class="tchip">grill-operator<span class="m">sonnet</span></span>
-          <span class="tchip">grill-engineer<span class="m">sonnet</span></span>
-          <span class="tchip">implementation-orchestrator<span class="m">sonnet</span></span>
-          <span class="tchip">test-writer<span class="m">sonnet</span></span>
-          <span class="tchip">implementer<span class="m">sonnet</span></span>
-          <span class="tchip">migration-engineer<span class="m">sonnet</span></span>
-          <span class="tchip">doc-writer<span class="m">sonnet</span></span>
-          <span class="tchip">quality-fixer<span class="m">haiku</span></span>
-          <span class="tchip">reviewer<span class="m">opus</span></span>
-          <span class="tchip">verifier<span class="m">opus</span></span>
-          <span class="tchip">delivery-orchestrator<span class="m">haiku</span></span>
-          <span class="tchip">release-manager<span class="m">sonnet</span></span>
-          <span class="tchip">handoff-writer<span class="m">haiku</span></span>
-          <span class="tchip">performance-analyst<span class="m">sonnet</span></span>
-          <span class="tchip">data-model-auditor<span class="m">sonnet</span></span>
-          <span class="tchip">solid-auditor<span class="m">opus</span></span>
-          <span class="tchip">design-orchestrator<span class="m">sonnet</span></span>
-          <span class="tchip">pattern-advisor<span class="m">opus</span></span>
-          <span class="tchip">domain-modeler<span class="m">opus</span></span>
-          <span class="tchip">planner<span class="m">opus</span></span>
-          <span class="tchip">grill-architect<span class="m">sonnet</span></span>
-          <span class="tchip">grill-operator<span class="m">sonnet</span></span>
-          <span class="tchip">grill-engineer<span class="m">sonnet</span></span>
-          <span class="tchip">implementation-orchestrator<span class="m">sonnet</span></span>
-          <span class="tchip">test-writer<span class="m">sonnet</span></span>
-          <span class="tchip">implementer<span class="m">sonnet</span></span>
-          <span class="tchip">migration-engineer<span class="m">sonnet</span></span>
-          <span class="tchip">doc-writer<span class="m">sonnet</span></span>
-          <span class="tchip">quality-fixer<span class="m">haiku</span></span>
-          <span class="tchip">reviewer<span class="m">opus</span></span>
-          <span class="tchip">verifier<span class="m">opus</span></span>
-          <span class="tchip">delivery-orchestrator<span class="m">haiku</span></span>
-          <span class="tchip">release-manager<span class="m">sonnet</span></span>
-          <span class="tchip">handoff-writer<span class="m">haiku</span></span>
+          <span class="tchip">domain-modeler<span class="m">judgement</span></span>
+          <span class="tchip">planner<span class="m">judgement</span></span>
+          <span class="tchip">review-orchestrator<span class="m">judgement</span></span>
+          <span class="tchip">completeness-critic<span class="m">judgement</span></span>
+          <span class="tchip">fact-checker<span class="m">judgement</span></span>
+          <span class="tchip">simplicity-critic<span class="m">judgement</span></span>
+          <span class="tchip">grill-architect<span class="m">judgement</span></span>
+          <span class="tchip">grill-operator<span class="m">judgement</span></span>
+          <span class="tchip">grill-engineer<span class="m">judgement</span></span>
+          <span class="tchip">refuter<span class="m">judgement</span></span>
+          <span class="tchip">blind-judge<span class="m">judgement</span></span>
+          <span class="tchip">implementation-orchestrator<span class="m">judgement</span></span>
+          <span class="tchip">test-writer<span class="m">standard</span></span>
+          <span class="tchip">implementer<span class="m">standard</span></span>
+          <span class="tchip">migration-engineer<span class="m">standard</span></span>
+          <span class="tchip">doc-writer<span class="m">standard</span></span>
+          <span class="tchip">quality-fixer<span class="m">standard</span></span>
+          <span class="tchip">reviewer<span class="m">judgement</span></span>
+          <span class="tchip">verifier<span class="m">judgement</span></span>
+          <span class="tchip">delivery-orchestrator<span class="m">judgement</span></span>
+          <span class="tchip">release-manager<span class="m">standard</span></span>
+          <span class="tchip">handoff-writer<span class="m">standard</span></span>
+          <span class="tchip">domain-modeler<span class="m">judgement</span></span>
+          <span class="tchip">planner<span class="m">judgement</span></span>
+          <span class="tchip">review-orchestrator<span class="m">judgement</span></span>
+          <span class="tchip">completeness-critic<span class="m">judgement</span></span>
+          <span class="tchip">fact-checker<span class="m">judgement</span></span>
+          <span class="tchip">simplicity-critic<span class="m">judgement</span></span>
+          <span class="tchip">grill-architect<span class="m">judgement</span></span>
+          <span class="tchip">grill-operator<span class="m">judgement</span></span>
+          <span class="tchip">grill-engineer<span class="m">judgement</span></span>
+          <span class="tchip">refuter<span class="m">judgement</span></span>
+          <span class="tchip">blind-judge<span class="m">judgement</span></span>
+          <span class="tchip">implementation-orchestrator<span class="m">judgement</span></span>
+          <span class="tchip">test-writer<span class="m">standard</span></span>
+          <span class="tchip">implementer<span class="m">standard</span></span>
+          <span class="tchip">migration-engineer<span class="m">standard</span></span>
+          <span class="tchip">doc-writer<span class="m">standard</span></span>
+          <span class="tchip">quality-fixer<span class="m">standard</span></span>
+          <span class="tchip">reviewer<span class="m">judgement</span></span>
+          <span class="tchip">verifier<span class="m">judgement</span></span>
+          <span class="tchip">delivery-orchestrator<span class="m">judgement</span></span>
+          <span class="tchip">release-manager<span class="m">standard</span></span>
+          <span class="tchip">handoff-writer<span class="m">standard</span></span>
       </div>
     </div>
     <div class="marquee-controls">
@@ -779,6 +863,63 @@
       </button>
     </div>
   </figure>
+
+  <section class="sec wrap dgm-sec" id="diagramas" aria-labelledby="dgm-h">
+    <h2 id="dgm-h"><span lang="es">Cómo funciona, en diagramas</span><span lang="en">How it works, in diagrams</span></h2>
+    <p><span lang="es">Diagramas interactivos hechos con Archify, sacados del propio repo: recorre los caminos, haz zoom o ábrelos a pantalla completa.</span><span lang="en">Interactive diagrams built with Archify, taken from the repo itself: trace the paths, zoom in, or open them full screen.</span></p>
+    <div class="dgm-list">
+    <figure class="dgm dgm-tall" data-base="diagrams/architecture" data-es="1" data-title-es="Arquitectura de agentes (diagrama interactivo)" data-title-en="Agent architecture (interactive diagram)">
+      <div class="dgm-frame"><a class="dgm-poster" href="diagrams/architecture.es.html" target="_blank" rel="noopener"><img lang="es" src="diagrams/architecture.es.webp" width="1600" height="955" loading="lazy" decoding="async" alt="Diagrama de la arquitectura de swarm: el orquestador raíz, los siete dominios con sus agentes hoja, el panel de revisión y el verificador independiente."><img lang="en" src="diagrams/architecture.webp" width="1600" height="1749" loading="lazy" decoding="async" alt="Diagram of swarm&#x27;s architecture: the root orchestrator, the seven domains with their leaf agents, the review panel and the independent verifier."></a><span class="dgm-hint" aria-hidden="true"><span lang="es">toca para abrir ↗</span><span lang="en">tap to open ↗</span></span></div>
+      <figcaption><span><span class="dgm-idx">fig. 1</span><b><span lang="es">Arquitectura de agentes</span><span lang="en">Agent architecture</span></b></span><a class="dgm-open" lang="es" href="diagrams/architecture.es.html" target="_blank" rel="noopener">Abrir interactivo ↗<span class="sr-only"> (pestaña nueva)</span></a><a class="dgm-open" lang="en" href="diagrams/architecture.html" target="_blank" rel="noopener">Open interactive ↗<span class="sr-only"> (new tab)</span></a></figcaption>
+    </figure>
+    <figure class="dgm" data-base="diagrams/run-flow" data-es="1" data-title-es="El flujo de /swarm:run (diagrama interactivo)" data-title-en="The /swarm:run flow (interactive diagram)">
+      <div class="dgm-frame"><a class="dgm-poster" href="diagrams/run-flow.es.html" target="_blank" rel="noopener"><img lang="es" src="diagrams/run-flow.es.webp" width="1600" height="620" loading="lazy" decoding="async" alt="Diagrama de flujo de /swarm:run: interpretación del objetivo, clasificación de tier (direct, light o full), memoria, discovery con una sola tanda de preguntas y cierre."><img lang="en" src="diagrams/run-flow.webp" width="1600" height="635" loading="lazy" decoding="async" alt="Flow diagram of /swarm:run: objective interpretation, tier classification (direct, light or full), memory, discovery with one batch of questions, and close."></a><span class="dgm-hint" aria-hidden="true"><span lang="es">toca para abrir ↗</span><span lang="en">tap to open ↗</span></span></div>
+      <figcaption><span><span class="dgm-idx">fig. 2</span><b><span lang="es">El flujo de /swarm:run</span><span lang="en">The /swarm:run flow</span></b></span><a class="dgm-open" lang="es" href="diagrams/run-flow.es.html" target="_blank" rel="noopener">Abrir interactivo ↗<span class="sr-only"> (pestaña nueva)</span></a><a class="dgm-open" lang="en" href="diagrams/run-flow.html" target="_blank" rel="noopener">Open interactive ↗<span class="sr-only"> (new tab)</span></a></figcaption>
+    </figure>
+    <figure class="dgm" data-base="diagrams/memory-mailbox" data-es="1" data-title-es="Escritura de memoria y buzón (diagrama interactivo)" data-title-en="Memory write and mailbox (interactive diagram)">
+      <div class="dgm-frame"><a class="dgm-poster" href="diagrams/memory-mailbox.es.html" target="_blank" rel="noopener"><img lang="es" src="diagrams/memory-mailbox.es.webp" width="1600" height="520" loading="lazy" decoding="async" alt="Diagrama de cómo toda escritura en .swarm/ pasa por una única instancia de memory-orchestrator con lock, y cómo cada mensaje se refleja en el buzón del destinatario."><img lang="en" src="diagrams/memory-mailbox.webp" width="1600" height="520" loading="lazy" decoding="async" alt="Diagram of how every write to .swarm/ goes through a single memory-orchestrator instance with a lock, and how each message is mirrored to the recipient&#x27;s mailbox."></a><span class="dgm-hint" aria-hidden="true"><span lang="es">toca para abrir ↗</span><span lang="en">tap to open ↗</span></span></div>
+      <figcaption><span><span class="dgm-idx">fig. 3</span><b><span lang="es">Escritura de memoria y buzón</span><span lang="en">Memory write and mailbox</span></b></span><a class="dgm-open" lang="es" href="diagrams/memory-mailbox.es.html" target="_blank" rel="noopener">Abrir interactivo ↗<span class="sr-only"> (pestaña nueva)</span></a><a class="dgm-open" lang="en" href="diagrams/memory-mailbox.html" target="_blank" rel="noopener">Open interactive ↗<span class="sr-only"> (new tab)</span></a></figcaption>
+    </figure>
+    <figure class="dgm" data-base="diagrams/stack-packs" data-es="1" data-title-es="Stack packs (diagrama interactivo)" data-title-en="Stack packs (interactive diagram)">
+      <div class="dgm-frame"><a class="dgm-poster" href="diagrams/stack-packs.es.html" target="_blank" rel="noopener"><img lang="es" src="diagrams/stack-packs.es.webp" width="1600" height="447" loading="lazy" decoding="async" alt="Diagrama de los stack packs: memory-builder detecta el pack una vez (por ejemplo php-ddd-symfony8) y envía su cabecera a las ocho hojas pack-aware; sin pack, el stack queda como generic."><img lang="en" src="diagrams/stack-packs.webp" width="1600" height="467" loading="lazy" decoding="async" alt="Diagram of stack packs: memory-builder detects the pack once (for example php-ddd-symfony8) and sends its header to the eight pack-aware leaves; without a pack, the stack stays generic."></a><span class="dgm-hint" aria-hidden="true"><span lang="es">toca para abrir ↗</span><span lang="en">tap to open ↗</span></span></div>
+      <figcaption><span><span class="dgm-idx">fig. 4</span><b><span lang="es">Stack packs</span><span lang="en">Stack packs</span></b></span><a class="dgm-open" lang="es" href="diagrams/stack-packs.es.html" target="_blank" rel="noopener">Abrir interactivo ↗<span class="sr-only"> (pestaña nueva)</span></a><a class="dgm-open" lang="en" href="diagrams/stack-packs.html" target="_blank" rel="noopener">Open interactive ↗<span class="sr-only"> (new tab)</span></a></figcaption>
+    </figure>
+    <figure class="dgm" data-base="diagrams/extending-packs-flow" data-es="1" data-title-es="Crear un stack pack (diagrama interactivo)" data-title-en="Writing a stack pack (interactive diagram)">
+      <div class="dgm-frame"><a class="dgm-poster" href="diagrams/extending-packs-flow.es.html" target="_blank" rel="noopener"><img lang="es" src="diagrams/extending-packs-flow.es.webp" width="1600" height="1345" loading="lazy" decoding="async" alt="Diagrama del flujo de un stack pack propio: detección una vez por run, resolución de la ruta del pack y cómo lo consumen las ocho hojas, env-checker y los asesores de diseño."><img lang="en" src="diagrams/extending-packs-flow.webp" width="1600" height="1263" loading="lazy" decoding="async" alt="Diagram of your own stack pack's flow: detection once per run, resolving the pack path, and how the eight leaves, env-checker and the design advisors consume it."></a><span class="dgm-hint" aria-hidden="true"><span lang="es">toca para abrir ↗</span><span lang="en">tap to open ↗</span></span></div>
+      <figcaption><span><span class="dgm-idx">fig. 5</span><b><span lang="es">Crear un stack pack</span><span lang="en">Writing a stack pack</span></b></span><a class="dgm-open" lang="es" href="diagrams/extending-packs-flow.es.html" target="_blank" rel="noopener">Abrir interactivo ↗<span class="sr-only"> (pestaña nueva)</span></a><a class="dgm-open" lang="en" href="diagrams/extending-packs-flow.html" target="_blank" rel="noopener">Open interactive ↗<span class="sr-only"> (new tab)</span></a></figcaption>
+    </figure>
+    </div>
+  </section>
+
+  <section class="sec wrap" id="tiers" aria-labelledby="tiers-h">
+    <span class="label amber"><span lang="es">Novedad en 0.2</span><span lang="en">New in 0.2</span></span>
+    <h2 id="tiers-h"><span lang="es">Ningún agente nombra un modelo.</span><span lang="en">No agent names a model.</span></h2>
+    <p><span lang="es">Cada agente declara un <b>tier</b>; qué modelo corre cada tier vive en un solo fichero, <code>models.json</code>, y un script determinista lo resuelve — nunca lo adivina un modelo. Un <code>.swarm/models.json</code> lo sobreescribe por repo, que es como otro host mapea los tiers a sus propios modelos.</span><span lang="en">Each agent declares a <b>tier</b>; which model runs each tier lives in a single file, <code>models.json</code>, and a deterministic script resolves it — a model never guesses. A <code>.swarm/models.json</code> overrides it per repo, which is how another host maps tiers to its own models.</span></p>
+    <div class="tier-grid">
+      <div class="tier-card"><span class="tier-n">30</span><span class="tier-name">judgement</span><p><span lang="es">Auditar, revisar, juzgar, planificar, orquestar. Nunca cae al modelo de un tier más débil: si se agota la lista, hereda el de la sesión.</span><span lang="en">Audit, review, judge, plan, orchestrate. It never falls to a weaker tier's model: an exhausted list inherits the session model.</span></p></div>
+      <div class="tier-card"><span class="tier-n">8</span><span class="tier-name">standard</span><p><span lang="es">Ejecutar un plan cerrado: escribir código, tests y docs. Si su salida no pasa la verificación, reintenta una vez escalando de tier.</span><span lang="en">Execute a closed plan: write code, tests and docs. If its output fails verification, it retries once on an escalated tier.</span></p></div>
+      <div class="tier-card"><span class="tier-n">7</span><span class="tier-name">mechanical</span><p><span lang="es">Correr scripts, curar memoria, recoger datos del entorno. Lo determinista lo hace un script; el modelo solo el residuo.</span><span lang="en">Run scripts, curate memory, collect environment facts. What's deterministic is done by a script; the model only handles the residue.</span></p></div>
+    </div>
+    <p class="sec-foot"><span lang="es">El juez ciego se resuelve con <code>--avoid</code> el modelo del autor; si la independencia no se puede demostrar, el panel lo dice en su salida en vez de callarlo.</span><span lang="en">The blind judge is resolved with <code>--avoid</code> the author's model; when independence can't be proven, the panel says so in its output instead of hiding it.</span></p>
+  </section>
+
+  <section class="sec wrap" id="coste" aria-labelledby="cost-h">
+    <span class="label amber"><span lang="es">Coste, medido</span><span lang="en">Cost, measured</span></span>
+    <h2 id="cost-h"><span lang="es">Núcleo corto, el resto bajo demanda.</span><span lang="en">A short core, the rest on demand.</span></h2>
+    <p><span lang="es">Cada agente carga solo su fichero núcleo y el skill de protocolo. Lo que necesita solo a veces vive en ficheros que lee cuando una línea <code>WHEN &lt;condición&gt; → Read &lt;ruta&gt;</code> se dispara. Es un invariante con test: un fichero bajo demanda al que nadie apunta, o un núcleo que se pasa de su presupuesto de líneas, rompe la suite.</span><span lang="en">Each agent loads only its core file and the protocol skill. What it needs only sometimes lives in files it reads when a <code>WHEN &lt;condition&gt; → Read &lt;path&gt;</code> line fires. It's a tested invariant: an on-demand file nothing points to, or a core file over its line budget, fails the suite.</span></p>
+    <div class="cost-wrap">
+      <table class="cost-table">
+        <caption class="sr-only"><span lang="es">Tokens por run típico antes y después de separar núcleo y material bajo demanda</span><span lang="en">Tokens per typical run before and after splitting core and on-demand material</span></caption>
+        <thead><tr><th scope="col"><span class="sr-only"><span lang="es">Métrica</span><span lang="en">Metric</span></span></th><th scope="col"><span lang="es">antes</span><span lang="en">before</span></th><th scope="col"><span lang="es">ahora</span><span lang="en">now</span></th></tr></thead>
+        <tbody>
+          <tr><th scope="row"><span lang="es"><code>SKILL.md</code>, precargado en cada agente</span><span lang="en"><code>SKILL.md</code>, preloaded into every agent</span></th><td><span lang="es">398 líneas</span><span lang="en">398 lines</span></td><td><span lang="es">114 líneas</span><span lang="en">114 lines</span></td></tr>
+          <tr><th scope="row"><span lang="es">Ficheros bajo demanda</span><span lang="en">On-demand files</span></th><td>1</td><td>31</td></tr>
+          <tr class="total"><th scope="row"><span lang="es">Run típico, total</span><span lang="en">Typical run, total</span></th><td><span lang="es">~147,8k tok</span><span lang="en">~147.8k tok</span></td><td><span lang="es">~61,8k tok</span><span lang="en">~61.8k tok</span> <b>−58%</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="sec-foot"><span lang="es">Medido, no estimado: del commit <code>a07e655</code> al estado actual, según la sección «Cost» del README. Presupuestos: hoja ≤80 líneas, orquestador de dominio ≤150, raíz ≤250, <code>SKILL.md</code> ≤120.</span><span lang="en">Measured, not estimated: from commit <code>a07e655</code> to now, per the README's "Cost" section. Budgets: leaf ≤80 lines, domain orchestrator ≤150, root ≤250, <code>SKILL.md</code> ≤120.</span></p>
+  </section>
 
   <section class="owner-band">
     <div class="wrap owner-grid">
@@ -797,7 +938,7 @@
     <div class="sr-only" id="copy-status" role="status" aria-live="polite"></div>
     <div class="install-block">
       <div class="install-row"><code><span class="c">$</span> /plugin marketplace add <span class="v">davidgarciagordo/claude-plugins</span></code><button class="copy-btn" data-copy="/plugin marketplace add davidgarciagordo/claude-plugins"><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
-      <div class="install-row"><code><span class="c">$</span> /plugin install <span class="v">swarm</span></code><button class="copy-btn" data-copy="/plugin install swarm"><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
+      <div class="install-row"><code><span class="c">$</span> /plugin install <span class="v">swarm@davidgarciagordo-plugins</span></code><button class="copy-btn" data-copy="/plugin install swarm@davidgarciagordo-plugins"><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
       <div class="install-row"><code><span class="c">$</span> /swarm:run <span class="v">"&lt;<span lang="es">lo que quieras</span><span lang="en">whatever you want</span>&gt;"</span></code><button class="copy-btn" data-copy='/swarm:run "..."'><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
     </div>
     <p class="install-alt"><span lang="es">Sin marketplace: <code>$ claude --plugin-dir /ruta/a/swarm</code></span><span lang="en">Without a marketplace: <code>$ claude --plugin-dir /path/to/swarm</code></span></p>
@@ -956,5 +1097,66 @@
   });
 })();
 </script>
+<script>
+(function(){
+  // Archify diagrams: the poster <img> (same aspect ratio, so no layout shift) is the no-JS and
+  // mobile fallback; on wide screens the interactive diagram is mounted over it when near the viewport.
+  var figs = document.querySelectorAll('figure.dgm[data-base]');
+  if (!figs.length) return;
+  var wide = window.matchMedia ? matchMedia('(min-width: 760px)') : { matches: true };
+  function lang(){ return document.documentElement.lang === 'en' ? 'en' : 'es'; }
+  function srcFor(f){ return f.dataset.base + (lang() === 'es' && f.dataset.es === '1' ? '.es' : '') + '.html?embed=1&theme=dark'; }
+  function titleFor(f){ return lang() === 'en' ? f.dataset.titleEn : f.dataset.titleEs; }
+  function mount(f){
+    if (!wide.matches) return;
+    var frame = f.querySelector('.dgm-frame');
+    var ifr = frame.querySelector('iframe');
+    if (!ifr) {
+      ifr = document.createElement('iframe');
+      ifr.setAttribute('loading', 'lazy');
+      ifr.addEventListener('load', function(){ setTimeout(function(){ fit(f); }, 300); });
+      frame.appendChild(ifr);
+      frame.classList.add('is-live');
+      var poster = frame.querySelector('.dgm-poster');
+      poster.setAttribute('tabindex', '-1');
+      poster.setAttribute('aria-hidden', 'true');
+    }
+    var s = srcFor(f);
+    if (ifr.getAttribute('src') !== s) { frame.style.height = ''; frame.classList.remove('is-fit'); ifr.setAttribute('src', s); }
+    ifr.setAttribute('title', titleFor(f));
+  }
+  // Width-bound diagrams render shorter than their poster (which carries the viewer's toolbar):
+  // once loaded, trim the frame to the drawn height instead of leaving an empty band.
+  function fit(f){
+    var frame = f.querySelector('.dgm-frame'), ifr = frame.querySelector('iframe');
+    try {
+      var d = ifr.contentDocument, svg = d && d.querySelector('svg');
+      if (!svg) return;
+      var sw = svg.getBoundingClientRect().width, fw = frame.clientWidth, h = d.body.scrollHeight;
+      if (sw >= fw - 24 && h > 80 && h < frame.clientHeight - 32) { frame.style.height = (h + 8) + 'px'; frame.classList.add('is-fit'); }
+    } catch (e) {}
+  }
+  function syncAlt(){
+    figs.forEach(function(f){
+      f.querySelectorAll('img[data-alt-en]').forEach(function(img){
+        if (!img.dataset.altEs) img.dataset.altEs = img.alt;
+        img.alt = lang() === 'en' ? img.dataset.altEn : img.dataset.altEs;
+      });
+      if (f.querySelector('iframe')) mount(f);
+    });
+  }
+  syncAlt();
+  new MutationObserver(syncAlt).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if (en.isIntersecting && wide.matches) { io.unobserve(en.target); mount(en.target); } });
+    }, { rootMargin: '400px 0px' });
+    figs.forEach(function(f){ io.observe(f); });
+  } else {
+    figs.forEach(mount);
+  }
+})();
+</script>
+
 </body>
 </html>

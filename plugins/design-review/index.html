@@ -44,12 +44,12 @@
     {
       "@type": "Question",
       "name": "¿Qué es el veredicto alive/templated/flat?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Un resultado verificable por máquina, no una opinión: el pipeline mide de verdad en el navegador (contraste, tipografía, movimiento, densidad) y solo pasa a alive cuando el diseño no podría confundirse con una plantilla genérica de IA." }
+      "acceptedAnswer": { "@type": "Answer", "text": "Un resultado verificable por máquina, no una opinión: el pipeline renderiza el diseño en un navegador real, lo compara con referencias vivas y solo pasa a alive cuando el diseño no podría confundirse con una plantilla genérica de IA." }
     },
     {
       "@type": "Question",
       "name": "¿Cómo se instala design-review?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Con /plugin marketplace add davidgarciagordo/claude-plugins y luego /plugin install design-review dentro de Claude Code. Se invoca con /design-review:run <ruta o componente>." }
+      "acceptedAnswer": { "@type": "Answer", "text": "Con /plugin marketplace add davidgarciagordo/claude-plugins y luego /plugin install design-review@davidgarciagordo-plugins dentro de Claude Code. Se invoca con /design-review:run <ruta o componente>." }
     },
     {
       "@type": "Question",
@@ -243,6 +243,43 @@
   #nav.open ~ .panel a { opacity: 1; transform: translateX(0); }
   .panel a.panel-sub { font-size: .95rem; font-weight: 500; color: var(--ink-cap); padding-left: .5rem; margin-top: -.4rem; }
   .panel a.active, .panel a.panel-sub.active { color: var(--amber, var(--accent-hot)); }
+
+  /* ============ Archify diagrams (poster + lazy interactive iframe) ============ */
+  .dgm-list { display: flex; flex-direction: column; gap: 40px; margin-top: 28px; }
+  figure.dgm { margin: 0; }
+  figure.dgm.dgm-tall { max-width: 860px; }
+  .dgm-frame {
+    position: relative; overflow: hidden; border-radius: 12px;
+    border: 1px solid var(--hairline); background: #05060a;
+  }
+  .dgm-poster { display: block; line-height: 0; }
+  .dgm-poster img { display: block; width: 100%; height: auto; }
+  .dgm-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #05060a; }
+  .dgm-hint {
+    position: absolute; right: 10px; bottom: 10px; line-height: 1.2;
+    font-family: var(--font-mono); font-size: 11.5px; letter-spacing: var(--track-mono);
+    color: var(--ink); background: rgb(2 2 3 / .78); border: 1px solid var(--hairline);
+    border-radius: 999px; padding: 7px 12px; pointer-events: none;
+  }
+  .dgm-frame.is-live .dgm-hint { display: none; }
+  .dgm-frame.is-fit .dgm-poster { display: none; }
+  .dgm figcaption {
+    display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px;
+    margin-top: 12px; font-size: 14.5px; color: var(--ink-muted);
+  }
+  .dgm figcaption b { color: var(--ink); font-weight: 500; }
+  .dgm-idx { font-family: var(--font-mono); font-size: 12px; letter-spacing: var(--track-mono); color: var(--accent, var(--amber)); margin-right: 8px; }
+  .dgm-open {
+    font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-cap); text-decoration: none;
+    border-bottom: 1px solid var(--hairline); padding: 10px 0 2px; min-height: 44px; display: inline-flex; align-items: flex-end;
+  }
+  .dgm-open:hover { color: var(--accent-hot, var(--amber-hot)); border-bottom-color: currentColor; }
+  .dgm-note { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-cap); margin-top: 10px; }
+  /* mobile nav: re-declared after the base .hamburger rule so the burger actually shows */
+  @media (max-width: 900px) { .hamburger { display: inline-flex; } }
+  @media (max-width: 480px) { .nav-gh { display: none; } }
+  /* keep the 24px gutter: .hero/.sec/.install-sec shorthand paddings reset .wrap's sides */
+  .wrap.hero, .wrap.sec, .wrap.install-sec { padding-left: 24px; padding-right: 24px; }
 </style>
 </head>
 <body>
@@ -317,10 +354,25 @@
   <section class="sec wrap">
     <h2><span lang="es">Qué hace</span><span lang="en">What it does</span></h2>
     <p><span lang="es">Los skills de diseño de terceros producen resultados genéricos y se saltan sus propios pasos de setup si nadie los fuerza. <code>design-review</code> los hace correr de verdad: primero investiga referencias reales y vivas del dominio —Dribbble, competidores, productos ya publicados— nunca memoria del modelo. Después lanza 4 lentes de diseño distintas en paralelo sobre lo construido, cada una con un playbook que corrige cómo esa herramienta se comporta mal por su cuenta.</span><span lang="en">Third-party design skills produce generic output and skip their own setup steps if nobody forces them to. <code>design-review</code> makes them actually run: it first studies real, live references for the domain — Dribbble, competitors, already-shipped products — never model memory. Then it runs 4 distinct design lenses in parallel over the result, each with a playbook that corrects how that tool misbehaves on its own.</span></p>
-    <p><span lang="es">El owner solo responde una pregunta —un multi-select con las recomendaciones ya marcadas. Al final, un agente renderiza la interfaz en un navegador real, mide contraste, tipografía y movimiento de verdad, y escribe el veredicto. Un hook vigila que ese veredicto siga siendo más nuevo que el último cambio de UI.</span><span lang="en">The owner answers exactly one question — a multi-select with recommendations already marked. At the end, an agent renders the UI in a real browser, measures contrast, typography and motion for real, and writes the verdict. A hook watches that the verdict stays newer than the latest UI change.</span></p>
+    <p><span lang="es">El owner solo responde una pregunta —un multi-select con las recomendaciones ya marcadas. Al final, un agente renderiza la interfaz en un navegador real —claro, oscuro y móvil—, la compara con las referencias y escribe el veredicto en <code>verdict.json</code>. Un hook <code>PostToolUse</code> avisa (o bloquea, si lo configuras) cuando se escribe un fichero de UI sin un veredicto <code>alive</code> vigente.</span><span lang="en">The owner answers exactly one question — a multi-select with recommendations already marked. At the end, an agent renders the UI in a real browser — light, dark and mobile —, diffs it against the references and writes the verdict to <code>verdict.json</code>. A <code>PostToolUse</code> hook warns (or blocks, if you configure it) when a UI file is written without a current <code>alive</code> verdict.</span></p>
     <div class="example-box js-reveal">
       <span class="label amber ex-label"><span lang="es">Ejemplo real</span><span lang="en">Real example</span></span>
       <p><span lang="es">Corres <code>/design-review:run</code> sobre una pantalla de ajustes. Sale un multi-select con hallazgos deduplicados por lente ("contraste de texto secundario 2,85:1 — falla WCAG AA", "sin movimiento de firma: entrada escalonada de la referencia #3"). El veredicto pasa de <code>templated</code> a <code>alive</code> tras aplicar los cambios — y si vuelves a tocar ese fichero sin re-verificar, el hook lo vuelve a marcar.</span><span lang="en">You run <code>/design-review:run</code> on a settings screen. Out comes a multi-select of findings deduplicated by lens ("secondary text contrast 2.85:1 — fails WCAG AA", "no signature motion: staggered entrance from reference #3"). The verdict goes from <code>templated</code> to <code>alive</code> once the changes land — and if you touch that file again without re-verifying, the hook flags it again.</span></p>
+    </div>
+  </section>
+
+  <section class="sec wrap dgm-sec" id="diagramas" aria-labelledby="dgm-h">
+    <h2 id="dgm-h"><span lang="es">Cómo funciona, en diagramas</span><span lang="en">How it works, in diagrams</span></h2>
+    <p><span lang="es">Diagramas interactivos hechos con Archify, sacados del propio repo: recorre los caminos, haz zoom o ábrelos a pantalla completa.</span><span lang="en">Interactive diagrams built with Archify, taken from the repo itself: trace the paths, zoom in, or open them full screen.</span></p><p class="dgm-note" lang="es">Los diagramas están en inglés.</p>
+    <div class="dgm-list">
+    <figure class="dgm" data-base="diagrams/pipeline" data-es="0" data-title-es="El pipeline, pasos 0 a 7 (diagrama interactivo)" data-title-en="The pipeline, steps 0-7 (interactive diagram)">
+      <div class="dgm-frame"><a class="dgm-poster" href="diagrams/pipeline.html" target="_blank" rel="noopener"><img src="diagrams/pipeline.webp" width="1600" height="760" loading="lazy" decoding="async" alt="Diagrama del pipeline de design-review: preflight, audit-first, investigación de referencias, context-pack, cuatro lentes en paralelo, multi-select del owner, aplicación y veredicto de vitalidad con bucle." data-alt-en="Diagram of the design-review pipeline: preflight, audit-first, reference research, context-pack, four parallel lenses, the owner multi-select, apply, and the vitality verdict with its loop."></a><span class="dgm-hint" aria-hidden="true"><span lang="es">toca para abrir ↗</span><span lang="en">tap to open ↗</span></span></div>
+      <figcaption><span><span class="dgm-idx">fig. 1</span><b><span lang="es">El pipeline, pasos 0 a 7</span><span lang="en">The pipeline, steps 0-7</span></b></span><a class="dgm-open" href="diagrams/pipeline.html" target="_blank" rel="noopener"><span lang="es">Abrir interactivo ↗</span><span lang="en">Open interactive ↗</span><span class="sr-only"><span lang="es"> (pestaña nueva)</span><span lang="en"> (new tab)</span></span></a></figcaption>
+    </figure>
+    <figure class="dgm" data-base="diagrams/hook-gate" data-es="0" data-title-es="El hook design-review-gate (diagrama interactivo)" data-title-en="The design-review-gate hook (interactive diagram)">
+      <div class="dgm-frame"><a class="dgm-poster" href="diagrams/hook-gate.html" target="_blank" rel="noopener"><img src="diagrams/hook-gate.webp" width="1600" height="640" loading="lazy" decoding="async" alt="Diagrama del hook PostToolUse: al escribir un fichero de UI comprueba verdict.json y, según DESIGN_REVIEW_GATE, avisa, bloquea o no hace nada." data-alt-en="Diagram of the PostToolUse hook: when a UI file is written it checks verdict.json and, depending on DESIGN_REVIEW_GATE, warns, blocks or stays off."></a><span class="dgm-hint" aria-hidden="true"><span lang="es">toca para abrir ↗</span><span lang="en">tap to open ↗</span></span></div>
+      <figcaption><span><span class="dgm-idx">fig. 2</span><b><span lang="es">El hook design-review-gate</span><span lang="en">The design-review-gate hook</span></b></span><a class="dgm-open" href="diagrams/hook-gate.html" target="_blank" rel="noopener"><span lang="es">Abrir interactivo ↗</span><span lang="en">Open interactive ↗</span><span class="sr-only"><span lang="es"> (pestaña nueva)</span><span lang="en"> (new tab)</span></span></a></figcaption>
+    </figure>
     </div>
   </section>
 
@@ -329,7 +381,7 @@
     <ul class="adv-list">
       <li><span class="dot" aria-hidden="true"></span><p><strong><span lang="es">Referencia real, no memoria del modelo.</span><span lang="en">Real reference, not model memory.</span></strong> <span lang="es">El diseño parte de productos y tendencias vivas, no de lo que el modelo cree recordar.</span><span lang="en">The design starts from live products and trends, not from what the model thinks it remembers.</span></p></li>
       <li><span class="dot" aria-hidden="true"></span><p><strong><span lang="es">El veredicto no se queda quieto.</span><span lang="en">The verdict doesn't just sit there.</span></strong> <span lang="es">Un hook lo re-comprueba en cada edición posterior de UI, así que un "alive" antiguo no se cuela como válido.</span><span lang="en">A hook re-checks it on every later UI edit, so a stale "alive" never slips through as valid.</span></p></li>
-      <li><span class="dot" aria-hidden="true"></span><p><strong><span lang="es">Cuatro lentes, un único owner-check.</span><span lang="en">Four lenses, one owner check.</span></strong> <span lang="es">Arquitectura, gusto, movimiento y accesibilidad revisan en paralelo, pero solo te interrumpen una vez.</span><span lang="en">Architecture, taste, motion and accessibility review in parallel, but only interrupt you once.</span></p></li>
+      <li><span class="dot" aria-hidden="true"></span><p><strong><span lang="es">Cuatro lentes, un único owner-check.</span><span lang="en">Four lenses, one owner check.</span></strong> <span lang="es">Crítica de diseño (impeccable), gusto, movimiento y accesibilidad revisan en paralelo, pero solo te interrumpen una vez.</span><span lang="en">Design critique (impeccable), taste, motion and accessibility review in parallel, but only interrupt you once.</span></p></li>
     </ul>
   </section>
 
@@ -358,11 +410,11 @@
       </div>
       <div class="faq-item">
         <h3><span lang="es">¿Qué es el veredicto alive/templated/flat?</span><span lang="en">What is the alive/templated/flat verdict?</span></h3>
-        <p><span lang="es">Un resultado verificable por máquina: el pipeline mide de verdad en el navegador (contraste, tipografía, movimiento) y solo pasa a <code>alive</code> cuando el diseño no podría confundirse con una plantilla genérica.</span><span lang="en">A machine-checkable result: the pipeline measures for real in the browser (contrast, typography, motion) and only reaches <code>alive</code> when the design couldn't be mistaken for a generic template.</span></p>
+        <p><span lang="es">Un resultado verificable por máquina: el pipeline renderiza el diseño en un navegador real, lo compara con referencias vivas y solo pasa a <code>alive</code> cuando el diseño no podría confundirse con una plantilla genérica.</span><span lang="en">A machine-checkable result: the pipeline renders the design in a real browser, diffs it against live references and only reaches <code>alive</code> when the design couldn't be mistaken for a generic template.</span></p>
       </div>
       <div class="faq-item">
         <h3><span lang="es">¿Cómo se instala?</span><span lang="en">How do I install it?</span></h3>
-        <p><span lang="es">Con <code>/plugin marketplace add davidgarciagordo/claude-plugins</code> y luego <code>/plugin install design-review</code>. Se invoca con <code>/design-review:run &lt;ruta&gt;</code>.</span><span lang="en">With <code>/plugin marketplace add davidgarciagordo/claude-plugins</code> then <code>/plugin install design-review</code>. Invoked with <code>/design-review:run &lt;path&gt;</code>.</span></p>
+        <p><span lang="es">Con <code>/plugin marketplace add davidgarciagordo/claude-plugins</code> y luego <code>/plugin install design-review@davidgarciagordo-plugins</code>. Se invoca con <code>/design-review:run &lt;ruta&gt;</code>.</span><span lang="en">With <code>/plugin marketplace add davidgarciagordo/claude-plugins</code> then <code>/plugin install design-review@davidgarciagordo-plugins</code>. Invoked with <code>/design-review:run &lt;path&gt;</code>.</span></p>
       </div>
       <div class="faq-item">
         <h3><span lang="es">¿Es gratis y de código abierto?</span><span lang="en">Is it free and open source?</span></h3>
@@ -377,7 +429,7 @@
     <div class="sr-only" id="copy-status" role="status" aria-live="polite"></div>
     <div class="install-block">
       <div class="install-row"><code><span class="c">$</span> /plugin marketplace add <span class="v">davidgarciagordo/claude-plugins</span></code><button class="copy-btn" data-copy="/plugin marketplace add davidgarciagordo/claude-plugins"><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
-      <div class="install-row"><code><span class="c">$</span> /plugin install <span class="v">design-review</span></code><button class="copy-btn" data-copy="/plugin install design-review"><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
+      <div class="install-row"><code><span class="c">$</span> /plugin install <span class="v">design-review@davidgarciagordo-plugins</span></code><button class="copy-btn" data-copy="/plugin install design-review@davidgarciagordo-plugins"><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
     </div>
     <div class="cta-row">
       <a class="cta cta-amber" href="https://github.com/davidgarciagordo/design-review"><span lang="es">Ver en GitHub</span><span lang="en">View on GitHub</span> →</a>
@@ -498,5 +550,66 @@
   });
 })();
 </script>
+<script>
+(function(){
+  // Archify diagrams: the poster <img> (same aspect ratio, so no layout shift) is the no-JS and
+  // mobile fallback; on wide screens the interactive diagram is mounted over it when near the viewport.
+  var figs = document.querySelectorAll('figure.dgm[data-base]');
+  if (!figs.length) return;
+  var wide = window.matchMedia ? matchMedia('(min-width: 760px)') : { matches: true };
+  function lang(){ return document.documentElement.lang === 'en' ? 'en' : 'es'; }
+  function srcFor(f){ return f.dataset.base + (lang() === 'es' && f.dataset.es === '1' ? '.es' : '') + '.html?embed=1&theme=dark'; }
+  function titleFor(f){ return lang() === 'en' ? f.dataset.titleEn : f.dataset.titleEs; }
+  function mount(f){
+    if (!wide.matches) return;
+    var frame = f.querySelector('.dgm-frame');
+    var ifr = frame.querySelector('iframe');
+    if (!ifr) {
+      ifr = document.createElement('iframe');
+      ifr.setAttribute('loading', 'lazy');
+      ifr.addEventListener('load', function(){ setTimeout(function(){ fit(f); }, 300); });
+      frame.appendChild(ifr);
+      frame.classList.add('is-live');
+      var poster = frame.querySelector('.dgm-poster');
+      poster.setAttribute('tabindex', '-1');
+      poster.setAttribute('aria-hidden', 'true');
+    }
+    var s = srcFor(f);
+    if (ifr.getAttribute('src') !== s) { frame.style.height = ''; frame.classList.remove('is-fit'); ifr.setAttribute('src', s); }
+    ifr.setAttribute('title', titleFor(f));
+  }
+  // Width-bound diagrams render shorter than their poster (which carries the viewer's toolbar):
+  // once loaded, trim the frame to the drawn height instead of leaving an empty band.
+  function fit(f){
+    var frame = f.querySelector('.dgm-frame'), ifr = frame.querySelector('iframe');
+    try {
+      var d = ifr.contentDocument, svg = d && d.querySelector('svg');
+      if (!svg) return;
+      var sw = svg.getBoundingClientRect().width, fw = frame.clientWidth, h = d.body.scrollHeight;
+      if (sw >= fw - 24 && h > 80 && h < frame.clientHeight - 32) { frame.style.height = (h + 8) + 'px'; frame.classList.add('is-fit'); }
+    } catch (e) {}
+  }
+  function syncAlt(){
+    figs.forEach(function(f){
+      f.querySelectorAll('img[data-alt-en]').forEach(function(img){
+        if (!img.dataset.altEs) img.dataset.altEs = img.alt;
+        img.alt = lang() === 'en' ? img.dataset.altEn : img.dataset.altEs;
+      });
+      if (f.querySelector('iframe')) mount(f);
+    });
+  }
+  syncAlt();
+  new MutationObserver(syncAlt).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if (en.isIntersecting && wide.matches) { io.unobserve(en.target); mount(en.target); } });
+    }, { rootMargin: '400px 0px' });
+    figs.forEach(function(f){ io.observe(f); });
+  } else {
+    figs.forEach(mount);
+  }
+})();
+</script>
+
 </body>
 </html>

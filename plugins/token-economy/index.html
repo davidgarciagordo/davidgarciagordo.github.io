@@ -49,7 +49,7 @@
     {
       "@type": "Question",
       "name": "¿Cómo se instala token-economy?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Con /plugin marketplace add davidgarciagordo/claude-plugins y luego /plugin install token-economy dentro de Claude Code. No hace falta ningún paso de build ni comando adicional que aprender." }
+      "acceptedAnswer": { "@type": "Answer", "text": "Con /plugin marketplace add davidgarciagordo/claude-plugins y luego /plugin install token-economy@davidgarciagordo-plugins dentro de Claude Code. No hace falta ningún paso de build ni comando adicional que aprender." }
     },
     {
       "@type": "Question",
@@ -243,6 +243,43 @@
   #nav.open ~ .panel a { opacity: 1; transform: translateX(0); }
   .panel a.panel-sub { font-size: .95rem; font-weight: 500; color: var(--ink-cap); padding-left: .5rem; margin-top: -.4rem; }
   .panel a.active, .panel a.panel-sub.active { color: var(--amber, var(--accent-hot)); }
+
+  /* ============ Archify diagrams (poster + lazy interactive iframe) ============ */
+  .dgm-list { display: flex; flex-direction: column; gap: 40px; margin-top: 28px; }
+  figure.dgm { margin: 0; }
+  figure.dgm.dgm-tall { max-width: 860px; }
+  .dgm-frame {
+    position: relative; overflow: hidden; border-radius: 12px;
+    border: 1px solid var(--hairline); background: #05060a;
+  }
+  .dgm-poster { display: block; line-height: 0; }
+  .dgm-poster img { display: block; width: 100%; height: auto; }
+  .dgm-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #05060a; }
+  .dgm-hint {
+    position: absolute; right: 10px; bottom: 10px; line-height: 1.2;
+    font-family: var(--font-mono); font-size: 11.5px; letter-spacing: var(--track-mono);
+    color: var(--ink); background: rgb(2 2 3 / .78); border: 1px solid var(--hairline);
+    border-radius: 999px; padding: 7px 12px; pointer-events: none;
+  }
+  .dgm-frame.is-live .dgm-hint { display: none; }
+  .dgm-frame.is-fit .dgm-poster { display: none; }
+  .dgm figcaption {
+    display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px;
+    margin-top: 12px; font-size: 14.5px; color: var(--ink-muted);
+  }
+  .dgm figcaption b { color: var(--ink); font-weight: 500; }
+  .dgm-idx { font-family: var(--font-mono); font-size: 12px; letter-spacing: var(--track-mono); color: var(--accent, var(--amber)); margin-right: 8px; }
+  .dgm-open {
+    font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-cap); text-decoration: none;
+    border-bottom: 1px solid var(--hairline); padding: 10px 0 2px; min-height: 44px; display: inline-flex; align-items: flex-end;
+  }
+  .dgm-open:hover { color: var(--accent-hot, var(--amber-hot)); border-bottom-color: currentColor; }
+  .dgm-note { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-cap); margin-top: 10px; }
+  /* mobile nav: re-declared after the base .hamburger rule so the burger actually shows */
+  @media (max-width: 900px) { .hamburger { display: inline-flex; } }
+  @media (max-width: 480px) { .nav-gh { display: none; } }
+  /* keep the 24px gutter: .hero/.sec/.install-sec shorthand paddings reset .wrap's sides */
+  .wrap.hero, .wrap.sec, .wrap.install-sec { padding-left: 24px; padding-right: 24px; }
 </style>
 </head>
 <body>
@@ -317,10 +354,21 @@
   <section class="sec wrap">
     <h2><span lang="es">Qué hace</span><span lang="en">What it does</span></h2>
     <p><span lang="es">Cuando una tarea abre varios agentes a la vez —una revisión de código, una auditoría, una migración— cada uno suele re-escanear el mismo repo y redescubrir los mismos hechos. Ese re-escaneo repetido, no las respuestas, es el coste dominante en tokens del trabajo multiagente.</span><span lang="en">When a task fans out several agents at once — a code review, an audit, a migration — each one usually re-scans the same repo and re-discovers the same facts. That repeated re-scanning, not the answers, is the dominant token cost of multi-agent work.</span></p>
-    <p><span lang="es"><code>token-economy</code> hace que ese descubrimiento pase <b>una sola vez</b>: un script determinista escribe un context-pack compartido, cada agente lo lee en vez de volver a escanear, y un output-style corta la narración innecesaria del hilo principal. No instalas un comando — se dispara solo cuando el trabajo lo pide.</span><span lang="en"><code>token-economy</code> makes that discovery happen <b>once</b>: a deterministic script writes a shared context-pack, each agent reads it instead of re-scanning, and an output-style cuts unnecessary narration from the main thread. There's no command to run — it triggers itself when the work calls for it.</span></p>
+    <p><span lang="es"><code>token-economy</code> hace que ese descubrimiento pase <b>una sola vez</b>: un script determinista escribe un context-pack compartido, cada agente lo lee en vez de volver a escanear, y cada lente responde en formato corto. Opcionalmente, el output-style <code>frugal</code> (lo activas tú con <code>/output-style</code>) corta la narración del hilo principal. No hay comando que ejecutar — el skill se dispara solo cuando el trabajo lo pide.</span><span lang="en"><code>token-economy</code> makes that discovery happen <b>once</b>: a deterministic script writes a shared context-pack, each agent reads it instead of re-scanning, and every lens answers in short form. Optionally, the <code>frugal</code> output-style (you turn it on with <code>/output-style</code>) cuts narration from the main thread. There's no command to run — the skill triggers itself when the work calls for it.</span></p>
     <div class="example-box js-reveal">
       <span class="label amber ex-label"><span lang="es">Ejemplo real</span><span lang="en">Real example</span></span>
       <p><span lang="es">Pides una revisión con 4 lentes (arquitectura, seguridad, rendimiento, datos) sobre un mismo PR. Medido en una pasada real: ~108k tokens por lente si cada una re-lee el repo, ~42k con el pack compartido — el pack en sí cuesta ~74k una vez, amortizado entre las cuatro.</span><span lang="en">You ask for a 4-lens review (architecture, security, performance, data) on the same PR. Measured on a real pass: ~108k tokens per lens if each re-reads the repo, ~42k with the shared pack — the pack itself costs ~74k once, amortized across all four.</span></p>
+    </div>
+  </section>
+
+  <section class="sec wrap dgm-sec" id="diagramas" aria-labelledby="dgm-h">
+    <h2 id="dgm-h"><span lang="es">Cómo funciona, en diagramas</span><span lang="en">How it works, in diagrams</span></h2>
+    <p><span lang="es">Diagramas interactivos hechos con Archify, sacados del propio repo: recorre los caminos, haz zoom o ábrelos a pantalla completa.</span><span lang="en">Interactive diagrams built with Archify, taken from the repo itself: trace the paths, zoom in, or open them full screen.</span></p>
+    <div class="dgm-list">
+    <figure class="dgm" data-base="diagrams/gate" data-es="1" data-title-es="El gate: binario, por fan-out (diagrama interactivo)" data-title-en="The gate: binary, per fan-out (interactive diagram)">
+      <div class="dgm-frame"><a class="dgm-poster" href="diagrams/gate.es.html" target="_blank" rel="noopener"><img lang="es" src="diagrams/gate.es.webp" width="1600" height="650" loading="lazy" decoding="async" alt="Diagrama del gate de token-economy: antes del segundo agente, si los agentes abrirán algún fichero en común el context-pack es obligatorio; si trabajan en módulos disjuntos, se omite."><img lang="en" src="diagrams/gate.webp" width="1600" height="650" loading="lazy" decoding="async" alt="Diagram of the token-economy gate: before the second agent, if the agents will open any of the same files the context-pack is mandatory; for disjoint modules it is skipped."></a><span class="dgm-hint" aria-hidden="true"><span lang="es">toca para abrir ↗</span><span lang="en">tap to open ↗</span></span></div>
+      <figcaption><span><span class="dgm-idx">fig. 1</span><b><span lang="es">El gate: binario, por fan-out</span><span lang="en">The gate: binary, per fan-out</span></b></span><a class="dgm-open" lang="es" href="diagrams/gate.es.html" target="_blank" rel="noopener">Abrir interactivo ↗<span class="sr-only"> (pestaña nueva)</span></a><a class="dgm-open" lang="en" href="diagrams/gate.html" target="_blank" rel="noopener">Open interactive ↗<span class="sr-only"> (new tab)</span></a></figcaption>
+    </figure>
     </div>
   </section>
 
@@ -362,7 +410,7 @@
       </div>
       <div class="faq-item">
         <h3><span lang="es">¿Cómo se instala?</span><span lang="en">How do I install it?</span></h3>
-        <p><span lang="es">Con <code>/plugin marketplace add davidgarciagordo/claude-plugins</code> y luego <code>/plugin install token-economy</code> dentro de Claude Code. Sin paso de build ni comando adicional que aprender.</span><span lang="en">With <code>/plugin marketplace add davidgarciagordo/claude-plugins</code> then <code>/plugin install token-economy</code> inside Claude Code. No build step, no extra command to learn.</span></p>
+        <p><span lang="es">Con <code>/plugin marketplace add davidgarciagordo/claude-plugins</code> y luego <code>/plugin install token-economy@davidgarciagordo-plugins</code> dentro de Claude Code. Sin paso de build ni comando adicional que aprender.</span><span lang="en">With <code>/plugin marketplace add davidgarciagordo/claude-plugins</code> then <code>/plugin install token-economy@davidgarciagordo-plugins</code> inside Claude Code. No build step, no extra command to learn.</span></p>
       </div>
       <div class="faq-item">
         <h3><span lang="es">¿Es gratis y de código abierto?</span><span lang="en">Is it free and open source?</span></h3>
@@ -377,7 +425,7 @@
     <div class="sr-only" id="copy-status" role="status" aria-live="polite"></div>
     <div class="install-block">
       <div class="install-row"><code><span class="c">$</span> /plugin marketplace add <span class="v">davidgarciagordo/claude-plugins</span></code><button class="copy-btn" data-copy="/plugin marketplace add davidgarciagordo/claude-plugins"><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
-      <div class="install-row"><code><span class="c">$</span> /plugin install <span class="v">token-economy</span></code><button class="copy-btn" data-copy="/plugin install token-economy"><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
+      <div class="install-row"><code><span class="c">$</span> /plugin install <span class="v">token-economy@davidgarciagordo-plugins</span></code><button class="copy-btn" data-copy="/plugin install token-economy@davidgarciagordo-plugins"><span lang="es">Copiar</span><span lang="en">Copy</span></button></div>
     </div>
     <div class="cta-row">
       <a class="cta cta-amber" href="https://github.com/davidgarciagordo/token-economy"><span lang="es">Ver en GitHub</span><span lang="en">View on GitHub</span> →</a>
@@ -498,5 +546,66 @@
   });
 })();
 </script>
+<script>
+(function(){
+  // Archify diagrams: the poster <img> (same aspect ratio, so no layout shift) is the no-JS and
+  // mobile fallback; on wide screens the interactive diagram is mounted over it when near the viewport.
+  var figs = document.querySelectorAll('figure.dgm[data-base]');
+  if (!figs.length) return;
+  var wide = window.matchMedia ? matchMedia('(min-width: 760px)') : { matches: true };
+  function lang(){ return document.documentElement.lang === 'en' ? 'en' : 'es'; }
+  function srcFor(f){ return f.dataset.base + (lang() === 'es' && f.dataset.es === '1' ? '.es' : '') + '.html?embed=1&theme=dark'; }
+  function titleFor(f){ return lang() === 'en' ? f.dataset.titleEn : f.dataset.titleEs; }
+  function mount(f){
+    if (!wide.matches) return;
+    var frame = f.querySelector('.dgm-frame');
+    var ifr = frame.querySelector('iframe');
+    if (!ifr) {
+      ifr = document.createElement('iframe');
+      ifr.setAttribute('loading', 'lazy');
+      ifr.addEventListener('load', function(){ setTimeout(function(){ fit(f); }, 300); });
+      frame.appendChild(ifr);
+      frame.classList.add('is-live');
+      var poster = frame.querySelector('.dgm-poster');
+      poster.setAttribute('tabindex', '-1');
+      poster.setAttribute('aria-hidden', 'true');
+    }
+    var s = srcFor(f);
+    if (ifr.getAttribute('src') !== s) { frame.style.height = ''; frame.classList.remove('is-fit'); ifr.setAttribute('src', s); }
+    ifr.setAttribute('title', titleFor(f));
+  }
+  // Width-bound diagrams render shorter than their poster (which carries the viewer's toolbar):
+  // once loaded, trim the frame to the drawn height instead of leaving an empty band.
+  function fit(f){
+    var frame = f.querySelector('.dgm-frame'), ifr = frame.querySelector('iframe');
+    try {
+      var d = ifr.contentDocument, svg = d && d.querySelector('svg');
+      if (!svg) return;
+      var sw = svg.getBoundingClientRect().width, fw = frame.clientWidth, h = d.body.scrollHeight;
+      if (sw >= fw - 24 && h > 80 && h < frame.clientHeight - 32) { frame.style.height = (h + 8) + 'px'; frame.classList.add('is-fit'); }
+    } catch (e) {}
+  }
+  function syncAlt(){
+    figs.forEach(function(f){
+      f.querySelectorAll('img[data-alt-en]').forEach(function(img){
+        if (!img.dataset.altEs) img.dataset.altEs = img.alt;
+        img.alt = lang() === 'en' ? img.dataset.altEn : img.dataset.altEs;
+      });
+      if (f.querySelector('iframe')) mount(f);
+    });
+  }
+  syncAlt();
+  new MutationObserver(syncAlt).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if (en.isIntersecting && wide.matches) { io.unobserve(en.target); mount(en.target); } });
+    }, { rootMargin: '400px 0px' });
+    figs.forEach(function(f){ io.observe(f); });
+  } else {
+    figs.forEach(mount);
+  }
+})();
+</script>
+
 </body>
 </html>
