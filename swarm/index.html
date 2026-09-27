@@ -23,7 +23,7 @@
   "name": "swarm",
   "url": "https://davidgarciagordo.github.io/swarm/",
   "description": "45-agent Claude Code plugin (v0.2) that runs a full software development cycle from one plain-language objective: discovery, 7-lens analysis, design and implementation reviewed by a scored panel (grill lenses, fact-checker, refuter, blind judge), TDD in an isolated worktree, and independent verification before delivery. Agents declare a model tier (judgement, standard, mechanical), never a model name.",
-  "softwareVersion": "0.2.1",
+  "softwareVersion": "0.2.2",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "Any (Claude Code plugin)",
   "softwareRequirements": "Claude Code",
@@ -898,6 +898,33 @@
       <figcaption><span><span class="dgm-idx">fig. 5</span><b><span lang="es">Crear un stack pack</span><span lang="en">Writing a stack pack</span></b></span><a class="dgm-open" lang="es" href="diagrams/extending-packs-flow.es.html" target="_blank" rel="noopener">Abrir interactivo ↗<span class="sr-only"> (pestaña nueva)</span></a><a class="dgm-open" lang="en" href="diagrams/extending-packs-flow.html" target="_blank" rel="noopener">Open interactive ↗<span class="sr-only"> (new tab)</span></a></figcaption>
     </figure>
     </div>
+  </section>
+
+  <section class="sec wrap dgm-sec" id="proporcional" aria-labelledby="prop-h">
+    <span class="label amber"><span lang="es">Novedad en 0.2.2</span><span lang="en">New in 0.2.2</span></span>
+    <h2 id="prop-h"><span lang="es">Proporcional por diseño</span><span lang="en">Proportional by design</span></h2>
+    <p><span lang="es"><code>/swarm:run</code> dimensiona el objetivo con un vistazo barato al repo antes de tocar nada: una pregunta de solo-lectura se responde en nativo, sin subagentes ni <code>.swarm/</code>; un cambio acotado trae solo el componente puntual que su valor justifica. Cada <code>spawn</code> y cada <code>skip</code> queda en el log con su motivo, en el formato real de <code>sizing.md</code>.</span><span lang="en"><code>/swarm:run</code> sizes the goal with a cheap look at the repo before touching anything: a read-only question is answered natively, no subagents or <code>.swarm/</code>; a bounded change pulls only the one component its value justifies. Every <code>spawn</code> and every <code>skip</code> is logged with its reason, in <code>sizing.md</code>'s real log format.</span></p>
+    <div class="dgm-list">
+    <figure class="dgm" data-base="diagrams/routing-1pct" data-es="1" data-title-es="swarm al 1% — pregunta / análisis (diagrama interactivo)" data-title-en="1% swarm — question / analysis (interactive diagram)">
+      <div class="dgm-frame"><a class="dgm-poster" href="diagrams/routing-1pct.es.html" target="_blank" rel="noopener"><img lang="es" src="diagrams/routing-1pct.es.webp" width="1600" height="940" loading="lazy" decoding="async" alt="Diagrama de una pregunta de solo análisis respondida en nativo con Read y Grep: sizing decide «direct», sin subagentes, orchestrator, .swarm/ ni paneles de revisión — ejecución real medida en 23,5 s y $0,36."><img lang="en" src="diagrams/routing-1pct.webp" width="1600" height="975" loading="lazy" decoding="async" alt="Diagram of an analysis-only question answered natively with Read and Grep: sizing decides &#x27;direct&#x27;, no subagents, orchestrator hop, .swarm/ or review panels — measured real run: 23.5s and $0.36."></a><span class="dgm-hint" aria-hidden="true"><span lang="es">toca para abrir ↗</span><span lang="en">tap to open ↗</span></span></div>
+      <figcaption><span><span class="dgm-idx">fig. 6</span><b><span lang="es">swarm al 1% — pregunta / análisis</span><span lang="en">1% swarm — question / analysis</span></b></span><a class="dgm-open" lang="es" href="diagrams/routing-1pct.es.html" target="_blank" rel="noopener">Abrir interactivo ↗<span class="sr-only"> (pestaña nueva)</span></a><a class="dgm-open" lang="en" href="diagrams/routing-1pct.html" target="_blank" rel="noopener">Open interactive ↗<span class="sr-only"> (new tab)</span></a></figcaption>
+    </figure>
+    <figure class="dgm" data-base="diagrams/routing-20pct" data-es="1" data-title-es="swarm al ~20% — añadir login a una app existente (diagrama interactivo)" data-title-en="~20% swarm — add login to an existing app (interactive diagram)">
+      <div class="dgm-frame"><a class="dgm-poster" href="diagrams/routing-20pct.es.html" target="_blank" rel="noopener"><img lang="es" src="diagrams/routing-20pct.es.webp" width="1600" height="1010" loading="lazy" decoding="async" alt="Diagrama de una feature acotada donde Claude planifica e implementa en nativo y el enjambre solo trae el context pack, security-auditor y el juez ciego sobre el plan, cada uno con su motivo de spawn; ejemplo ilustrativo, no una ejecución medida."><img lang="en" src="diagrams/routing-20pct.webp" width="1600" height="1035" loading="lazy" decoding="async" alt="Diagram of a bounded feature where Claude plans and implements natively and the swarm pulls only the context pack, security-auditor and the blind judge on the plan, each with its spawn reason; illustrative example, not a measured run."></a><span class="dgm-hint" aria-hidden="true"><span lang="es">toca para abrir ↗</span><span lang="en">tap to open ↗</span></span></div>
+      <figcaption><span><span class="dgm-idx">fig. 7</span><b><span lang="es">swarm al ~20% — añadir login</span><span lang="en">~20% swarm — add login</span></b></span><a class="dgm-open" lang="es" href="diagrams/routing-20pct.es.html" target="_blank" rel="noopener">Abrir interactivo ↗<span class="sr-only"> (pestaña nueva)</span></a><a class="dgm-open" lang="en" href="diagrams/routing-20pct.html" target="_blank" rel="noopener">Open interactive ↗<span class="sr-only"> (new tab)</span></a></figcaption>
+    </figure>
+    </div>
+    <div class="cost-wrap">
+      <table class="cost-table">
+        <caption class="sr-only"><span lang="es">Tiempo y coste de la misma pregunta de solo lectura: pipeline completo, sizing nativo, y sin swarm</span><span lang="en">Time and cost of the same read-only question: full pipeline, native sizing, and without swarm</span></caption>
+        <thead><tr><th scope="col"><span class="sr-only"><span lang="es">Métrica</span><span lang="en">Metric</span></span></th><th scope="col"><span lang="es">antes (pipeline completo)</span><span lang="en">before (full pipeline)</span></th><th scope="col"><span lang="es">ahora (swarm 0.2.2)</span><span lang="en">now (swarm 0.2.2)</span></th><th scope="col"><span lang="es">plano (sin swarm)</span><span lang="en">plain (no swarm)</span></th></tr></thead>
+        <tbody>
+          <tr><th scope="row"><span lang="es">Tiempo</span><span lang="en">Time</span></th><td>356 s</td><td>23.5 s <b>−93%</b></td><td>144 s</td></tr>
+          <tr class="total"><th scope="row"><span lang="es">Coste</span><span lang="en">Cost</span></th><td>$4.28</td><td>$0.36 <b>−92%</b></td><td>$0.87</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="sec-foot"><span lang="es">Una ejecución real, no un benchmark: el mismo objetivo de solo lectura, medido tres veces (pipeline completo de 0.2.1, sizing nativo de 0.2.2, y Claude Code plano sin el plugin).</span><span lang="en">One real run, not a benchmark: the same read-only goal, measured three times (0.2.1's full pipeline, 0.2.2's native sizing, and plain Claude Code without the plugin).</span></p>
   </section>
 
   <section class="sec wrap" id="tiers" aria-labelledby="tiers-h">
