@@ -914,17 +914,7 @@
       <figcaption><span><span class="dgm-idx">fig. 7</span><b><span lang="es">swarm al ~20% — añadir login</span><span lang="en">~20% swarm — add login</span></b></span><a class="dgm-open" lang="es" href="diagrams/routing-20pct.es.html" target="_blank" rel="noopener">Abrir interactivo ↗<span class="sr-only"> (pestaña nueva)</span></a><a class="dgm-open" lang="en" href="diagrams/routing-20pct.html" target="_blank" rel="noopener">Open interactive ↗<span class="sr-only"> (new tab)</span></a></figcaption>
     </figure>
     </div>
-    <div class="cost-wrap">
-      <table class="cost-table">
-        <caption class="sr-only"><span lang="es">Tiempo y coste de la misma pregunta de solo lectura: pipeline completo, sizing nativo, y sin swarm</span><span lang="en">Time and cost of the same read-only question: full pipeline, native sizing, and without swarm</span></caption>
-        <thead><tr><th scope="col"><span class="sr-only"><span lang="es">Métrica</span><span lang="en">Metric</span></span></th><th scope="col"><span lang="es">antes (pipeline completo)</span><span lang="en">before (full pipeline)</span></th><th scope="col"><span lang="es">ahora (swarm 0.2.2)</span><span lang="en">now (swarm 0.2.2)</span></th><th scope="col"><span lang="es">plano (sin swarm)</span><span lang="en">plain (no swarm)</span></th></tr></thead>
-        <tbody>
-          <tr><th scope="row"><span lang="es">Tiempo</span><span lang="en">Time</span></th><td>356 s</td><td>23.5 s <b>−93%</b></td><td>144 s</td></tr>
-          <tr class="total"><th scope="row"><span lang="es">Coste</span><span lang="en">Cost</span></th><td>$4.28</td><td>$0.36 <b>−92%</b></td><td>$0.87</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p class="sec-foot"><span lang="es">Una ejecución real, no un benchmark: el mismo objetivo de solo lectura, medido tres veces (pipeline completo de 0.2.1, sizing nativo de 0.2.2, y Claude Code plano sin el plugin).</span><span lang="en">One real run, not a benchmark: the same read-only goal, measured three times (0.2.1's full pipeline, 0.2.2's native sizing, and plain Claude Code without the plugin).</span></p>
+    <p class="sec-foot"><span lang="es">Medido una vez, sin valor de benchmark: una pregunta pequeña de solo lectura se resolvió en nativo en 23,5 s y 0,36 $, sin subagentes y sin tocar ficheros. Antes, una pregunta de análisis mayor lanzaba el pipeline completo (356 s, 4,28 $). Son preguntas distintas, así que no es una comparativa. Falta medir swarm frente a Claude nativo en una tarea grande, que es para lo que está pensado.</span><span lang="en">Measured once, not a benchmark: a small read-only question was answered natively in 23.5 s and $0.36, with no subagents and no files touched. Before, a larger analysis question launched the full pipeline (356 s, $4.28). The questions differ, so this is not a comparison. Swarm versus native Claude on a large task, which is what it is built for, has not been measured yet.</span></p>
   </section>
 
   <section class="sec wrap" id="tiers" aria-labelledby="tiers-h">
