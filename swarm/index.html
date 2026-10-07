@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#020203">
-<meta name="description" content="swarm 0.2: un equipo de software sénior en un comando. 45 agentes para Claude Code, modelos por tier, un panel de revisión con juez ciego y verificación independiente. −58% de tokens por run vs v0.1.">
+<meta name="description" content="swarm 0.2: un equipo de software sénior en un comando. 44 agentes para Claude Code, modelos por tier, un panel de revisión con juez ciego y verificación independiente. −58% de tokens por run vs v0.1.">
 <title>swarm · David García Gordo</title>
 <link rel="canonical" href="https://davidgarciagordo.github.io/swarm/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://davidgarciagordo.github.io/swarm/">
 <meta property="og:title" content="swarm: David García Gordo">
-<meta property="og:description" content="Un equipo de software sénior, en un comando. 45 agentes para Claude Code, con panel de revisión y juez ciego.">
+<meta property="og:description" content="Un equipo de software sénior, en un comando. 44 agentes para Claude Code, con panel de revisión y juez ciego.">
 <meta property="og:image" content="https://davidgarciagordo.github.io/swarm/diagrams/architecture.webp">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://davidgarciagordo.github.io/swarm/diagrams/architecture.webp">
@@ -623,7 +623,7 @@
     </div>
 
     <div class="stat-rail">
-      <div class="stat-tile"><span class="stat-num js-count" data-to="45">45</span><span class="stat-cap"><span lang="es">agentes</span><span lang="en">agents</span></span></div>
+      <div class="stat-tile"><span class="stat-num js-count" data-to="44">44</span><span class="stat-cap"><span lang="es">agentes</span><span lang="en">agents</span></span></div>
       <div class="stat-tile"><span class="stat-num js-count" data-to="3">3</span><span class="stat-cap"><span lang="es">tiers de modelo</span><span lang="en">model tiers</span></span></div>
       <div class="stat-tile"><span class="stat-num">7/10</span><span class="stat-cap"><span lang="es">umbral del juez ciego</span><span lang="en">blind-judge threshold</span></span></div>
       <div class="stat-tile"><span class="stat-num">−58%</span><span class="stat-cap"><span lang="es">tokens por run típico vs v0.1</span><span lang="en">tokens per typical run vs v0.1</span></span></div>
@@ -641,8 +641,8 @@
       <span lang="es">Un equipo de software sénior, en un comando.</span>
       <span lang="en">A senior software team, in one command.</span>
       <span class="m">
-        <span lang="es"> 45 agentes de responsabilidad única que descubren, analizan, diseñan, implementan y entregan: un panel de revisión puntúa cada plan y cada diff, TDD en worktree aislado y un verificador que nunca construyó lo que revisa. Sobre tu repo, en local.</span>
-        <span lang="en"> 45 single-responsibility agents that discover, analyze, design, implement and deliver: a review panel scores every plan and every diff, TDD in an isolated worktree, and a verifier that never built what it checks. On your repo, locally.</span>
+        <span lang="es"> 44 agentes de responsabilidad única que descubren, analizan, diseñan, implementan y entregan: un panel de revisión puntúa cada plan y cada diff, TDD en worktree aislado y un verificador que nunca construyó lo que revisa. Sobre tu repo, en local.</span>
+        <span lang="en"> 44 single-responsibility agents that discover, analyze, design, implement and deliver: a review panel scores every plan and every diff, TDD in an isolated worktree, and a verifier that never built what it checks. On your repo, locally.</span>
       </span>
     </p>
   </section>
@@ -720,7 +720,7 @@
   </figure>
 
   <figure class="figframe" id="roster">
-    <figcaption class="fig-cap"><span class="rule" aria-hidden="true"></span><h2><span aria-hidden="true">&gt;_ ───</span> <span lang="es">fig. 2 · los 45 agentes</span><span lang="en">fig. 2 · the 45 agents</span> <span aria-hidden="true">─── #</span></h2><span class="rule" aria-hidden="true"></span></figcaption>
+    <figcaption class="fig-cap"><span class="rule" aria-hidden="true"></span><h2><span aria-hidden="true">&gt;_ ───</span> <span lang="es">fig. 2 · los 44 agentes</span><span lang="en">fig. 2 · the 44 agents</span> <span aria-hidden="true">─── #</span></h2><span class="rule" aria-hidden="true"></span></figcaption>
     <ul class="sr-only roster-list" id="roster-sr">
       <li>orchestrator &middot; judgement</li>
       <li>memory-orchestrator &middot; mechanical</li>
@@ -762,7 +762,6 @@
       <li>migration-engineer &middot; standard</li>
       <li>doc-writer &middot; standard</li>
       <li>quality-fixer &middot; standard</li>
-      <li>reviewer &middot; judgement</li>
       <li>verifier &middot; judgement</li>
       <li>delivery-orchestrator &middot; judgement</li>
       <li>release-manager &middot; standard</li>
@@ -837,7 +836,6 @@
           <span class="tchip">migration-engineer<span class="m">standard</span></span>
           <span class="tchip">doc-writer<span class="m">standard</span></span>
           <span class="tchip">quality-fixer<span class="m">standard</span></span>
-          <span class="tchip">reviewer<span class="m">judgement</span></span>
           <span class="tchip">verifier<span class="m">judgement</span></span>
           <span class="tchip">delivery-orchestrator<span class="m">judgement</span></span>
           <span class="tchip">release-manager<span class="m">standard</span></span>
@@ -859,7 +857,6 @@
           <span class="tchip">migration-engineer<span class="m">standard</span></span>
           <span class="tchip">doc-writer<span class="m">standard</span></span>
           <span class="tchip">quality-fixer<span class="m">standard</span></span>
-          <span class="tchip">reviewer<span class="m">judgement</span></span>
           <span class="tchip">verifier<span class="m">judgement</span></span>
           <span class="tchip">delivery-orchestrator<span class="m">judgement</span></span>
           <span class="tchip">release-manager<span class="m">standard</span></span>
@@ -922,7 +919,7 @@
     <h2 id="tiers-h"><span lang="es">Ningún agente nombra un modelo.</span><span lang="en">No agent names a model.</span></h2>
     <p><span lang="es">Cada agente declara un <b>tier</b>; qué modelo corre cada tier vive en un solo fichero, <code>models.json</code>, y un script determinista lo resuelve — nunca lo adivina un modelo. Un <code>.swarm/models.json</code> lo sobreescribe por repo, que es como otro host mapea los tiers a sus propios modelos.</span><span lang="en">Each agent declares a <b>tier</b>; which model runs each tier lives in a single file, <code>models.json</code>, and a deterministic script resolves it — a model never guesses. A <code>.swarm/models.json</code> overrides it per repo, which is how another host maps tiers to its own models.</span></p>
     <div class="tier-grid">
-      <div class="tier-card"><span class="tier-n">30</span><span class="tier-name">judgement</span><p><span lang="es">Auditar, revisar, juzgar, planificar, orquestar. Nunca cae al modelo de un tier más débil: si se agota la lista, hereda el de la sesión.</span><span lang="en">Audit, review, judge, plan, orchestrate. It never falls to a weaker tier's model: an exhausted list inherits the session model.</span></p></div>
+      <div class="tier-card"><span class="tier-n">29</span><span class="tier-name">judgement</span><p><span lang="es">Auditar, revisar, juzgar, planificar, orquestar. Nunca cae al modelo de un tier más débil: si se agota la lista, hereda el de la sesión.</span><span lang="en">Audit, review, judge, plan, orchestrate. It never falls to a weaker tier's model: an exhausted list inherits the session model.</span></p></div>
       <div class="tier-card"><span class="tier-n">8</span><span class="tier-name">standard</span><p><span lang="es">Ejecutar un plan cerrado: escribir código, tests y docs. Si su salida no pasa la verificación, reintenta una vez escalando de tier.</span><span lang="en">Execute a closed plan: write code, tests and docs. If its output fails verification, it retries once on an escalated tier.</span></p></div>
       <div class="tier-card"><span class="tier-n">7</span><span class="tier-name">mechanical</span><p><span lang="es">Correr scripts, curar memoria, recoger datos del entorno. Lo determinista lo hace un script; el modelo solo el residuo.</span><span lang="en">Run scripts, curate memory, collect environment facts. What's deterministic is done by a script; the model only handles the residue.</span></p></div>
     </div>
@@ -938,14 +935,14 @@
         <caption class="sr-only"><span lang="es">Tokens por run típico antes y después de separar núcleo y material bajo demanda</span><span lang="en">Tokens per typical run before and after splitting core and on-demand material</span></caption>
         <thead><tr><th scope="col"><span class="sr-only"><span lang="es">Métrica</span><span lang="en">Metric</span></span></th><th scope="col"><span lang="es">antes</span><span lang="en">before</span></th><th scope="col"><span lang="es">ahora</span><span lang="en">now</span></th></tr></thead>
         <tbody>
-          <tr><th scope="row"><span lang="es"><code>SKILL.md</code>, precargado en cada agente</span><span lang="en"><code>SKILL.md</code>, preloaded into every agent</span></th><td><span lang="es">398 líneas</span><span lang="en">398 lines</span></td><td><span lang="es">114 líneas</span><span lang="en">114 lines</span></td></tr>
-          <tr><th scope="row"><span lang="es">Ficheros bajo demanda</span><span lang="en">On-demand files</span></th><td>1</td><td>31</td></tr>
+          <tr><th scope="row"><span lang="es"><code>SKILL.md</code>, precargado en cada agente</span><span lang="en"><code>SKILL.md</code>, preloaded into every agent</span></th><td><span lang="es">398 líneas</span><span lang="en">398 lines</span></td><td><span lang="es">118 líneas</span><span lang="en">118 lines</span></td></tr>
+          <tr><th scope="row"><span lang="es">Ficheros bajo demanda</span><span lang="en">On-demand files</span></th><td>1</td><td>32</td></tr>
           <tr class="total"><th scope="row"><span lang="es">Run típico, total</span><span lang="en">Typical run, total</span></th><td><span lang="es">~147,8k tok</span><span lang="en">~147.8k tok</span></td><td><span lang="es">~61,8k tok</span><span lang="en">~61.8k tok</span> <b>−58%</b></td></tr>
           <tr class="total"><th scope="row"><span lang="es">Coste always-on, cada sesión (antes de llamar a swarm) · 0.2.0 → 0.2.1</span><span lang="en">Always-on cost, every session (before any swarm call) · 0.2.0 → 0.2.1</span></th><td><span lang="es">~3.581 tok</span><span lang="en">~3,581 tok</span></td><td><span lang="es">~1.196 tok</span><span lang="en">~1,196 tok</span> <b>−67%</b></td></tr>
         </tbody>
       </table>
     </div>
-    <p class="sec-foot"><span lang="es">Medido, no estimado: del commit <code>a07e655</code> al estado actual, según la sección «Cost» del README (el coste always-on, con <code>claude plugin details</code>). Presupuestos: hoja ≤80 líneas, orquestador de dominio ≤150, raíz ≤250, <code>SKILL.md</code> ≤120.</span><span lang="en">Measured, not estimated: from commit <code>a07e655</code> to now, per the README's "Cost" section (the always-on cost, via <code>claude plugin details</code>). Budgets: leaf ≤80 lines, domain orchestrator ≤150, root ≤250, <code>SKILL.md</code> ≤120.</span></p>
+    <p class="sec-foot"><span lang="es">Medido, no estimado: del commit <code>a07e655</code> a <code>a39cbd4</code>, según la sección «Cost» del README (el coste always-on, con <code>claude plugin details</code>). Presupuestos: hoja ≤80 líneas, orquestador de dominio ≤150, raíz ≤370, <code>SKILL.md</code> ≤120. Tokens por run medidos en el commit <code>a39cbd4</code>, sin volver a medir desde entonces. Claude Code 2.1.292 informa ~1.838 tok de coste always-on para 0.2.3: cambió su estimación, el texto de las descripciones no creció.</span><span lang="en">Measured, not estimated: from commit <code>a07e655</code> to <code>a39cbd4</code>, per the README's "Cost" section (the always-on cost, via <code>claude plugin details</code>). Budgets: leaf ≤80 lines, domain orchestrator ≤150, root ≤370, <code>SKILL.md</code> ≤120. Tokens per run were measured at commit <code>a39cbd4</code> and not re-measured since. Claude Code 2.1.292 reports ~1,838 tok of always-on cost for 0.2.3: its estimate changed, the description text did not grow.</span></p>
   </section>
 
   <section class="owner-band">

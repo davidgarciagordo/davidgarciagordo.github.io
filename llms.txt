@@ -5,7 +5,7 @@
 ## Site
 
 - [Home / CV](https://davidgarciagordo.github.io/): background, experience, stack, and the AI-engineering ecosystem section.
-- [swarm](https://davidgarciagordo.github.io/swarm/): 45-agent Claude Code plugin (v0.2) that runs a full software-development cycle (discovery, analysis, design, implementation, delivery) from one plain-language objective. Agents declare a model tier (judgement / standard / mechanical) instead of a model name; every plan and diff goes through a scored review panel (grill lenses, fact-checker, refuter, blind judge, KO below 7/10) and an independent verifier. Core-vs-on-demand split measured at -58% tokens per typical run.
+- [swarm](https://davidgarciagordo.github.io/swarm/): 44-agent Claude Code plugin (v0.2) that runs a full software-development cycle (discovery, analysis, design, implementation, delivery) from one plain-language objective. Agents declare a model tier (judgement / standard / mechanical) instead of a model name; every plan and diff goes through a scored review panel (grill lenses, fact-checker, refuter, blind judge, KO below 7/10) and an independent verifier. Core-vs-on-demand split measured at -58% tokens per typical run.
 - [Plugin catalog](https://davidgarciagordo.github.io/plugins/): overview of all 6 open-source Claude Code plugins in the ecosystem, installable from one marketplace (`davidgarciagordo/claude-plugins`).
 
 ## Plugins (individual pages)
