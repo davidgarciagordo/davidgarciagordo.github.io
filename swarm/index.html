@@ -23,7 +23,7 @@
   "name": "swarm",
   "url": "https://davidgarciagordo.github.io/swarm/",
   "description": "45-agent Claude Code plugin (v0.2) that runs a full software development cycle from one plain-language objective: discovery, 7-lens analysis, design and implementation reviewed by a scored panel (grill lenses, fact-checker, refuter, blind judge), TDD in an isolated worktree, and independent verification before delivery. Agents declare a model tier (judgement, standard, mechanical), never a model name.",
-  "softwareVersion": "0.2.2",
+  "softwareVersion": "0.2.4",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "Any (Claude Code plugin)",
   "softwareRequirements": "Claude Code",
@@ -898,7 +898,7 @@
   </section>
 
   <section class="sec wrap dgm-sec" id="proporcional" aria-labelledby="prop-h">
-    <span class="label amber"><span lang="es">Novedad en 0.2.2</span><span lang="en">New in 0.2.2</span></span>
+    <span class="label amber"><span lang="es">0.2.2 · ampliado en 0.2.4</span><span lang="en">0.2.2 · extended in 0.2.4</span></span>
     <h2 id="prop-h"><span lang="es">Proporcional por diseño</span><span lang="en">Proportional by design</span></h2>
     <p><span lang="es"><code>/swarm:run</code> dimensiona el objetivo con un vistazo barato al repo antes de tocar nada: una pregunta de solo-lectura se responde en nativo, sin subagentes ni <code>.swarm/</code>; un cambio acotado trae solo el componente puntual que su valor justifica. Cada <code>spawn</code> y cada <code>skip</code> queda en el log con su motivo, en el formato real de <code>sizing.md</code>.</span><span lang="en"><code>/swarm:run</code> sizes the goal with a cheap look at the repo before touching anything: a read-only question is answered natively, no subagents or <code>.swarm/</code>; a bounded change pulls only the one component its value justifies. Every <code>spawn</code> and every <code>skip</code> is logged with its reason, in <code>sizing.md</code>'s real log format.</span></p>
     <div class="dgm-list">
@@ -912,6 +912,7 @@
     </figure>
     </div>
     <p class="sec-foot"><span lang="es">Medido una vez, sin valor de benchmark: una pregunta pequeña de solo lectura se resolvió en nativo en 23,5 s y 0,36 $, sin subagentes y sin tocar ficheros. Antes, una pregunta de análisis mayor lanzaba el pipeline completo (356 s, 4,28 $). Son preguntas distintas, así que no es una comparativa. Falta medir swarm frente a Claude nativo en una tarea grande, que es para lo que está pensado.</span><span lang="en">Measured once, not a benchmark: a small read-only question was answered natively in 23.5 s and $0.36, with no subagents and no files touched. Before, a larger analysis question launched the full pipeline (356 s, $4.28). The questions differ, so this is not a comparison. Swarm versus native Claude on a large task, which is what it is built for, has not been measured yet.</span></p>
+    <p class="sec-foot"><span lang="es"><b>0.2.4</b>, tras un run real que lanzó 18 agentes para escribir un solo plan: si el entregable es un plan, corre solo <code>planner</code> y una ronda de panel; el orquestador raíz nunca escribe el artefacto; discovery puede lanzar solo la investigación, sin preguntas; y la segunda ronda del panel comprueba los bloqueos de la primera en vez de revisar desde cero. Estas rutas tienen tests en scripts y hook, pero aún no están medidas en un run real.</span><span lang="en"><b>0.2.4</b>, after a real run that launched 18 agents to write one plan: when the deliverable is a plan, only <code>planner</code> and one panel round run; the root orchestrator never writes the artifact; discovery can launch research alone, with no questions; and the panel's second round checks the first round's blockers instead of reviewing from scratch. These routes have tests on scripts and hook, but are not yet measured on a real run.</span></p>
   </section>
 
   <section class="sec wrap" id="tiers" aria-labelledby="tiers-h">
@@ -936,7 +937,7 @@
         <thead><tr><th scope="col"><span class="sr-only"><span lang="es">Métrica</span><span lang="en">Metric</span></span></th><th scope="col"><span lang="es">antes</span><span lang="en">before</span></th><th scope="col"><span lang="es">ahora</span><span lang="en">now</span></th></tr></thead>
         <tbody>
           <tr><th scope="row"><span lang="es"><code>SKILL.md</code>, precargado en cada agente</span><span lang="en"><code>SKILL.md</code>, preloaded into every agent</span></th><td><span lang="es">398 líneas</span><span lang="en">398 lines</span></td><td><span lang="es">118 líneas</span><span lang="en">118 lines</span></td></tr>
-          <tr><th scope="row"><span lang="es">Ficheros bajo demanda</span><span lang="en">On-demand files</span></th><td>1</td><td>32</td></tr>
+          <tr><th scope="row"><span lang="es">Ficheros bajo demanda</span><span lang="en">On-demand files</span></th><td>1</td><td>34</td></tr>
           <tr class="total"><th scope="row"><span lang="es">Run típico, total</span><span lang="en">Typical run, total</span></th><td><span lang="es">~147,8k tok</span><span lang="en">~147.8k tok</span></td><td><span lang="es">~61,8k tok</span><span lang="en">~61.8k tok</span> <b>−58%</b></td></tr>
           <tr class="total"><th scope="row"><span lang="es">Coste always-on, cada sesión (antes de llamar a swarm) · 0.2.0 → 0.2.1</span><span lang="en">Always-on cost, every session (before any swarm call) · 0.2.0 → 0.2.1</span></th><td><span lang="es">~3.581 tok</span><span lang="en">~3,581 tok</span></td><td><span lang="es">~1.196 tok</span><span lang="en">~1,196 tok</span> <b>−67%</b></td></tr>
         </tbody>
